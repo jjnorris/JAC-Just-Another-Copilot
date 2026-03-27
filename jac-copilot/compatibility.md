@@ -1,69 +1,56 @@
 # Compatibility notes
 
-## Portable core
+## Verified GitHub Copilot surfaces
 
-The following parts are intentionally portable and do not depend on a verified native Copilot runtime feature:
+These are the documented native surfaces this repository now targets first:
 
-- markdown instructions and rules
-- workflow documents
-- templates
-- JSON event contracts
-- portable manifest metadata
-- skill and hook definitions as behavioral contracts
-- docs and examples
+- `.github/copilot-instructions.md`
+- `.github/instructions/*.instructions.md`
+- `AGENTS.md`
 
-These files can be used manually, through editor notes, or through a custom adapter.
+They are the public activation layer for this repo.
 
-## Platform-specific assumptions
+## Portable extras and behavioral contracts
 
-The following are not claimed as verified native GitHub Copilot features by this repository:
+Everything under `jac-copilot/` remains useful, but not every part of it is a documented native Copilot runtime primitive.
+Portable-only parts include:
 
-- global user-level installation of this exact package shape
-- native execution of `hooks/*/hook.json`
-- native registration of `skills/*/skill.json`
-- native slash-command binding for `workflows/*.md`
-- native acceptance of `manifest.json` as an official schema
+- `manifest.json` as internal source-pack metadata
+- `hooks/` as behavioral hook contracts
+- `skills/` as behavioral skill contracts
+- `workflows/` as procedural rails and adapter inputs
+- templates, event schemas, docs, and examples
 
-If your environment supports some equivalent surface, adapt the pack carefully and document what was actually verified.
+Those files can guide adapters, manual use, or future integrations.
+They should not be described as already-executed native runtime features unless verified.
 
-## Activation modes
+## Environment differences
 
-JAC defines three conceptual activation modes:
+### GitHub.com
+Repository-wide instructions, path-specific instructions, and `AGENTS.md` are documented customization surfaces.
+GitHub's docs also note that path-specific instruction files on GitHub.com currently apply to Copilot coding agent and Copilot code review.
 
-- `always-on`: core instructions always apply
-- `model-decision`: a router or user decides whether a skill or workflow is relevant
-- `glob-pattern`: a workspace or adapter activates local rules by file pattern
+### VS Code
+Repository custom instructions are documented for VS Code as well.
+Treat the repo-native files as the first layer, but keep editor-version-specific claims narrow unless you verify them directly.
 
-These are policy modes. They are not proof of native runtime support.
+### Copilot CLI
+Copilot CLI documents the same repository files and also documents extra local instruction locations.
+Those extra local paths are outside this repo's primary public release story.
 
-## Fallback behavior
+## Manual fallback mode
 
-If advanced surfaces are unsupported:
+If the native adapter files are not being consumed in your environment, use them as readable Markdown and fall back to the source pack under `jac-copilot/`.
+The source pack is verbose on purpose and can be used directly without pretending runtime support exists.
 
-- `instructions.md` stays authoritative
-- `rules/` stay readable policy files
-- `workflows/` stay manual procedural rails
-- `hooks/` become review checklists and pseudo-hook contracts
-- `skills/` become named behavior bundles for manual routing
-- event contracts remain trace formats for local artifacts or logs
+## Release readiness note
 
-## Environment classes
+- Verified: `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md`
+- Portable only: `jac-copilot/manifest.json`, hooks, skills, workflows, templates, event schemas, docs, examples
+- Manual fallback: read adapter files and source-pack files directly
+- Adapter-dependent: executable hook behavior, executable skill behavior, workflow command surfaces, or any manifest consumer
 
-### Local-first
-Use direct file access, local tasks, local tests, and local notes. Prefer this mode.
+## Optional prompt files
 
-### Remote or hosted
-Use the same authority pack, but keep stronger scrutiny on secrets, networked actions, and credential boundaries.
-
-### Degraded or offline
-Skip semantic retrieval, remote research, or live telemetry. Keep working-memory-only behavior and local evidence notes.
-
-## Versioning guidance
-
-Increment this pack when:
-- a rule meaning changes
-- a schema changes
-- a workflow pause point or blocker changes
-- a compatibility claim is newly verified or withdrawn
-
-Do not change compatibility claims casually.
+This release does not ship prompt files.
+They are omitted because this revision did not verify a current official prompt-file path and syntax that should be claimed for this repository.

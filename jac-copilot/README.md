@@ -1,50 +1,34 @@
-# JAC
+# JAC source pack
 
-JAC stands for Just Another Copilot.
+This directory is the longer source pack behind the repo-native Copilot files in:
 
-This is a small pile of rules, notes, templates, and JSON for steering GitHub Copilot in a more careful direction.
-It is not a verified native Copilot package format.
-It is mostly a portable authority pack that you can adapt to whatever instruction surface your editor actually supports.
+- `.github/copilot-instructions.md`
+- `.github/instructions/*.instructions.md`
+- `AGENTS.md`
 
-## What it is
+It is mostly rules, notes, templates, and JSON.
+It is not the first thing to wire by hand if your Copilot environment already reads the repo-native adapter files.
 
-- a user-level rules pack
-- a set of workspace-override patterns
-- some workflow documents
-- some pseudo-hook and pseudo-skill definitions
-- a few schemas and templates for traces, review, memory, and verification
+## What is in here
 
-## What it is not
+- long-form instructions
+- rules with one canonical home each
+- workflow notes
+- portable hook and skill contracts
+- templates, schemas, docs, and examples
+- internal metadata in `manifest.json`
 
-- not an official GitHub format claim
-- not proof that Copilot runs hooks from this folder
-- not proof that global install works the same everywhere
-- not a runtime or extension by itself
+## What `manifest.json` means here
 
-## Install idea
+`manifest.json` is portable source-pack metadata for this folder.
+It is not presented as an official GitHub Copilot package manifest.
 
-1. Put this folder somewhere stable.
-2. Point whatever reusable Copilot instruction surface you have to `instructions.md`.
-3. Layer workspace rules on top when your editor supports that.
-4. If your editor does not support any of that cleanly, open the workflow docs manually and use them as operating notes.
+## What hooks and skills mean here
 
-More detail is in `install.md` and `compatibility.md`.
+The `hooks/` and `skills/` directories describe behavioral contracts and future adapter targets.
+They are not shipped as proven native Copilot runtime units in this repository.
 
-## Layout
+## When to read this folder first
 
-- `instructions.md` is the main file
-- `rules/` holds narrow policies with one canonical home each
-- `workflows/` holds step-by-step operating rails
-- `skills/` and `hooks/` describe portable behaviors, not guaranteed native runtime features
-- `event-contracts/` defines trace payloads
-- `templates/` holds reusable review, assumption, rollback, and verification shapes
-- `docs/` explains the design choices and boundaries
-- `examples/` shows how to adapt the pack locally
-
-## Why it exists
-
-Mostly so Copilot does not bluff, overreach, or quietly skip the boring parts.
-
-## Donation
-
-If this saved you some time, you can buy me a coffee here: https://example.com/coffee
+Read this folder first when you need the long-form policy text or when you are editing the source pack itself.
+Otherwise, start with the repo-native adapter files and come back here when you need detail.

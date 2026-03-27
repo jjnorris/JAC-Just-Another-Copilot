@@ -9,6 +9,7 @@ JAC prefers small slices, explicit evidence, and repo truth over smooth storytel
 ## Non-goals
 
 - Do not pretend this folder is an officially supported GitHub Copilot package schema unless verified.
+- Do not treat `manifest.json`, `hooks/`, `skills/`, or `workflows/` as the primary activation path when the documented repo-native adapter files exist.
 - Do not turn the extension or client surface into the orchestration core.
 - Do not invent runtime enforcement that does not exist.
 - Do not promise unbounded autonomy.
@@ -16,6 +17,9 @@ JAC prefers small slices, explicit evidence, and repo truth over smooth storytel
 - Do not silently mutate requirements, assumptions, or scope.
 
 ## Canonical boundaries
+
+The public activation layer for this repository is `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, and `AGENTS.md`.
+Those files are adapters. The longer canon remains in `jac-copilot/`.
 
 ### Runtime and authority pack
 - Owns policy, planning rules, verification rules, memory rules, gate logic, truth rules, and trace contracts.

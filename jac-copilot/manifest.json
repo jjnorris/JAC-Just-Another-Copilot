@@ -3,9 +3,9 @@
   "name": "jac-copilot",
   "display_name": "JAC",
   "version": "0.1.0",
-  "kind": "portable-authority-pack",
+  "kind": "portable-source-pack-metadata",
   "public_persona": "small rules-and-notes pack",
-  "summary": "Portable GitHub Copilot authority pack with global rules, workspace override guidance, workflows, skills, pseudo-hooks, templates, and trace contracts.",
+  "summary": "Portable source-pack metadata for the JAC Copilot adapter files and internal behavioral contracts.",
   "compatibility_notes": {
     "native_github_copilot_package_schema_verified": false,
     "native_hooks_verified": false,
@@ -13,8 +13,9 @@
     "native_workflows_verified": false,
     "global_user_install_verified": false,
     "notes": [
-      "Use this manifest as portable metadata unless your environment proves a richer native surface.",
-      "The instructions and workflow documents remain authoritative even with no adapter."
+      "Use this manifest as internal source-pack metadata unless your environment proves a richer native surface.",
+      "The primary public activation layer for this repo is the repo-native instruction files and AGENTS.md.",
+      "Hooks, skills, workflows, and this manifest remain portable contracts unless an adapter proves otherwise."
     ]
   },
   "activation_summary": {
@@ -136,6 +137,7 @@
     "docs": [
       "docs/design-rationale.md",
       "docs/extension-boundaries.md",
+      "docs/release-readiness.md",
       "docs/review-and-approval-model.md",
       "docs/rotation-runbook.md",
       "docs/secret-handling-model.md",
@@ -147,5 +149,14 @@
       "examples/workflow-example.md",
       "examples/workspace-rule-example.md"
     ]
+  },
+  "internal_role": "Source-pack metadata and adapter registry. Not an official GitHub Copilot package manifest.",
+  "primary_activation": {
+    "verified_native_surfaces": [
+      ".github/copilot-instructions.md",
+      ".github/instructions/*.instructions.md",
+      "AGENTS.md"
+    ],
+    "portable_source_pack_root": "jac-copilot"
   }
 }
