@@ -1,0 +1,6 @@
+{
+  "name": "compliance-audit",
+  "description": "Verifies proposed architecture against current-year software security and tech regulations.",
+  "instructions": "Query the live web for current compliance frameworks (e.g., OWASP 2025, NIST CSF 2.0, GDPR, DORA) before finalizing code involving auth, financial processing, or AI models.",
+  "tools": ["web_search", "web_fetch"]
+}
