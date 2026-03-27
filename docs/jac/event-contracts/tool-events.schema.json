@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jac.local/event-contracts/tool-events.schema.json",
+  "title": "Tool Governance Event",
+  "type": "object",
+  "required": [
+    "event_type",
+    "timestamp",
+    "task_id",
+    "payload"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "tool_permission_denied",
+        "budget_exceeded",
+        "changed_tool_definition_detected",
+        "pii_detected",
+        "unresolved_dependency"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tool_name": {
+          "type": "string"
+        },
+        "requested_action": {
+          "type": "string"
+        },
+        "budget_name": {
+          "type": "string"
+        },
+        "budget_limit": {
+          "type": "integer"
+        },
+        "budget_used": {
+          "type": "integer"
+        },
+        "detected_item": {
+          "type": "string"
+        },
+        "dependency_name": {
+          "type": "string"
+        },
+        "license_risk": {
+          "type": "string"
+        },
+        "remediation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "tool-guardian",
+  "trigger": "Before any privileged tool action or shell invocation.",
+  "inspects": [
+    "tool name",
+    "requested action",
+    "cwd",
+    "budget state",
+    "approval state",
+    "input provenance"
+  ],
+  "warns_on": [
+    "budget nearing limit",
+    "untrusted content influencing privileged action",
+    "broad write scope",
+    "namespace collision risk"
+  ],
+  "blocks_on": [
+    "destructive action without approval",
+    "budget exceeded",
+    "permission escalation without approval"
+  ],
+  "remediation": [
+    "Narrow scope, request approval, sanitize tool descriptions, or switch to a safer tool."
+  ],
+  "emitted_events": [
+    "tool_permission_denied",
+    "budget_exceeded",
+    "changed_tool_definition_detected"
+  ],
+  "limitations": [
+    "Cannot guarantee runtime interception unless an adapter executes it."
+  ],
+  "fallback_behavior": "Apply the same checks manually during plan review and before shell use."
+}

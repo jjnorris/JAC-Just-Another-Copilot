@@ -1,0 +1,9 @@
+{
+  "template_version": "jac-template-v1",
+  "task_id": "",
+  "blocking_question": "",
+  "why_blocking": "",
+  "safe_default_available": false,
+  "options": [],
+  "needed_by_phase": "planning"
+}

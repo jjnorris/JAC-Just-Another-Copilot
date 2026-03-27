@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jac.local/event-contracts/review-events.schema.json",
+  "title": "Review Event",
+  "type": "object",
+  "required": [
+    "event_type",
+    "timestamp",
+    "task_id",
+    "review_mode",
+    "payload"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "review_requested",
+        "review_comment_applied"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_mode": {
+      "type": "string",
+      "enum": [
+        "always_proceed",
+        "request_review"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "summary",
+        "artifact_ref"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_class": {
+          "type": "string"
+        },
+        "approval_needed_for": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "comment_id": {
+          "type": "string"
+        },
+        "applied_changes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

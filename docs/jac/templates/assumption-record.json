@@ -1,0 +1,10 @@
+{
+  "template_version": "jac-template-v1",
+  "task_id": "",
+  "assumption": "",
+  "reason": "",
+  "risk_level": "low",
+  "reversible": true,
+  "evidence_refs": [],
+  "user_visible": true
+}

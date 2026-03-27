@@ -1,0 +1,29 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "context-budgeter",
+  "trigger": "Before each model call or large prompt assembly.",
+  "inspects": [
+    "working memory size",
+    "retrieved memory size",
+    "research payload size",
+    "budget cap"
+  ],
+  "warns_on": [
+    "peripheral context is crowding out the active contract",
+    "retrieval is not relevance-ranked"
+  ],
+  "blocks_on": [
+    "budget exceeded with no safe compression path"
+  ],
+  "remediation": [
+    "Compress peripheral material, keep contract and blockers, and ask for guidance if tradeoffs remain."
+  ],
+  "emitted_events": [
+    "budget_exceeded",
+    "memory_retrieved"
+  ],
+  "limitations": [
+    "Actual token accounting may not be available on every platform."
+  ],
+  "fallback_behavior": "Use deterministic prompt pruning rules from `instructions.md`."
+}

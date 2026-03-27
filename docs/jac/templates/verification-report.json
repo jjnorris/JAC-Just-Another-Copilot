@@ -1,0 +1,12 @@
+{
+  "template_version": "jac-template-v1",
+  "task_id": "",
+  "correctness_contract_ref": "",
+  "verified_must": [],
+  "verified_must_not": [],
+  "wiring_claim_status": "unverified",
+  "evidence_refs": [],
+  "coverage_misses": [],
+  "orphan_symbol_concerns": [],
+  "open_risks": []
+}

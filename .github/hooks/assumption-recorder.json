@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "comment": "JAC native hook for assumption-recorder. Canonical rationale stays in docs/jac/hook-contracts/assumption-recorder/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py assumption-recorder",
+        "powershell": "python .github/hooks/scripts/jac_hook.py assumption-recorder",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "comment": "JAC native hook for dependency-risk. Canonical rationale stays in docs/jac/hook-contracts/dependency-risk/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py dependency-risk",
+        "powershell": "python .github/hooks/scripts/jac_hook.py dependency-risk",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
