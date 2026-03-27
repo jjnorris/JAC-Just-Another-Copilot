@@ -53,4 +53,4 @@ A little less bluffing, a little more checking, and a clearer line between nativ
 
 ## Donation
 
-If this saved you some time, you can buy me a coffee here: [YOUR_BUY_ME_A_COFFEE_URL]
+If this saved you some time, you can buy me a coffee here: https://buymeacoffee.com/jjnorris
