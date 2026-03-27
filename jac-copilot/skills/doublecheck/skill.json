@@ -1,0 +1,54 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "doublecheck",
+  "purpose": "Re-run truth, correctness, reuse, and reporting checks before any strong claim.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "before completion",
+      "after non-trivial implementation",
+      "after risky research conclusions"
+    ]
+  },
+  "inputs": [
+    "correctness contract",
+    "current diff or artifact set",
+    "verification evidence",
+    "report draft"
+  ],
+  "outputs": [
+    "claim-status summary",
+    "coverage miss note",
+    "reduced overclaim risk"
+  ],
+  "rules": [
+    "Do not upgrade a claim without evidence.",
+    "Flag wiring uncertainty explicitly.",
+    "Prefer narrowing the claim over smoothing the language."
+  ],
+  "warnings": [
+    "Passing tests may still miss real wiring.",
+    "Narrative confidence can hide missing proof."
+  ],
+  "blockers": [
+    "Explicit wiring claim is contradicted.",
+    "Critical claim has no evidence at all."
+  ],
+  "evidence_emitted": [
+    "coverage_miss",
+    "wiring_claim_orphan",
+    "usage_recorded"
+  ],
+  "examples": [
+    "Check whether the package registry actually references newly added workflow docs."
+  ],
+  "depends_on": [
+    "rules/10-correctness-contracts.md",
+    "workflows/verify-before-claim.md"
+  ],
+  "degrades_to": "Manual verification checklist using `workflows/verify-before-claim.md`.",
+  "authority_boundary": "May advise, warn, or narrow claims. It may not fabricate evidence or self-approve blocked work."
+}

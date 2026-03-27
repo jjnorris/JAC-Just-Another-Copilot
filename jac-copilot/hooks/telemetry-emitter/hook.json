@@ -1,0 +1,30 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "telemetry-emitter",
+  "trigger": "After significant decisions, tool denials, review actions, memory changes, and verification steps.",
+  "inspects": [
+    "event payload",
+    "artifact references",
+    "route choice",
+    "usage notes"
+  ],
+  "warns_on": [
+    "partial payloads",
+    "missing task scope"
+  ],
+  "blocks_on": [
+    "required event omitted for a significant action with no alternate evidence path"
+  ],
+  "remediation": [
+    "Emit a local JSON note or structured log using the relevant event contract."
+  ],
+  "emitted_events": [
+    "model_route_chosen",
+    "usage_recorded",
+    "memory_recorded"
+  ],
+  "limitations": [
+    "Needs an adapter or manual artifact writing to be durable in practice."
+  ],
+  "fallback_behavior": "Record the event data in a local note or final report section."
+}

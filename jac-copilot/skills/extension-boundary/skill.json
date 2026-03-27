@@ -1,0 +1,48 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "extension-boundary",
+  "purpose": "Keep the client surface limited to display, relay, and focused local interaction.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "extension design",
+      "editor integration decisions",
+      "local UX planning"
+    ]
+  },
+  "inputs": [
+    "extension proposal",
+    "authority pack rules"
+  ],
+  "outputs": [
+    "boundary compliance note",
+    "surface capability summary"
+  ],
+  "rules": [
+    "Surface is not the brain.",
+    "Local UX may display verdicts but not replace them.",
+    "Prioritize repo-native workflows and targeted views."
+  ],
+  "warnings": [
+    "Feature creep can turn the client into a second orchestrator.",
+    "Local-only verdict logic drifts from policy."
+  ],
+  "blockers": [
+    "A proposed extension takes ownership of authoritative gating."
+  ],
+  "evidence_emitted": [
+    "model_route_chosen"
+  ],
+  "examples": [
+    "Allow a tree view for traces, but keep policy evaluation in the authority pack."
+  ],
+  "depends_on": [
+    "rules/02-boundaries.md",
+    "docs/extension-boundaries.md"
+  ],
+  "degrades_to": "Manual boundary checklist in docs.",
+  "authority_boundary": "May validate surface scope. It may not move policy ownership out of the authority pack."
+}

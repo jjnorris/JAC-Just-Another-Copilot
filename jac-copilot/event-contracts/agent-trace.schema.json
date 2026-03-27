@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jac.local/event-contracts/agent-trace.schema.json",
+  "title": "Agent Trace Event",
+  "type": "object",
+  "required": [
+    "event_type",
+    "timestamp",
+    "session_id",
+    "task_id",
+    "severity",
+    "payload"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "assumption_added",
+        "clarification_requested",
+        "clarification_resolved",
+        "research_source_used",
+        "research_source_untrusted",
+        "model_route_chosen",
+        "usage_recorded"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "blocker"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assumption": {
+          "type": "string"
+        },
+        "blocking_question": {
+          "type": "string"
+        },
+        "resolution": {
+          "type": "string"
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "source_trust": {
+          "type": "string",
+          "enum": [
+            "primary",
+            "maintainer",
+            "secondary",
+            "untrusted"
+          ]
+        },
+        "route": {
+          "type": "string"
+        },
+        "cost_estimate": {
+          "type": "number"
+        },
+        "token_estimate": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "artifact_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_step": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

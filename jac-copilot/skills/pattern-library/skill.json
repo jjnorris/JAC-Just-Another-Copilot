@@ -1,0 +1,47 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "pattern-library",
+  "purpose": "Prefer canonical patterns and warn about duplicate abstractions or premature generalization.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "before adding new structures",
+      "during refactor or design work"
+    ]
+  },
+  "inputs": [
+    "existing file layout",
+    "candidate symbols or patterns"
+  ],
+  "outputs": [
+    "reuse recommendation",
+    "duplicate-abstraction warning"
+  ],
+  "rules": [
+    "Prefer curated canonical patterns.",
+    "Do not auto-harvest business logic as a pattern library.",
+    "Avoid premature abstraction."
+  ],
+  "warnings": [
+    "Clean and extensible variants both matter, but only with one canonical home.",
+    "Near-duplicate names signal drift."
+  ],
+  "blockers": [
+    "A new abstraction duplicates existing ownership without justification."
+  ],
+  "evidence_emitted": [
+    "duplicate_abstraction_candidate"
+  ],
+  "examples": [
+    "Warn if a new policy file duplicates memory rules already owned by `05-memory-policy.md`."
+  ],
+  "depends_on": [
+    "rules/00-core-role.md",
+    "rules/02-boundaries.md"
+  ],
+  "degrades_to": "Manual pattern comparison against the current tree.",
+  "authority_boundary": "May recommend reuse and consolidation. It may not invent a second canon."
+}

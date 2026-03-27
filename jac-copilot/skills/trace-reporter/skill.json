@@ -1,0 +1,52 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "trace-reporter",
+  "purpose": "Emit durable structured events for meaningful decisions and actions.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "after review decisions",
+      "after memory changes",
+      "after tool denials",
+      "after verification"
+    ]
+  },
+  "inputs": [
+    "event payload data",
+    "artifact references",
+    "task identifiers"
+  ],
+  "outputs": [
+    "structured event payloads",
+    "usage summary"
+  ],
+  "rules": [
+    "Use the event contracts.",
+    "Keep payloads task-scoped and evidence-linked.",
+    "Record route and usage where available."
+  ],
+  "warnings": [
+    "Trace spam reduces value.",
+    "Missing event fields reduce reviewability."
+  ],
+  "blockers": [
+    "A required significant action cannot be traced at all."
+  ],
+  "evidence_emitted": [
+    "review_requested",
+    "usage_recorded",
+    "memory_recorded"
+  ],
+  "examples": [
+    "Record that a review comment was applied and what artifact changed."
+  ],
+  "depends_on": [
+    "event-contracts/agent-trace.schema.json",
+    "event-contracts/review-events.schema.json"
+  ],
+  "degrades_to": "Plain JSON note written from the schema.",
+  "authority_boundary": "May emit records and usage summaries. It may not disguise missing evidence with logging noise."
+}

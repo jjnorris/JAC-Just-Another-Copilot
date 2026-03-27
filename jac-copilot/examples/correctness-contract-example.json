@@ -1,0 +1,16 @@
+{
+  "task_id": "task-42",
+  "given": [
+    "The repository currently lacks a verified native Copilot package schema.",
+    "The pack must stay portable and honest about unsupported runtime claims."
+  ],
+  "must": [
+    "The manifest must register every shipped rule, workflow, skill, hook, template, doc, and schema file.",
+    "The README must stay intentionally plain and modest."
+  ],
+  "must_not": [
+    "Claim native hook execution without proof.",
+    "Collapse extension logic into the authority pack canon or vice versa."
+  ],
+  "wiring_claim": "The main instructions, manifest registry, and supporting docs point to the same package structure."
+}

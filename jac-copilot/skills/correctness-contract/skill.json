@@ -1,0 +1,49 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "correctness-contract",
+  "purpose": "Create and enforce the pre-write behavioral contract for non-trivial work.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "before non-trivial edits",
+      "before bugfix or refactor"
+    ]
+  },
+  "inputs": [
+    "task scope",
+    "repo context",
+    "expected behavior"
+  ],
+  "outputs": [
+    "contract artifact",
+    "verification checklist"
+  ],
+  "rules": [
+    "Require given, must, must_not, wiring_claim.",
+    "No non-trivial work without a contract.",
+    "Tie verification back to each contract field."
+  ],
+  "warnings": [
+    "Compile success is not enough.",
+    "Unverified wiring makes a contract incomplete."
+  ],
+  "blockers": [
+    "Wiring claim is false or unprovable."
+  ],
+  "evidence_emitted": [
+    "coverage_miss",
+    "wiring_claim_orphan"
+  ],
+  "examples": [
+    "State that the manifest must register every workflow and hook path that exists."
+  ],
+  "depends_on": [
+    "rules/10-correctness-contracts.md",
+    "templates/correctness-contract.json"
+  ],
+  "degrades_to": "Manual correctness checklist in markdown or JSON.",
+  "authority_boundary": "May state and validate behavioral obligations. It may not waive them for convenience."
+}

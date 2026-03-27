@@ -1,0 +1,50 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "autoresearch",
+  "purpose": "Gather and structure external facts when repo truth is not enough.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "current facts required",
+      "unverified platform behavior",
+      "security or license question"
+    ]
+  },
+  "inputs": [
+    "research question",
+    "decision context"
+  ],
+  "outputs": [
+    "cited findings",
+    "trust grading",
+    "fact vs inference split"
+  ],
+  "rules": [
+    "Prefer primary sources.",
+    "Label untrusted sources.",
+    "Do not trigger when repo truth already answers the question."
+  ],
+  "warnings": [
+    "Research can bloat context.",
+    "Secondary summaries may distort technical facts."
+  ],
+  "blockers": [
+    "Only weak or untrusted sources support a high-risk recommendation."
+  ],
+  "evidence_emitted": [
+    "research_source_used",
+    "research_source_untrusted"
+  ],
+  "examples": [
+    "Check official docs before claiming a native Copilot package surface."
+  ],
+  "depends_on": [
+    "rules/08-research-policy.md",
+    "workflows/research-with-citations.md"
+  ],
+  "degrades_to": "Local recommendation with uncertainty note and no external fetches.",
+  "authority_boundary": "May recommend and cite. It may not convert speculation into verified platform support."
+}

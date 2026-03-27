@@ -1,0 +1,31 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "review-gate",
+  "trigger": "Before non-trivial execution and before approval-zone actions.",
+  "inspects": [
+    "risk class",
+    "review mode",
+    "planned actions",
+    "approval state"
+  ],
+  "warns_on": [
+    "review artifact is thin",
+    "rollback path missing",
+    "evidence plan is weak"
+  ],
+  "blocks_on": [
+    "approval-zone action without approval",
+    "non-trivial work with no review artifact"
+  ],
+  "remediation": [
+    "Pause execution, request review, or reduce the slice until it fits `always_proceed`."
+  ],
+  "emitted_events": [
+    "review_requested",
+    "review_comment_applied"
+  ],
+  "limitations": [
+    "Cannot summon real human review by itself."
+  ],
+  "fallback_behavior": "Use `workflows/plan-review.md` and task-scoped review comments manually."
+}

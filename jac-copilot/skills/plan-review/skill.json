@@ -1,0 +1,51 @@
+{
+  "schema_version": "jac-skill-v1",
+  "name": "plan-review",
+  "purpose": "Build the review artifact and route tasks through proceed or review-comment paths.",
+  "activation": {
+    "mode": [
+      "model-decision",
+      "manual"
+    ],
+    "when": [
+      "before non-trivial work",
+      "before approval-zone work"
+    ]
+  },
+  "inputs": [
+    "correctness contract",
+    "task scope",
+    "initial plan"
+  ],
+  "outputs": [
+    "review artifact",
+    "review mode",
+    "task-scoped comments"
+  ],
+  "rules": [
+    "Every non-trivial task needs a review artifact.",
+    "Approval-zone work must request review.",
+    "Comments must stay task-scoped and actionable."
+  ],
+  "warnings": [
+    "A good plan can still hide rollback gaps.",
+    "Vague comments are not evidence."
+  ],
+  "blockers": [
+    "Approval-zone work lacks approval.",
+    "Plan has no explainable rollback or evidence path."
+  ],
+  "evidence_emitted": [
+    "review_requested",
+    "review_comment_applied"
+  ],
+  "examples": [
+    "Request review before deleting files or changing secrets handling."
+  ],
+  "depends_on": [
+    "rules/11-review-policy.md",
+    "workflows/plan-review.md"
+  ],
+  "degrades_to": "Manual plan review note.",
+  "authority_boundary": "May request review or clear low-risk work to proceed. It may not approve blocked actions without policy basis."
+}
