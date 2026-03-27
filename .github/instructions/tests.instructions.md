@@ -1,5 +1,5 @@
 ---
-applyTo: "README.md,.github/copilot-instructions.md,.github/instructions/**/*.instructions.md,AGENTS.md,jac-copilot/manifest.json,jac-copilot/**/*.json,jac-copilot/**/*.md"
+applyTo: "README.md,.github/copilot-instructions.md,.github/instructions/**/*.instructions.md,AGENTS.md,jac-copilot/manifest.json,jac-copilot/install.md,jac-copilot/compatibility.md,jac-copilot/docs/release-readiness.md,jac-copilot/event-contracts/**/*.json,jac-copilot/templates/**/*.json,jac-copilot/examples/**/*.json"
 ---
 
 This repository does not have an application test suite.
