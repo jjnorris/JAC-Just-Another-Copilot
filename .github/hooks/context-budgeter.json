@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "comment": "JAC native hook for context-budgeter. Canonical rationale stays in docs/jac/hook-contracts/context-budgeter/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py context-budgeter",
+        "powershell": "python .github/hooks/scripts/jac_hook.py context-budgeter",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}

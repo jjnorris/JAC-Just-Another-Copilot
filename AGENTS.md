@@ -1,21 +1,22 @@
 # JAC agent notes
 
-Start with the native adapter layer:
+Start with the native repo layer:
 
 1. `.github/copilot-instructions.md`
 2. relevant `.github/instructions/*.instructions.md`
-3. this `AGENTS.md`
+3. matching `.github/skills/*/SKILL.md` or `.github/hooks/*.json` when the task is that narrow
+4. this `AGENTS.md`
 
-Then use `jac-copilot/` as the longer source pack when you need the full policy text.
+Then use `docs/jac/` when you need the longer policy and rationale.
 
 ## Working rules
 
-- `jac-copilot/` is the canonical source of truth
-- `.github/` instruction files and `AGENTS.md` are concise adapters, not separate policy canons
+- `docs/jac/` is the canonical long-form source
+- `.github/` files and `AGENTS.md` are concise operational adapters
 - keep the public tone modest and a little unimpressed with itself
 - do not reference outside product names or imply any outside runtime is required
-- do not claim native execution for source-pack hooks, skills, workflows, or manifest metadata
-- preserve the extension or client boundary and keep policy in the source pack
+- keep hook and skill claims narrow and aligned with GitHub's documented surfaces
+- do not turn the supporting canon into a fake runtime story
 - prefer small reversible slices
 - do not overclaim verification
 
@@ -25,9 +26,9 @@ There is no normal app build or test pipeline here.
 Use targeted checks instead:
 
 - parse JSON
-- verify manifest registry paths when the source-pack file list changes
+- verify referenced paths after any move or rename
 - keep Markdown readable
-- keep adapter files and source-pack summaries aligned
+- keep adapter files and supporting canon aligned
 - remove hidden or bidirectional Unicode characters
 - keep LF line endings
 
@@ -36,6 +37,6 @@ Use targeted checks instead:
 Pause instead of bluffing when:
 
 - a Copilot support claim is not verified
-- a change would make the adapter layer disagree with the source pack
+- a change would make the adapter layer disagree with the supporting canon
 - a destructive or approval-zone action appears without approval
 - a security, secret, or license concern stops being advisory and becomes blocking

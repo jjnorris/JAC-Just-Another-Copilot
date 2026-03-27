@@ -1,5 +1,5 @@
 ---
-applyTo: "jac-copilot/hooks/**/*.json,jac-copilot/event-contracts/**/*.json,jac-copilot/templates/**/*.json,jac-copilot/rules/06-tool-governance.md,jac-copilot/rules/07-output-guardrails.md,jac-copilot/rules/09-compliance-security-license.md,jac-copilot/workflows/secret-handling.md,jac-copilot/docs/secret-handling-model.md,jac-copilot/docs/rotation-runbook.md"
+applyTo: ".github/hooks/**/*.json,docs/jac/hook-contracts/**/*.json,docs/jac/event-contracts/**/*.json,docs/jac/templates/**/*.json,docs/jac/rules/06-tool-governance.md,docs/jac/rules/07-output-guardrails.md,docs/jac/rules/09-compliance-security-license.md,docs/jac/workflows/secret-handling.md,docs/jac/secret-handling-model.md,docs/jac/rotation-runbook.md"
 ---
 
 Keep the security posture plain and strict.
@@ -9,5 +9,5 @@ Keep the security posture plain and strict.
 - no `curl | bash`
 - no destructive commands without explicit approval
 - keep tool permissions narrow and cwd-aware
-- treat hook files as behavioral contracts, not as proof of native enforcement
+- treat `docs/jac/hook-contracts/` as canonical rationale and `.github/hooks/*.json` as the native executable layer
 - warn about compliance or license obligations without pretending to give legal sign-off

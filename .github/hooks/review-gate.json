@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "comment": "JAC native hook for review-gate. Canonical rationale stays in docs/jac/hook-contracts/review-gate/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py review-gate",
+        "powershell": "python .github/hooks/scripts/jac_hook.py review-gate",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}

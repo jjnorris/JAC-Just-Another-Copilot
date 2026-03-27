@@ -1,5 +1,5 @@
 ---
-applyTo: "README.md,.github/copilot-instructions.md,.github/instructions/**/*.instructions.md,AGENTS.md,jac-copilot/manifest.json,jac-copilot/install.md,jac-copilot/compatibility.md,jac-copilot/docs/release-readiness.md,jac-copilot/event-contracts/**/*.json,jac-copilot/templates/**/*.json,jac-copilot/examples/**/*.json"
+applyTo: "README.md,install.md,compatibility.md,AGENTS.md,.github/copilot-instructions.md,.github/instructions/**/*.instructions.md,.github/hooks/**/*.json,docs/jac/source-pack-registry.json,docs/jac/release-readiness.md,docs/jac/event-contracts/**/*.json,docs/jac/templates/**/*.json,docs/jac/examples/**/*.json"
 ---
 
 This repository does not have an application test suite.
@@ -11,9 +11,9 @@ For meaningful changes, validate the things this repo actually ships:
 - JSON parses cleanly
 - JSON stays pretty-printed
 - Markdown stays readable
-- manifest registry paths still exist when source-pack files change
-- native adapter files exist and still reflect the source pack
+- referenced paths still exist after moves or renames
+- native adapter files exist and still reflect the supporting canon
 - verified GitHub Copilot surfaces are described honestly
-- portable-only files are clearly marked as portable-only
+- portable-only or canon-only files are clearly marked as such
 - hidden or bidirectional Unicode characters are absent and line endings stay LF
 - the donation note uses either a real link or the explicit placeholder token

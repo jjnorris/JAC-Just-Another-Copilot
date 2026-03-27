@@ -1,0 +1,187 @@
+{
+  "schema_version": "jac-portable-manifest-v1",
+  "name": "jac",
+  "display_name": "JAC",
+  "version": "0.1.0",
+  "kind": "supporting-canon-registry",
+  "public_persona": "small rules-and-notes pack",
+  "summary": "Registry metadata for the JAC supporting canon and its native GitHub Copilot adapter files.",
+  "compatibility_notes": {
+    "native_github_copilot_package_schema_verified": false,
+    "native_hooks_verified": true,
+    "native_skills_verified": true,
+    "native_workflows_verified": false,
+    "global_user_install_verified": false,
+    "notes": [
+      "Use this registry as human-maintained inventory metadata for the JAC supporting canon.",
+      "The primary native activation layer for this repo lives in .github/ plus AGENTS.md.",
+      "Skills and hooks are now shipped through documented native GitHub Copilot locations, while the longer rationale stays under docs/jac/."
+    ]
+  },
+  "activation_summary": {
+    "global_user_scope": "conceptual and adapter-dependent",
+    "workspace_override": "supported as a design pattern",
+    "modes": [
+      "always-on",
+      "model-decision",
+      "glob-pattern"
+    ],
+    "fallback": "manual use of instructions, workflows, templates, and docs"
+  },
+  "optional_features": {
+    "semantic_memory": "optional and bounded",
+    "native_hook_execution": "documented native surface in agent-capable flows",
+    "native_skill_registration": "documented native surface in agent-capable flows",
+    "slash_like_workflow_commands": "adapter-needed",
+    "structured_trace_export": "portable with adapter or manual artifact generation"
+  },
+  "canonical_boundaries": {
+    "authority_pack": [
+      "policy",
+      "planning rules",
+      "verification rules",
+      "memory rules",
+      "gate logic",
+      "truth rules"
+    ],
+    "surface": [
+      "display",
+      "relay",
+      "commands",
+      "focused UX",
+      "local task and test integration"
+    ],
+    "tools": [
+      "bounded work under least privilege"
+    ],
+    "state": [
+      "repo truth",
+      "explicit memory records",
+      "trace artifacts"
+    ]
+  },
+  "file_registry": {
+    "repo_readme": "README.md",
+    "install": "install.md",
+    "compatibility": "compatibility.md",
+    "agents": "AGENTS.md",
+    "copilot_instructions": ".github/copilot-instructions.md",
+    "path_instructions": [
+      ".github/instructions/core.instructions.md",
+      ".github/instructions/review.instructions.md",
+      ".github/instructions/security.instructions.md",
+      ".github/instructions/tests.instructions.md"
+    ],
+    "native_hooks": [
+      ".github/hooks/assumption-recorder.json",
+      ".github/hooks/context-budgeter.json",
+      ".github/hooks/dependency-risk.json",
+      ".github/hooks/extension-surface-guard.json",
+      ".github/hooks/review-gate.json",
+      ".github/hooks/secrets-scanner.json",
+      ".github/hooks/structured-output.json",
+      ".github/hooks/telemetry-emitter.json",
+      ".github/hooks/tool-guardian.json"
+    ],
+    "hook_scripts": [
+      ".github/hooks/scripts/jac_hook.py"
+    ],
+    "native_skills": [
+      ".github/skills/autoresearch/SKILL.md",
+      ".github/skills/compliance-audit/SKILL.md",
+      ".github/skills/correctness-contract/SKILL.md",
+      ".github/skills/doublecheck/SKILL.md",
+      ".github/skills/extension-boundary/SKILL.md",
+      ".github/skills/intake-clarifier/SKILL.md",
+      ".github/skills/memory-manager/SKILL.md",
+      ".github/skills/pattern-library/SKILL.md",
+      ".github/skills/plan-review/SKILL.md",
+      ".github/skills/secret-vault-awareness/SKILL.md",
+      ".github/skills/trace-reporter/SKILL.md",
+      ".github/skills/verifier-bridge/SKILL.md"
+    ],
+    "canon_readme": "docs/jac/README.md",
+    "canon_instructions": "docs/jac/instructions.md",
+    "rules": [
+      "docs/jac/rules/00-core-role.md",
+      "docs/jac/rules/01-repo-truth.md",
+      "docs/jac/rules/02-boundaries.md",
+      "docs/jac/rules/03-execution-loop.md",
+      "docs/jac/rules/04-ambiguity-policy.md",
+      "docs/jac/rules/05-memory-policy.md",
+      "docs/jac/rules/06-tool-governance.md",
+      "docs/jac/rules/07-output-guardrails.md",
+      "docs/jac/rules/08-research-policy.md",
+      "docs/jac/rules/09-compliance-security-license.md",
+      "docs/jac/rules/10-correctness-contracts.md",
+      "docs/jac/rules/11-review-policy.md",
+      "docs/jac/rules/12-reporting-and-traces.md",
+      "docs/jac/rules/13-stop-conditions.md"
+    ],
+    "workflows": [
+      "docs/jac/workflows/bounded-implementation.md",
+      "docs/jac/workflows/bugfix-with-proof.md",
+      "docs/jac/workflows/compliance-triage.md",
+      "docs/jac/workflows/intake-and-clarify.md",
+      "docs/jac/workflows/plan-review.md",
+      "docs/jac/workflows/research-with-citations.md",
+      "docs/jac/workflows/rollback-and-recovery.md",
+      "docs/jac/workflows/safe-refactor.md",
+      "docs/jac/workflows/secret-handling.md",
+      "docs/jac/workflows/verify-before-claim.md"
+    ],
+    "templates": [
+      "docs/jac/templates/assumption-record.json",
+      "docs/jac/templates/clarification-request.json",
+      "docs/jac/templates/correctness-contract.json",
+      "docs/jac/templates/plan-review-comment.json",
+      "docs/jac/templates/rollback-note.md",
+      "docs/jac/templates/usage-summary.json",
+      "docs/jac/templates/verification-report.json"
+    ],
+    "event_contracts": [
+      "docs/jac/event-contracts/agent-trace.schema.json",
+      "docs/jac/event-contracts/correctness-events.schema.json",
+      "docs/jac/event-contracts/memory-events.schema.json",
+      "docs/jac/event-contracts/review-events.schema.json",
+      "docs/jac/event-contracts/tool-events.schema.json"
+    ],
+    "docs": [
+      "docs/jac/design-rationale.md",
+      "docs/jac/extension-boundaries.md",
+      "docs/jac/release-readiness.md",
+      "docs/jac/review-and-approval-model.md",
+      "docs/jac/rotation-runbook.md",
+      "docs/jac/secret-handling-model.md",
+      "docs/jac/trace-taxonomy.md"
+    ],
+    "examples": [
+      "docs/jac/examples/correctness-contract-example.json",
+      "docs/jac/examples/review-comment-example.md",
+      "docs/jac/examples/workflow-example.md",
+      "docs/jac/examples/workspace-rule-example.md"
+    ],
+    "hook_contracts": [
+      "docs/jac/hook-contracts/assumption-recorder/hook.json",
+      "docs/jac/hook-contracts/context-budgeter/hook.json",
+      "docs/jac/hook-contracts/dependency-risk/hook.json",
+      "docs/jac/hook-contracts/extension-surface-guard/hook.json",
+      "docs/jac/hook-contracts/review-gate/hook.json",
+      "docs/jac/hook-contracts/secrets-scanner/hook.json",
+      "docs/jac/hook-contracts/structured-output/hook.json",
+      "docs/jac/hook-contracts/telemetry-emitter/hook.json",
+      "docs/jac/hook-contracts/tool-guardian/hook.json"
+    ]
+  },
+  "internal_role": "Supporting-canon registry and adapter inventory. Not a GitHub Copilot package manifest.",
+  "primary_activation": {
+    "verified_native_surfaces": [
+      ".github/copilot-instructions.md",
+      ".github/instructions/*.instructions.md",
+      "AGENTS.md",
+      ".github/skills/<name>/SKILL.md",
+      ".github/hooks/*.json"
+    ],
+    "supporting_canon_root": "docs/jac"
+  }
+}

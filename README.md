@@ -2,58 +2,54 @@
 
 JAC is a small discipline pack for GitHub Copilot.
 
-It is mostly a few instruction files, a longer source folder, and some JSON that tries to keep Copilot from making a mess.
-It is not a runtime, not a service, and not a claim that every file in here is a native Copilot feature.
+It is mostly a few native repo files, a longer canon folder, and some JSON meant to keep Copilot a little more supervised.
+It is not a runtime, not a service, and not a promise that every Copilot surface behaves the same way everywhere.
 
-## What Copilot can use directly first
+## Native files first
 
-This repo ships the GitHub-documented instruction surfaces first:
+This repo puts the documented Copilot-facing files where GitHub expects them:
 
 - `.github/copilot-instructions.md`
 - `.github/instructions/*.instructions.md`
 - `AGENTS.md`
+- `.github/skills/*/SKILL.md`
+- `.github/hooks/*.json`
 
-Those are the files to keep in place if you want the least confusing setup in GitHub Copilot and supported editor flows.
+Repository instructions and `AGENTS.md` are the broad repo layer.
+Skills and hooks are narrower agent surfaces and should be described that way, not as universal behavior across every Copilot UI.
 
-## What the `jac-copilot/` folder is
+## What `docs/jac/` is
 
-That folder is the source pack.
-It holds the longer rules, workflows, templates, schemas, and other portable contract files that the native adapter files summarize.
-
-Useful pieces in there include:
-
-- long-form instructions
-- rule files
-- workflow notes
-- correctness and review templates
-- trace schemas
-- hook and skill definitions as portable contracts
+That folder is the longer supporting canon.
+It keeps the long-form instructions, rules, workflows, templates, event contracts, examples, and hook-contract notes that sit behind the native layer.
 
 ## Install shape
 
-If you use this repo as-is, the native adapter files are already wired:
+If you use this repo as-is, keep these together:
 
-1. keep `.github/copilot-instructions.md`
-2. keep `.github/instructions/`
-3. keep `AGENTS.md`
-4. keep `jac-copilot/` beside them as the source pack
+1. `.github/copilot-instructions.md`
+2. `.github/instructions/`
+3. `.github/skills/`
+4. `.github/hooks/`
+5. `AGENTS.md`
+6. `docs/jac/`
 
-If you copy JAC into another repository, copy those same pieces together.
-Do not copy only `jac-copilot/` and assume Copilot will discover it by magic.
+If you copy JAC into another repository, copy the same set.
+Do not copy only `docs/jac/` and assume Copilot will discover it by magic.
 
-More detail is in `jac-copilot/install.md` and `jac-copilot/compatibility.md`.
+More detail is in `install.md` and `compatibility.md`.
 
 ## Release readiness note
 
-- Verified GitHub Copilot surfaces: `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md`
-- Portable only: `jac-copilot/manifest.json`, `jac-copilot/hooks/`, `jac-copilot/skills/`, `jac-copilot/workflows/`, templates, schemas, docs, examples
-- Manual fallback: read the adapter files and source pack directly if your environment does not load them automatically
-- Still adapter-dependent: turning hooks, skills, workflows, or metadata into executable runtime behavior
+- Verified native files in this repo: `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md`, `.github/skills/*/SKILL.md`, `.github/hooks/*.json`
+- Supporting canon only: `docs/jac/source-pack-registry.json`, `docs/jac/hook-contracts/`, `docs/jac/workflows/`, templates, event contracts, examples, and longer docs
+- Manual fallback: read the native files and `docs/jac/` directly if your environment does not load them automatically
+- Still environment-specific: which Copilot clients load which surfaces, especially hooks and skills outside agent-capable flows
 
 ## What this is trying to do
 
 Mostly just supervision.
-A little less bluffing, a little more checking, and a clearer line between what is verified and what is only a portable note.
+A little less bluffing, a little more checking, and a clearer line between native files and supporting notes.
 
 ## Donation
 

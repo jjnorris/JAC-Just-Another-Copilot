@@ -1,5 +1,5 @@
 ---
-applyTo: "AGENTS.md,jac-copilot/rules/10-correctness-contracts.md,jac-copilot/rules/11-review-policy.md,jac-copilot/rules/12-reporting-and-traces.md,jac-copilot/rules/13-stop-conditions.md,jac-copilot/workflows/plan-review.md,jac-copilot/workflows/bugfix-with-proof.md,jac-copilot/workflows/verify-before-claim.md,jac-copilot/templates/correctness-contract.json,jac-copilot/templates/plan-review-comment.json,jac-copilot/templates/verification-report.json"
+applyTo: "AGENTS.md,docs/jac/rules/10-correctness-contracts.md,docs/jac/rules/11-review-policy.md,docs/jac/rules/12-reporting-and-traces.md,docs/jac/rules/13-stop-conditions.md,docs/jac/workflows/plan-review.md,docs/jac/workflows/bugfix-with-proof.md,docs/jac/workflows/verify-before-claim.md,docs/jac/templates/correctness-contract.json,docs/jac/templates/plan-review-comment.json,docs/jac/templates/verification-report.json"
 ---
 
 Non-trivial work should still read like JAC:
