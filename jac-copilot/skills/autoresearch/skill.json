@@ -1,6 +1,0 @@
-{
-  "name": "autoresearch",
-  "description": "Autonomous iterative experimentation and TDD loop. Runs linters and tests, and reads terminal output.",
-  "instructions": "Execute the provided test or linter command in the terminal. Read the output. If the test or linter fails, analyze the stack trace, correct the implementation code, and re-run until it passes cleanly.",
-  "tools": ["execute/runInTerminal", "execute/getTerminalOutput", "edit/editFiles"]
-}

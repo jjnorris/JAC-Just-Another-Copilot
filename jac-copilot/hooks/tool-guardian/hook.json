@@ -1,6 +1,0 @@
-{
-  "name": "tool-guardian",
-  "event": "preToolUse",
-  "description": "Blocks destructive operations and boundary-crossing commands.",
-  "instructions": "Intercept shell execution and file operations. If the command contains destructive patterns (e.g., `rm -rf`, `drop table`, `git push --force`) or modifies authentication boundaries, immediately halt execution and request explicit human override."
-}

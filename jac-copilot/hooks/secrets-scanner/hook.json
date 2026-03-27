@@ -1,6 +1,0 @@
-{
-  "name": "secrets-scanner",
-  "event": "sessionEnd",
-  "description": "Scans modified files for leaked credentials and PII.",
-  "instructions": "Review all code generated during the session. If high-entropy strings, API keys, or plaintext credentials are detected in the diffs, redact them and issue a critical warning before the session closes."
-}
