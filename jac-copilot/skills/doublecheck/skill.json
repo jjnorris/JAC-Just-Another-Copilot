@@ -1,0 +1,6 @@
+{
+  "name": "doublecheck",
+  "description": "Verifies library syntax and API endpoints against live web documentation before code generation.",
+  "instructions": "Before using any third-party API or library, use the web search tool to find the official documentation. Cross-reference the proposed code against the live docs to ensure the syntax is not hallucinated or deprecated.",
+  "tools": ["web_search", "web_fetch"]
+}
