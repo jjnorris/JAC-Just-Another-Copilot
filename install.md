@@ -1,16 +1,10 @@
 # Install notes
 
-JAC now ships in two layers.
+Use this file when you want to keep JAC in this repository, transplant it into another repository, or compare repo-scoped and user-scoped placement.
 
-- **Native layer:** `.github/` plus `AGENTS.md`
-- **Supporting canon:** `docs/jac/`
+## Repo-scoped files this repository ships
 
-Use the native layer first.
-Use `docs/jac/` when you need the longer rationale, policy text, templates, or supporting artifacts.
-
-## Repo-scoped native files this repo ships
-
-These are the repo files JAC actually places where Copilot expects them:
+These files are committed in this repository and are the primary install shape for JAC:
 
 1. `.github/copilot-instructions.md`
 2. `.github/instructions/*.instructions.md`
@@ -18,75 +12,63 @@ These are the repo files JAC actually places where Copilot expects them:
 4. `.github/skills/*/SKILL.md`
 5. `.github/hooks/*.json`
 6. `.github/agents/*.agent.md` if present
+7. `docs/jac/`
 
-The instruction files and `AGENTS.md` are the broad repo guidance.
-The skill and hook files are narrower agent surfaces and should be claimed only where GitHub documents them.
+Repository instructions and `AGENTS.md` provide broad repo guidance.
+Skills, hooks, and custom agent profiles are narrower surfaces and should only be described where GitHub documents them.
 
-## Concrete repo install flow
+## Using this repository directly
 
-If you are using this repository directly:
+If you are using JAC in this repository, keep the repo-scoped files above together.
+They are meant to travel as one set.
 
-1. keep `.github/copilot-instructions.md`
-2. keep `.github/instructions/`
-3. keep `.github/skills/`
-4. keep `.github/hooks/`
-5. keep `AGENTS.md`
-6. keep `.github/agents/` if present
-7. keep `docs/jac/`
+## Copying JAC into another repository
 
-If you are transplanting JAC into another repository:
+For a cross-project transplant:
 
 1. copy `.github/copilot-instructions.md`
 2. copy `.github/instructions/`
 3. copy `.github/skills/`
 4. copy `.github/hooks/`
 5. copy `AGENTS.md`
-6. copy `.github/agents/` if you want the agent profile
+6. copy `.github/agents/` if you want the custom agent profile
 7. copy `docs/jac/`
-8. adjust only the concise adapter wording if the target repo truly needs local detail
+8. edit only the repo-specific wording that truly needs to change in the target repository
 
-## User-scoped or personal setup
+Do not copy only `docs/jac/` and expect GitHub Copilot to discover it on its own.
 
-This repository is repo-scoped.
-It does not try to install anything into your home directory.
+## User-scoped equivalents
 
-If you want a personal setup instead, GitHub's docs also describe user-level instruction and skill locations in some environments, such as `$HOME/.copilot/copilot-instructions.md` and `~/.copilot/skills/`.
-Those are separate from what this repository ships.
+JAC itself is repo-scoped.
+It does not install anything into your home directory.
 
-## Supporting canon
+Where GitHub documents user-scoped placement, some environments also support equivalents such as:
 
-`docs/jac/` is the human-maintained canon, not the runtime surface.
-It keeps:
+- `$HOME/.copilot/copilot-instructions.md`
+- `~/.copilot/skills/`
+- `~/.copilot/agents/`
 
-- long-form instructions
-- rules and workflows
-- templates and event contracts
-- examples
-- hook contract notes under `docs/jac/hook-contracts/`
-- inventory metadata in `docs/jac/source-pack-registry.json`
+Those locations are separate from this repository and remain environment-specific.
 
-## Manual fallback mode
+## What stays repo-scoped
 
-If your environment does not load the native files reliably:
+Hooks stay repo-scoped here.
+This repository does not claim a user-scoped hooks directory because GitHub does not document one for JAC to rely on.
 
-1. open `.github/copilot-instructions.md`
-2. open the relevant file under `.github/instructions/`
-3. open `AGENTS.md` if you are using an agent-style workflow
-4. open the matching skill or hook file under `.github/` if the task is narrow and agent-specific
-5. use `docs/jac/` as the longer reference set
+The repo-scoped `.github/` files and `AGENTS.md` are the install target.
+`docs/jac/` remains the longer reference set for rules, workflows, templates, examples, hook notes, support docs, and maintenance inventory in `docs/jac/inventory.json`.
 
-That fallback is manual, but still usable.
+## Manual fallback
+
+If your environment does not load the repo-scoped files automatically:
+
+1. read `.github/copilot-instructions.md`
+2. read the relevant file under `.github/instructions/`
+3. read `AGENTS.md` if you are working in an agent-style flow
+4. read the matching skill, hook, or agent profile under `.github/` if the task is narrow
+5. use `docs/jac/` for the longer rule set and support notes
 
 ## Environment differences
 
-### GitHub.com
-GitHub documents repository instructions, path-specific instructions, skills, and hooks.
-Those surfaces are the concrete native story for this repo.
-
-### VS Code
-VS Code documents repository instructions and agent skills.
-Editor behavior can still vary by version and mode, so keep any VS Code-specific claim narrow.
-
-### Agent-capable flows and CLI
-Agent hooks and some skill behavior are documented for Copilot coding agent and Copilot CLI style flows.
-Do not describe them as guaranteed in every Copilot chat surface.
+Repository instructions, skills, hooks, and custom agent profiles do not behave the same way everywhere.
+Treat user-scoped support, skill loading, hook execution, and agent profile support as environment-specific unless GitHub documents the behavior for the environment you care about.

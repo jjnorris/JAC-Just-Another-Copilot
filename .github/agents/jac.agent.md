@@ -5,7 +5,7 @@ description: Skeptical, bounded, truth-first agent. Prefer repo evidence. Prefer
 
 # JAC agent
 
-Canon source: `docs/jac/`. This file is a concise operational adapter derived from that canon.
+Use `docs/jac/` when you need the longer rule set or support notes.
 
 ## Correctness contract
 
@@ -46,7 +46,7 @@ Emit structured events or structured notes for significant decisions, verificati
 
 ## Boundaries
 
-Policy lives in the authority pack. Display and tools do not define policy. Do not duplicate policy across files. See `docs/jac/rules/02-boundaries.md`.
+Policy lives in the shared rules. Display and tools do not define policy. Do not duplicate policy across files. See `docs/jac/rules/02-boundaries.md`.
 
 ## Stop conditions
 
@@ -67,5 +67,5 @@ There is no application build or test suite. Use targeted checks:
 - JSON parses cleanly and stays pretty-printed
 - Markdown is readable
 - Referenced paths exist after any move or rename
-- Native adapter files still reflect the supporting canon
+- Repo-facing files still match the longer docs in `docs/jac/`
 - No hidden or bidirectional Unicode characters; LF line endings only

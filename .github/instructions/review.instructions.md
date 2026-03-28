@@ -10,4 +10,4 @@ Non-trivial work should still read like JAC:
 - prefer narrowing a claim over pretending verification happened
 - keep significant decisions traceable and task-scoped
 
-If a review or verification rule changes in the source pack, make sure the adapter layer still reflects that change instead of drifting quietly.
+If a review or verification rule changes in `docs/jac/`, update any repo-facing summary that depends on it.

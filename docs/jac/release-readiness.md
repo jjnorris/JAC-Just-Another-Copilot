@@ -1,36 +1,34 @@
 # Release readiness
 
-Use this as a quick honesty check before calling JAC done.
+Use this checklist before calling a JAC change ready to ship.
 
-## Verified native files in this repo
+## Repo-scoped files
 
-- `.github/copilot-instructions.md` exists
-- `.github/instructions/*.instructions.md` exist and use `applyTo` frontmatter
-- `AGENTS.md` exists
-- `.github/skills/*/SKILL.md` exist
-- `.github/hooks/*.json` exist
-- `.github/agents/jac.agent.md` exists with valid YAML frontmatter
-- public docs describe repository instructions and `AGENTS.md` as the broad repo layer
-- public docs describe skills and hooks as narrower documented agent surfaces
+- `.github/copilot-instructions.md` exists and still fits its repo-wide purpose
+- `.github/instructions/*.instructions.md` exist and still use `applyTo` frontmatter correctly
+- `AGENTS.md` exists and still reads like contributor guidance for this repository
+- `.github/skills/*/SKILL.md` exist and still read like skill docs
+- `.github/hooks/*.json` exist and still point at the right files
+- `.github/agents/jac.agent.md`, if present, still reads like a real custom agent profile
 
-## Supporting canon only
+## Reference material
 
-- `docs/jac/source-pack-registry.json`
-- `docs/jac/hook-contracts/`
-- `docs/jac/workflows/`
-- `docs/jac/templates/`
-- `docs/jac/event-contracts/`
-- `docs/jac/examples/`
-- the longer docs under `docs/jac/`
+- `docs/jac/inventory.json` matches current file paths after any move or rename
+- `docs/jac/` still provides the longer rules, workflows, templates, examples, hook notes, and support docs
+- public docs describe those files as reference material and manual fallback where appropriate
 
-## Manual fallback
+## Truthful support claims
 
-- native files are still readable as plain Markdown or JSON
-- `docs/jac/` is still usable directly when native loading is unavailable
+- repo-scoped files are described as repo-scoped
+- user-scoped equivalents are labeled environment-specific
+- hooks remain repo-scoped unless GitHub documents something broader
+- no doc claims native runtime support for `docs/jac/inventory.json`
+- no doc claims Markdown workflow files execute as commands unless GitHub documents that behavior
 
-## Still environment-specific
+## File quality
 
-- which Copilot clients load which surfaces
-- how widely hooks and skills are available outside agent-capable flows
-- any undocumented runtime that might consume `docs/jac/source-pack-registry.json`
-- any workflow-command behavior not documented by GitHub
+- JSON parses cleanly and stays pretty-printed
+- Markdown is readable
+- referenced paths still exist
+- hidden or bidirectional Unicode characters are absent
+- line endings stay LF

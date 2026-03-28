@@ -1,11 +1,10 @@
 {
-  "schema_version": "jac-portable-manifest-v1",
+  "schema_version": "jac-inventory-v1",
   "name": "jac",
   "display_name": "JAC",
   "version": "0.1.0",
-  "kind": "supporting-canon-registry",
-  "public_persona": "small rules-and-notes pack",
-  "summary": "Registry metadata for the JAC supporting canon and its native GitHub Copilot adapter files.",
+  "kind": "maintenance-inventory",
+  "summary": "Inventory metadata for JAC's repo-scoped files and supporting reference docs.",
   "compatibility_notes": {
     "native_github_copilot_package_schema_verified": false,
     "native_hooks_verified": true,
@@ -13,14 +12,14 @@
     "native_workflows_verified": false,
     "user_scoped_install_verified": false,
     "notes": [
-      "Use this registry as human-maintained inventory metadata for the JAC supporting canon.",
-      "The primary native activation layer for this repo lives in .github/ plus AGENTS.md.",
-      "Skills and hooks are now shipped through documented native GitHub Copilot locations, while the longer rationale stays under docs/jac/."
+      "Use this file as human-maintained inventory metadata for JAC.",
+      "The repo-scoped GitHub Copilot files live under .github/ plus AGENTS.md.",
+      "The longer reference docs live under docs/jac/."
     ]
   },
   "activation_summary": {
-    "user_scoped_activation": "optional; place files under ~/.copilot/ in supported environments",
-    "workspace_override": "supported as a design pattern",
+    "user_scoped_activation": "optional in supported environments; place files under ~/.copilot/ where GitHub documents that location",
+    "cross_project_reuse": "copy the repo-scoped files first, then carry docs/jac/ as the longer reference set",
     "modes": [
       "always-on",
       "model-decision",
@@ -32,33 +31,13 @@
     "semantic_memory": "optional and bounded",
     "native_hook_execution": "documented native surface in agent-capable flows",
     "native_skill_registration": "documented native surface in agent-capable flows",
-    "slash_like_workflow_commands": "adapter-needed",
-    "structured_trace_export": "portable with adapter or manual artifact generation"
+    "markdown_workflow_use": "manual fallback or environment-specific tooling",
+    "structured_trace_export": "manual artifact generation or environment-specific tooling"
   },
-  "canonical_boundaries": {
-    "authority_pack": [
-      "policy",
-      "planning rules",
-      "verification rules",
-      "memory rules",
-      "gate logic",
-      "truth rules"
-    ],
-    "surface": [
-      "display",
-      "relay",
-      "commands",
-      "focused UX",
-      "local task and test integration"
-    ],
-    "tools": [
-      "bounded work under least privilege"
-    ],
-    "state": [
-      "repo truth",
-      "explicit memory records",
-      "trace artifacts"
-    ]
+  "scope_boundaries": {
+    "repo_scoped_files": "Files under .github/ plus AGENTS.md",
+    "reference_docs": "Long-form docs under docs/jac/",
+    "manual_fallback": "Read the repo-scoped files and docs directly when automatic loading is unavailable"
   },
   "file_registry": {
     "repo_readme": "README.md",
@@ -108,8 +87,8 @@
       ".github/skills/trace-reporter/SKILL.md",
       ".github/skills/verifier-bridge/SKILL.md"
     ],
-    "canon_readme": "docs/jac/README.md",
-    "canon_instructions": "docs/jac/instructions.md",
+    "reference_readme": "docs/jac/README.md",
+    "reference_instructions": "docs/jac/instructions.md",
     "rules": [
       "docs/jac/rules/00-core-role.md",
       "docs/jac/rules/01-repo-truth.md",
@@ -187,9 +166,9 @@
       "docs/jac/hook-contracts/tool-guardian/hook.json"
     ]
   },
-  "internal_role": "Supporting-canon registry and adapter inventory. Not a GitHub Copilot package manifest.",
+  "internal_role": "Maintenance inventory for JAC. Not a GitHub Copilot package manifest.",
   "primary_activation": {
-    "verified_native_surfaces": [
+    "verified_repo_scoped_surfaces": [
       ".github/copilot-instructions.md",
       ".github/instructions/*.instructions.md",
       "AGENTS.md",
@@ -197,6 +176,6 @@
       ".github/hooks/*.json",
       ".github/agents/*.agent.md"
     ],
-    "supporting_canon_root": "docs/jac"
+    "reference_docs_root": "docs/jac"
   }
 }

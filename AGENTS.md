@@ -1,42 +1,34 @@
-# JAC agent notes
+# JAC contributor notes
 
-Start with the native repo layer:
+For contributors and coding agents working on this repository.
 
-1. `.github/copilot-instructions.md`
-2. relevant `.github/instructions/*.instructions.md`
-3. matching `.github/skills/*/SKILL.md` or `.github/hooks/*.json` when the task is that narrow
-4. this `AGENTS.md`
+## How to work in this repo
 
-Then use `docs/jac/` when you need the longer policy and rationale.
+- Write each file for its actual audience and purpose.
+- Keep public docs plain, practical, and understated.
+- Use `docs/jac/` when you need the longer rule set, rationale, or support notes.
+- Keep GitHub Copilot support claims narrow and verified.
+- Use precise scope terms: `repo-scoped`, `user-scoped`, `cross-project`, and `environment-specific`.
+- Prefer small, reversible edits over broad rewrites.
+- Do not add outside-product stories or unsupported runtime claims.
 
-## Working rules
+## What to validate
 
-- `docs/jac/` is the canonical long-form source
-- `.github/` files and `AGENTS.md` are concise operational adapters
-- keep the public tone modest and a little unimpressed with itself
-- do not reference outside product names or imply any outside runtime is required
-- keep hook and skill claims narrow and aligned with GitHub's documented surfaces
-- do not turn the supporting canon into a fake runtime story
-- prefer small reversible slices
-- do not overclaim verification
+This repository does not have an application build or test suite.
+Validate the files it actually ships:
 
-## Validation rules for this repo
+- JSON parses cleanly and stays pretty-printed
+- referenced paths still exist after moves or renames
+- Markdown stays readable
+- repo-facing files still agree with the longer docs in `docs/jac/`
+- hidden or bidirectional Unicode characters are absent
+- line endings stay LF
 
-There is no normal app build or test pipeline here.
-Use targeted checks instead:
+## When to pause instead of bluffing
 
-- parse JSON
-- verify referenced paths after any move or rename
-- keep Markdown readable
-- keep adapter files and supporting canon aligned
-- remove hidden or bidirectional Unicode characters
-- keep LF line endings
+Pause when:
 
-## Escalation rules
-
-Pause instead of bluffing when:
-
-- a Copilot support claim is not verified
-- a change would make the adapter layer disagree with the supporting canon
+- a GitHub Copilot support claim cannot be verified
+- two docs disagree about scope or support boundaries
 - a destructive or approval-zone action appears without approval
-- a security, secret, or license concern stops being advisory and becomes blocking
+- a security, secret, or license concern becomes blocking
