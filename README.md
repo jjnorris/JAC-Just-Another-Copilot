@@ -36,7 +36,7 @@ If you use this repo as-is, keep these together:
 6. `docs/jac/`
 
 If you copy JAC into another repository, copy the same set.
-Do not copy only `docs/jac/` and assume Copilot will discover it by magic.
+Do not copy only `docs/jac/` and assume Copilot will discover it.
 
 More detail is in `install.md` and `compatibility.md`.
 
