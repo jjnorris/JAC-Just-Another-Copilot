@@ -1,6 +1,6 @@
 # Design rationale
 
-JAC keeps short repo-scoped Copilot files in the locations GitHub documents, and keeps the longer reference material in `docs/jac/`.
+JAC keeps concise native files in the locations GitHub documents and keeps the longer reference material in `docs/jac/`.
 
 ## Repo-scoped files
 
@@ -18,7 +18,6 @@ These files need to stay concise because they are the files a supported environm
 ## Reference material under `docs/jac/`
 
 `docs/jac/` keeps the longer rules, workflows, templates, event contracts, examples, hook notes, support docs, and maintenance inventory.
-That gives JAC one stable place for the longer explanations that do not belong in every repo-scoped file.
 
 ## Why the split exists
 

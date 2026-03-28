@@ -15,7 +15,6 @@ This directory holds the longer reference material behind the repo-scoped files 
 ## When to use this directory
 
 Read this directory when you need the longer policy text, a template, environment notes, or maintenance detail.
-If you are installing JAC in a repository, start with the repo-scoped files first and use this directory as the supporting reference set.
 
 ## What `inventory.json` is
 

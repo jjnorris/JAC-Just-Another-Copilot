@@ -1,11 +1,11 @@
 {
   "hook_name": "session-start",
   "event": "sessionStart",
-  "intent": "Emit a structured session context note and warn if the session prompt contains secret-like values.",
+  "intent": "Emit a structured session context note and warn if the initial session prompt contains secret-like values.",
   "fires_on": "sessionStart",
   "deny_conditions": [],
   "advisory_conditions": [
-    "session prompt contains a token-like or secret-like pattern"
+    "initial session prompt contains a token-like or secret-like pattern"
   ],
   "emits": [
     "structured session_start event to stderr with cwd and prompt_length"

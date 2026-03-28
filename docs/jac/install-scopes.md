@@ -41,10 +41,4 @@ JAC does not claim a user-scoped hooks directory.
 Hook files live under `.github/hooks/` and are repo-scoped.
 No user-scoped hook placement is documented by GitHub as of this writing.
 
-## Summary
-
-- This repository ships the repo-scoped layer.
-- User-scoped equivalents exist in some environments but require separate manual placement.
-- Do not conflate the two scopes.
-
 See `docs/jac/support-matrix.md` for environment-specific details.

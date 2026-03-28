@@ -19,14 +19,14 @@ The script reads the payload, applies policy rules, and either:
 |---|---|---|
 | `cwd` | string | all — sets the working directory for log output |
 | `toolArgs` | string or object | preToolUse hooks — contains the tool call arguments |
-| `prompt` | string | preToolUse, sessionStart — contains the current prompt or session context |
+| `prompt` | string | userPromptSubmitted and some JAC preToolUse checks — contains the submitted prompt when present |
+| `initialPrompt` | string | sessionStart — contains the initial prompt for a new or resumed session when provided |
 | `toolResult` | string or object | postToolUse hooks — contains the tool output |
-| `errorMessage` | string | errorOccurred hooks — contains the error text |
-| `errorCode` | string or number | errorOccurred hooks — contains the error code if present |
+| `error` | object | errorOccurred hooks — contains `message`, `name`, and `stack` when available |
 
 ## What the script inspects
 
-The script lowercases and concatenates `toolArgs`, `prompt`, and `toolResult` into a single string for pattern matching.
+The script lowercases and concatenates `toolArgs`, prompt text (`prompt` or `initialPrompt`), `toolResult`, and error details into a single string for pattern matching.
 This makes the matching simple and portable but means false positives are possible on legitimate content.
 
 Pattern matching is used for:
