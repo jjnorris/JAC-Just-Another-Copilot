@@ -27,6 +27,7 @@ The script reads the payload, applies policy rules, and either:
 ## What the script inspects
 
 The script lowercases and concatenates `toolArgs`, prompt text (`prompt` or `initialPrompt`), `toolResult`, and error details into a single string for pattern matching.
+For compatibility, `jac_hook.py` prefers the documented `initialPrompt` and `error.message` / `error.name` fields, but it still falls back to the older flat keys when they are present.
 This makes the matching simple and portable but means false positives are possible on legitimate content.
 
 Pattern matching is used for:
