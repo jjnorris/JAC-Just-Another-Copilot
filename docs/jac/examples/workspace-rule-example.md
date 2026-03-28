@@ -11,4 +11,4 @@ A workspace override should stay local and explicit.
 - local compliance note: treat customer export files as regulated data
 ```
 
-This narrows local behavior without pretending the global pack changed its own canon.
+This narrows local behavior without pretending the repo-scoped pack changed its own canon.

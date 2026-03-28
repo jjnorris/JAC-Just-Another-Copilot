@@ -21,7 +21,7 @@ Keep implementation and reporting anchored to the current workspace and verified
 
 ## examples
 - Good: "The workspace does not verify a native manifest consumer, so this manifest is portable only."
-- Bad: "The package installs globally" with no validation path.
+- Bad: "The package installs cross-project (user-scoped)" with no documented install path to verify.
 
 ## interplay
 Pairs with `08-research-policy.md` for external verification and `12-reporting-and-traces.md` for honest reporting.

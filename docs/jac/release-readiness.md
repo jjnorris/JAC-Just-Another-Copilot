@@ -9,6 +9,7 @@ Use this as a quick honesty check before calling JAC done.
 - `AGENTS.md` exists
 - `.github/skills/*/SKILL.md` exist
 - `.github/hooks/*.json` exist
+- `.github/agents/jac.agent.md` exists with valid YAML frontmatter
 - public docs describe repository instructions and `AGENTS.md` as the broad repo layer
 - public docs describe skills and hooks as narrower documented agent surfaces
 

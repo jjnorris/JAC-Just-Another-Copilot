@@ -21,7 +21,7 @@ Define when the agent must pause rather than improvising.
 - All listed stop conditions are blockers until resolved.
 
 ## examples
-- Good: pause when a requested global install path cannot be verified in the actual Copilot environment.
+- Good: pause when a requested user-scoped install path cannot be verified in the actual Copilot environment.
 - Bad: publish a fake compatibility claim to keep momentum.
 
 ## interplay
