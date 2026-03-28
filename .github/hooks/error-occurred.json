@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "errorOccurred": [
+      {
+        "type": "command",
+        "comment": "JAC native hook for error-occurred. Canonical rationale stays in docs/jac/hook-contracts/error-occurred/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py error-occurred",
+        "powershell": "python .github/hooks/scripts/jac_hook.py error-occurred",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}

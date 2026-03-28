@@ -15,8 +15,9 @@ Skills and hooks are narrower agent surfaces and should be described with that n
 
 ## Optional native surfaces used only if present
 
-This repo does not currently ship `.github/agents/*.agent.md`.
-That surface is optional and should only be added when a real agent profile is useful enough to justify the extra layer.
+This repo ships `.github/agents/jac.agent.md` as a custom agent profile.
+It has valid YAML frontmatter (`name`, `description`) and a concise body derived from the supporting canon.
+Additional `.github/agents/*.agent.md` files may be added if a real agent profile justifies the extra layer.
 
 ## Supporting canon that Copilot does not directly consume as a native runtime surface
 

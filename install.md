@@ -17,6 +17,7 @@ These are the repo files JAC actually places where Copilot expects them:
 3. `AGENTS.md`
 4. `.github/skills/*/SKILL.md`
 5. `.github/hooks/*.json`
+6. `.github/agents/*.agent.md` if present
 
 The instruction files and `AGENTS.md` are the broad repo guidance.
 The skill and hook files are narrower agent surfaces and should be claimed only where GitHub documents them.
@@ -30,7 +31,8 @@ If you are using this repository directly:
 3. keep `.github/skills/`
 4. keep `.github/hooks/`
 5. keep `AGENTS.md`
-6. keep `docs/jac/`
+6. keep `.github/agents/` if present
+7. keep `docs/jac/`
 
 If you are transplanting JAC into another repository:
 
@@ -39,8 +41,9 @@ If you are transplanting JAC into another repository:
 3. copy `.github/skills/`
 4. copy `.github/hooks/`
 5. copy `AGENTS.md`
-6. copy `docs/jac/`
-7. adjust only the concise adapter wording if the target repo truly needs local detail
+6. copy `.github/agents/` if you want the agent profile
+7. copy `docs/jac/`
+8. adjust only the concise adapter wording if the target repo truly needs local detail
 
 ## User-scoped or personal setup
 

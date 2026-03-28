@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "comment": "JAC native hook for session-start. Canonical rationale stays in docs/jac/hook-contracts/session-start/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py session-start",
+        "powershell": "python .github/hooks/scripts/jac_hook.py session-start",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
