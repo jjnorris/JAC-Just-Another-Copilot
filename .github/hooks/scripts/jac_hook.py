@@ -40,15 +40,35 @@ def text(blob: object) -> str:
 def advisory(message: str) -> None:
     sys.stderr.write(f"JAC {HOOK}: {message}\n")
 
+
+def prompt_text() -> str:
+    prompt = PAYLOAD.get("initialPrompt")
+    if prompt in (None, ""):
+        prompt = PAYLOAD.get("prompt", "")
+    return text(prompt)
+
+
+def error_details() -> Dict[str, Any]:
+    error = PAYLOAD.get("error")
+    if isinstance(error, dict):
+        return cast(Dict[str, Any], error)
+    details: Dict[str, Any] = {}
+    if "errorMessage" in PAYLOAD:
+        details["message"] = PAYLOAD.get("errorMessage", "")
+    if "errorCode" in PAYLOAD:
+        details["name"] = PAYLOAD.get("errorCode", "")
+    return details
+
 # ---------------------------------------------------------------------------
 # Build raw text for pattern matching
 # ---------------------------------------------------------------------------
 
 raw = (
     text(PAYLOAD.get("toolArgs", "")) + "\n" +
-    text(PAYLOAD.get("prompt", "")) + "\n" +
+    prompt_text() + "\n" +
     text(PAYLOAD.get("toolResult", {})) + "\n" +
-    text(PAYLOAD.get("errorMessage", ""))
+    text(error_details().get("message", "")) + "\n" +
+    text(error_details().get("name", ""))
 ).lower()
 
 # ---------------------------------------------------------------------------
@@ -151,9 +171,9 @@ def _secret_like_value() -> bool:
 # ---------------------------------------------------------------------------
 
 def handle_session_start() -> None:
-    prompt = text(PAYLOAD.get("prompt", ""))
+    prompt = prompt_text()
     if _secret_like_value():
-        advisory("session prompt may contain a secret-like value; do not echo or log.")
+        advisory("initial session prompt may contain a secret-like value; do not echo or log.")
     sys.stderr.write(json.dumps({
         "event": "session_start",
         "hook": HOOK,
@@ -226,8 +246,9 @@ def handle_post_tool_use() -> None:
         advisory("recorded a trace event in .git/jac-hooks/.")
 
 def handle_error_occurred() -> None:
-    error_msg = text(PAYLOAD.get("errorMessage", ""))
-    error_code = PAYLOAD.get("errorCode", "")
+    error = error_details()
+    error_msg = text(error.get("message", ""))
+    error_code = error.get("name", "")
     artifact = {
         "event": "error_occurred",
         "hook": HOOK,

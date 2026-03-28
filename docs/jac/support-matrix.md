@@ -10,9 +10,9 @@ Claims are narrow. If a surface is not explicitly documented by GitHub for an en
 | `.github/copilot-instructions.md` | yes | yes | yes | limited |
 | `.github/instructions/**/*.instructions.md` | yes | yes | yes | limited |
 | `AGENTS.md` | yes (agent flows) | partial | yes | yes |
-| `.github/skills/*/SKILL.md` | agent flows | agent flows | yes | limited |
-| `.github/hooks/*.json` | agent flows | not documented | yes | limited |
-| `.github/agents/*.agent.md` | agent flows | not documented | yes | unknown |
+| `.github/skills/*/SKILL.md` | coding agent | agent mode | agent mode | limited |
+| `.github/hooks/*.json` | coding agent | not documented | preview | limited |
+| `.github/agents/*.agent.md` | coding agent | coding agent | coding agent | unknown |
 | User-scoped instructions | environment-specific | environment-specific | environment-specific | environment-specific |
 | User-scoped skills | unknown | unknown | some environments | unknown |
 | User-scoped hooks | not documented | not documented | not documented | not documented |
@@ -34,8 +34,8 @@ Behavior can vary between VS Code stable and VS Code Insiders.
 
 ### VS Code Insiders / agent-capable flows
 
-This is the most permissive surface for JAC features.
-Skills, hooks, and custom agent profiles are documented for agent-capable flows.
+This is where JAC's broader agent-mode features are most likely to appear, but support still varies by feature.
+Skills are documented for agent mode, and hook support remains more cautious than the table may suggest on other surfaces.
 Claims should still be verified against the current GitHub documentation before asserting any specific behavior.
 
 ### Copilot CLI
@@ -56,4 +56,4 @@ JAC does not claim:
 
 If behavior is environment-specific, it is labeled as such and not described as universal.
 
-See `docs/jac/install-scopes.md` for the placement details behind each surface.
+See `docs/jac/install-scopes.md` for placement details and scope terms.
