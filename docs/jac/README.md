@@ -1,38 +1,23 @@
-# JAC supporting canon
+# JAC reference docs
 
-This directory is the longer canon behind the repo-native Copilot files in:
-
-- `.github/copilot-instructions.md`
-- `.github/instructions/*.instructions.md`
-- `.github/skills/*/SKILL.md`
-- `.github/hooks/*.json`
-- `AGENTS.md`
-
-It is mostly rules, notes, templates, and JSON.
-It is not the first thing to wire by hand if your Copilot environment already reads the native repo files.
+This directory holds the longer reference material behind the repo-scoped files in `.github/` and `AGENTS.md`.
 
 ## What is in here
 
 - long-form instructions
-- rules with one canonical home each
-- workflow notes
+- rules and workflows
 - templates and event contracts
 - examples
-- hook contract notes under `hook-contracts/`
-- inventory metadata in `source-pack-registry.json`
+- hook notes under `hook-contracts/`
+- support docs
+- maintenance inventory in `inventory.json`
 
-## What `source-pack-registry.json` means here
+## When to use this directory
 
-`source-pack-registry.json` is maintenance metadata for this folder and its native adapters.
-It is not presented as an official GitHub Copilot package manifest.
+Read this directory when you need the longer policy text, a template, environment notes, or maintenance detail.
+If you are installing JAC in a repository, start with the repo-scoped files first and use this directory as the supporting reference set.
 
-## What does not live here anymore
+## What `inventory.json` is
 
-Native skill folders live in `.github/skills/`.
-Native hook configuration lives in `.github/hooks/`.
-This folder keeps the longer rationale behind them.
-
-## When to read this folder first
-
-Read this folder first when you need the long-form policy text or when you are editing the canon itself.
-Otherwise, start with the native repo files and come back here when you need detail.
+`inventory.json` is maintenance inventory for this directory and the repo-scoped files that point back to it.
+It is not presented as a GitHub Copilot package manifest or runtime surface.

@@ -15,7 +15,7 @@ Keep the client surface limited to display, relay, and focused local interaction
 
 ## Inputs
 - extension proposal
-- authority pack rules
+- shared repo rules
 
 ## Outputs
 - boundary compliance note
@@ -24,7 +24,7 @@ Keep the client surface limited to display, relay, and focused local interaction
 ## What it checks
 - Surface is not the brain.
 - Local UX may display verdicts but not replace them.
-- Prioritize repo-native workflows and targeted views.
+- Prioritize targeted repo workflows and views.
 
 ## Warnings
 - Feature creep can turn the client into a second orchestrator.
@@ -37,13 +37,13 @@ Keep the client surface limited to display, relay, and focused local interaction
 - model_route_chosen
 
 ## Examples
-- Allow a tree view for traces, but keep policy evaluation in the authority pack.
+- Allow a tree view for traces, but keep policy evaluation in the shared rules.
 
 ## Limitations
 - Falls back to: Manual boundary checklist in docs.
 
 ## Boundary
-- May validate surface scope. It may not move policy ownership out of the authority pack.
+- May validate surface scope. It may not move policy ownership out of the shared rules.
 
 ## Related docs
 - `docs/jac/rules/02-boundaries.md`

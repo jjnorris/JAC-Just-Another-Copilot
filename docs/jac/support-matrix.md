@@ -50,7 +50,7 @@ JAC does not claim:
 
 - identical behavior across all Copilot surfaces
 - user-scoped hook directories in any environment
-- that `docs/jac/source-pack-registry.json` is natively consumed by GitHub
+- that `docs/jac/inventory.json` is natively consumed by GitHub
 - that Markdown workflow files are natively executed as commands
 - that skills or hooks work in every Copilot chat UI
 

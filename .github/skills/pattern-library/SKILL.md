@@ -26,7 +26,7 @@ Prefer canonical patterns and warn about duplicate abstractions or premature gen
 - Avoid premature abstraction.
 
 ## Warnings
-- Clean and extensible variants both matter, but only with one canonical home.
+- Clean and extensible variants both matter, but only with one clear home.
 - Near-duplicate names signal drift.
 
 ## Blocks on
@@ -42,7 +42,7 @@ Prefer canonical patterns and warn about duplicate abstractions or premature gen
 - Falls back to: Manual pattern comparison against the current tree.
 
 ## Boundary
-- May recommend reuse and consolidation. It may not invent a second canon.
+- May recommend reuse and consolidation. It may not invent a second competing home.
 
 ## Related docs
 - `docs/jac/rules/00-core-role.md`

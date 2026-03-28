@@ -20,7 +20,7 @@ Separate blocking uncertainty from safe, explicit assumptions.
 - Security-sensitive or correctness-critical work with unresolved blocking ambiguity.
 
 ## examples
-- Good: "Assuming the portable manifest is adapter-owned because native support is unverified."
+- Good: "Assuming `inventory.json` is maintenance-only because native runtime support is unverified."
 - Bad: quietly changing the package shape because it felt cleaner.
 
 ## interplay

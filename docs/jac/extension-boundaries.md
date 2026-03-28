@@ -29,4 +29,4 @@ It must not become the authority engine.
 
 ## v1 guidance
 Do not try to rebuild an entire browser workbench.
-Prioritize repo-native workflows, diffs, tests, targeted control-plane visibility, and continuation.
+Prioritize repo workflows, diffs, tests, targeted control-plane visibility, and continuation.

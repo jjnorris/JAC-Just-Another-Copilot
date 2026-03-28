@@ -9,7 +9,7 @@ JAC prefers small slices, explicit evidence, and repo truth over smooth storytel
 ## Non-goals
 
 - Do not pretend this folder is an officially supported GitHub Copilot package schema unless verified.
-- Do not treat `source-pack-registry.json`, `hook-contracts/`, or `workflows/` as the primary activation path when the documented repo-native adapter files exist.
+- Do not treat `inventory.json`, `hook-contracts/`, or `workflows/` as the primary activation path when the documented repo-scoped files exist.
 - Do not turn the extension or client surface into the orchestration core.
 - Do not invent runtime enforcement that does not exist.
 - Do not promise unbounded autonomy.
@@ -19,7 +19,7 @@ JAC prefers small slices, explicit evidence, and repo truth over smooth storytel
 ## Canonical boundaries
 
 The public activation layer for this repository is `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `.github/skills/*/SKILL.md`, `.github/hooks/*.json`, and `AGENTS.md`.
-Those files are adapters and native surfaces. The longer canon remains in `docs/jac/`.
+Those files are the repo-scoped entry points. The longer reference material remains in `docs/jac/`.
 
 ### Runtime and authority pack
 - Owns policy, planning rules, verification rules, memory rules, gate logic, truth rules, and trace contracts.
@@ -328,7 +328,7 @@ Require explicit review or approval before:
 
 - The extension surface may show traces, review cards, diffs, tests, tasks, and session continuation controls.
 - It may offer commands, CodeLens, panels, or tree views.
-- It should prioritize repo-native workflows, diffs, tasks, tests, targeted control-plane visibility, and continuation.
+- It should prioritize repo workflows, diffs, tasks, tests, targeted control-plane visibility, and continuation.
 - It should not try to replicate a whole browser workbench in v1.
 - It must support local-first, remote, and degraded or offline modes conceptually.
 - It relays and displays authority-pack decisions, but does not become the final policy engine.

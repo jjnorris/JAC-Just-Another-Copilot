@@ -1,13 +1,11 @@
 # Just Another Copilot
 
-JAC is a small discipline pack for GitHub Copilot.
+JAC is a small set of instructions, skills, hooks, and reference docs for GitHub Copilot.
+It is meant to make Copilot work a little more cautious, explicit, and reviewable inside a repository.
 
-It is mostly a few native repo files, a longer canon folder, and some JSON meant to keep Copilot a little more supervised.
-It is not a runtime, not a service, and not a promise that every Copilot surface behaves the same way everywhere.
+## What this repo ships
 
-## Native files first
-
-This repo puts the documented Copilot-facing files where GitHub expects them:
+The repo-scoped files live where GitHub documents them:
 
 - `.github/copilot-instructions.md`
 - `.github/instructions/*.instructions.md`
@@ -16,42 +14,31 @@ This repo puts the documented Copilot-facing files where GitHub expects them:
 - `.github/hooks/*.json`
 - `.github/agents/jac.agent.md`
 
-Repository instructions and `AGENTS.md` are the broad repo layer.
-Skills and hooks are narrower agent surfaces and should be described that way, not as universal behavior across every Copilot UI.
+Those files are the part a supported environment may read directly.
+Repository instructions and `AGENTS.md` provide broad repo guidance.
+Skills, hooks, and custom agent profiles are narrower and remain environment-specific.
 
 ## What `docs/jac/` is
 
-That folder is the longer supporting canon.
-It keeps the long-form instructions, rules, workflows, templates, event contracts, examples, and hook-contract notes that sit behind the native layer.
+`docs/jac/` is the longer reference set for JAC.
+It holds rules, workflows, templates, event contracts, examples, hook notes, support docs, and maintenance inventory.
+It supports the repo-scoped files and manual fallback use; it is not described here as a native runtime surface.
 
 ## Install shape
 
-If you use this repo as-is, keep these together:
+If you use this repository directly, keep `.github/`, `AGENTS.md`, and `docs/jac/` together.
+If you transplant JAC into another repository, copy the same repo-scoped files first and bring `docs/jac/` along as the longer reference set.
 
-1. `.github/copilot-instructions.md`
-2. `.github/instructions/`
-3. `.github/skills/`
-4. `.github/hooks/`
-5. `AGENTS.md`
-6. `docs/jac/`
+`install.md` covers placement in more detail.
 
-If you copy JAC into another repository, copy the same set.
-Do not copy only `docs/jac/` and assume Copilot will discover it.
+## Support boundaries
 
-More detail is in `install.md` and `compatibility.md`.
+JAC only makes claims about GitHub Copilot surfaces that GitHub documents for the environment in question.
+Skills, hooks, and custom agent profiles are still environment-specific.
+Files under `docs/jac/`, including `docs/jac/inventory.json`, workflow notes, templates, examples, and hook notes, are reference material and manual fallback, not claimed runtime features.
 
-## Release readiness note
-
-- Verified native files in this repo: `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md`, `.github/skills/*/SKILL.md`, `.github/hooks/*.json`, `.github/agents/jac.agent.md`
-- Supporting canon only: `docs/jac/source-pack-registry.json`, `docs/jac/hook-contracts/`, `docs/jac/workflows/`, templates, event contracts, examples, and longer docs
-- Manual fallback: read the native files and `docs/jac/` directly if your environment does not load them automatically
-- Still environment-specific: which Copilot clients load which surfaces, especially hooks and skills outside agent-capable flows
-
-## What this is trying to do
-
-Mostly just supervision.
-A little less bluffing, a little more checking, and a clearer line between native files and supporting notes.
+`compatibility.md` covers those boundaries in more detail.
 
 ## Donation
 
-If this saved you some time, you can buy me a coffee here: https://buymeacoffee.com/jjnorris
+Optional: https://buymeacoffee.com/jjnorris

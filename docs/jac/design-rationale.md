@@ -1,48 +1,36 @@
 # Design rationale
 
-JAC now uses a native-first two-layer layout.
+JAC keeps short repo-scoped Copilot files in the locations GitHub documents, and keeps the longer reference material in `docs/jac/`.
 
-## Layer A: supporting canon
+## Repo-scoped files
 
-`docs/jac/` is the canonical long-form set.
-It keeps policy, rationale, rules, workflows, templates, event contracts, examples, and hook-contract notes.
-
-## Layer B: native Copilot files
-
-The native layer in this repo is:
+The repo-scoped files in this repository are:
 
 - `.github/copilot-instructions.md`
 - `.github/instructions/*.instructions.md`
 - `AGENTS.md`
 - `.github/skills/*/SKILL.md`
 - `.github/hooks/*.json`
+- `.github/agents/*.agent.md` when present
 
-Those are the first public activation path because GitHub documents them as Copilot customization surfaces.
-They stay concise and point back to the canon.
+These files need to stay concise because they are the files a supported environment may read directly.
+
+## Reference material under `docs/jac/`
+
+`docs/jac/` keeps the longer rules, workflows, templates, event contracts, examples, hook notes, support docs, and maintenance inventory.
+That gives JAC one stable place for the longer explanations that do not belong in every repo-scoped file.
 
 ## Why the split exists
 
-The earlier layout kept too much of the public story in a custom source-pack folder.
-That was honest, but it was weaker than it needed to be.
-The current layout puts the documented native files first and keeps the longer reasoning in one quieter place.
+The split keeps the repo-scoped files practical and easy to transplant into another repository.
+It also reduces repeated prose and makes support boundaries easier to state honestly.
 
-## What stays canon-only
+## Claim boundaries
 
-The repository still does not claim native runtime support for:
+JAC only makes support claims that GitHub documents for the environment in question.
+`docs/jac/inventory.json`, Markdown workflows, templates, examples, event contracts, and hook notes are reference material and manual fallback, not claimed native runtime features unless GitHub documents them that way.
 
-- `docs/jac/source-pack-registry.json`
-- `docs/jac/workflows/` as executable commands
-- `docs/jac/templates/`, `docs/jac/event-contracts/`, and `docs/jac/examples/` as direct runtime surfaces
-- `docs/jac/hook-contracts/` as executable hook configuration
+## Maintenance rule
 
-Those files are for policy, rationale, maintenance, and fallback.
-
-## Claim discipline
-
-Skills and hooks are documented native surfaces, but not every Copilot client loads every native surface the same way.
-So the repo should describe them narrowly, especially outside agent-capable flows.
-
-## Canon discipline
-
-Each policy still has one canonical home.
-The native layer should summarize or point at the canon, not become a second canon.
+Each policy should have one clear home.
+Repo-scoped files can summarize or point to the longer docs, but they should not quietly grow into a second copy of the same policy.
