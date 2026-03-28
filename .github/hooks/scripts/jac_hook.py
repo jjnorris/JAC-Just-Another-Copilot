@@ -224,9 +224,6 @@ def handle_post_tool_use() -> None:
                 advisory("emitted JSON-looking output that did not parse cleanly.")
     elif HOOK == "telemetry-emitter":
         advisory("recorded a trace event in .git/jac-hooks/.")
-    elif HOOK == "secrets-scanner":
-        if _secret_like_value():
-            deny("JAC secrets scanner blocked a secret-like value in tool output.")
 
 def handle_error_occurred() -> None:
     error_msg = text(PAYLOAD.get("errorMessage", ""))

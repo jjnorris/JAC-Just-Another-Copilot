@@ -12,6 +12,6 @@
   "notes": [
     "Does not deny. Purely observational.",
     "Keeps only the first 200 characters of the error message in the snippet.",
-    "Logs to .git/jac-hooks/error-occurred.jsonl and also appends to .git/jac-hooks/error-occurred.jsonl."
+    "Appends to .git/jac-hooks/error-occurred.jsonl for durable local audit."
   ]
 }
