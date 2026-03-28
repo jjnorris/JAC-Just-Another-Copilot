@@ -5,6 +5,7 @@ import os
 import re
 import sys
 from pathlib import Path
+from typing import Any, Dict, cast
 
 HOOK = sys.argv[1]
 PAYLOAD = json.load(sys.stdin)
@@ -12,7 +13,9 @@ ROOT = Path(PAYLOAD.get("cwd") or os.getcwd())
 LOG_DIR = ROOT / ".git" / "jac-hooks"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_PATH = LOG_DIR / f"{HOOK}.jsonl"
-with LOG_PATH.open("a", encoding="utf-8") as handle:
+# allow writing lone surrogates that may appear in incoming payloads
+# use surrogatepass so the UTF-8 encoder will accept surrogate code points
+with LOG_PATH.open("a", encoding="utf-8", errors="surrogatepass") as handle:
     handle.write(json.dumps({"hook": HOOK, "payload": PAYLOAD}, ensure_ascii=False) + "\n")
 
 def deny(reason: str) -> None:
@@ -70,7 +73,12 @@ elif HOOK == "assumption-recorder":
         sys.stderr.write("JAC assumption recorder: surface assumptions explicitly in the task record.\n")
 elif HOOK == "structured-output":
     result = PAYLOAD.get("toolResult", {})
-    text_result = text(result.get("textResultForLlm", "")) if isinstance(result, dict) else text(result)
+    # normalize and type-cast to help static analyzers understand dict.get usage
+    if isinstance(result, dict):
+        result_dict = cast(Dict[str, Any], result)
+        text_result = text(result_dict.get("textResultForLlm", ""))
+    else:
+        text_result = text(result)
     stripped = text_result.strip()
     if stripped.startswith(("{", "[")):
         try:
