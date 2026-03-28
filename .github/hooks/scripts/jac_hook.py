@@ -30,13 +30,25 @@ def text(blob: object) -> str:
 raw = (text(PAYLOAD.get("toolArgs", "")) + "\n" + text(PAYLOAD.get("prompt", "")) + "\n" + text(PAYLOAD.get("toolResult", {}))).lower()
 
 if HOOK == "tool-guardian":
-    patterns = [r"rm\s+-rf\s+(/|\.)", r"\bmkfs\b", r"\bdd\s+if=", r"\bsudo\b", r"chmod\s+777\s+/", r"curl[^
-|]*\|\s*(bash|sh)"]
+    patterns = [r"rm\s+-rf\s+(/|\.)", r"\bmkfs\b", r"\bdd\s+if=", r"\bsudo\b", r"chmod\s+777\s+/", r"curl[^|]*\|\s*(bash|sh)"]
+    # broaden destructive-command detection to cover common Unix and Windows forms
+    patterns = [
+        r"rm\s+-rf\s+([/\\.]|\w:)",            # rm -rf / or rm -rf . or rm -rf C:\\
+        r"\bmkfs\b",
+        r"\bdd\s+if=",
+        r"\bsudo\b",
+        r"chmod\s+777\s+([/\\])",
+        r"curl[^|]*\|\s*(bash|sh)",               # curl ... | bash
+        r"\brmdir\b\s+/s\s+/q",
+        r"\bdel\b\s+/s\s+/q",
+        r"\bformat\b\s+[a-z]:",
+        r"remove-item\s+-recurse\s+-force",
+    ]
     if any(re.search(p, raw) for p in patterns):
         deny("JAC tool guardian blocked a destructive or permission-escalating command.")
 elif HOOK == "dependency-risk":
-    patterns = [r"curl[^
-|]*\|\s*(bash|sh)", r"npm\s+(install|add)\s+-g\b", r"pip\s+install\s+.*(git\+|https?://)"]
+    patterns = [r"curl[^|]*\|\s*(bash|sh)", r"npm\s+(install|add)\s+-g\b", r"pip\s+install\s+.*(git\+|https?://)"]
+    patterns = [r"curl[^|]*\|\s*(bash|sh)", r"npm\s+(install|add)\s+-g\b", r"pip\s+install\s+.*(git\+|https?://)"]
     if any(re.search(p, raw) for p in patterns):
         deny("JAC dependency risk blocked an install path that needs explicit review.")
 elif HOOK == "review-gate":
