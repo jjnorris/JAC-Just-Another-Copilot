@@ -41,4 +41,4 @@ Files under `docs/jac/`, including `docs/jac/inventory.json`, workflow notes, te
 
 ## Donation
 
-Optional: https://www.buymeacoffee.com/jjnorris
+Optional: <a href="https://www.buymeacoffee.com/jjnorris"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=jjnorris&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" height="35"></a>
