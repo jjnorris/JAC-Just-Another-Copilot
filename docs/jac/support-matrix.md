@@ -1,6 +1,3 @@
-
-### `docs/jac/support-matrix.md`
-```md
 # Support matrix
 
 Use this file to check where each JAC native surface is documented, where support is narrower, and where you should verify behavior in the exact environment you care about.
