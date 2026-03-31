@@ -1,181 +1,131 @@
 {
-  "schema_version": "jac-inventory-v1",
+  "schema_version": "jac-inventory-v2",
   "name": "jac",
   "display_name": "JAC",
   "version": "0.1.0",
   "kind": "maintenance-inventory",
-  "summary": "Inventory metadata for JAC's repo-scoped files and supporting reference docs.",
-  "compatibility_notes": {
-    "native_github_copilot_package_schema_verified": false,
-    "native_hooks_verified": true,
-    "native_skills_verified": true,
-    "native_workflows_verified": false,
-    "user_scoped_install_verified": false,
-    "notes": [
-      "Use this file as human-maintained inventory metadata for JAC.",
-      "The repo-scoped GitHub Copilot files live under .github/ plus AGENTS.md.",
-      "The longer reference docs live under docs/jac/."
+  "summary": "Maintenance inventory for JAC's repo-scoped native files and longer reference docs.",
+  "purpose": {
+    "why_this_exists": [
+      "Record the canonical roots and file classes that make up JAC.",
+      "Give maintainers one place to validate path-sensitive claims.",
+      "Reduce drift between repo-scoped files and the longer docs in docs/jac/."
+    ],
+    "what_this_is_not": [
+      "Not a GitHub Copilot package manifest.",
+      "Not a runtime feature descriptor consumed by GitHub.",
+      "Not a complete file-by-file registry that must change every time a single skill or doc is added."
     ]
   },
-  "activation_summary": {
-    "user_scoped_activation": "optional in supported environments; place files under ~/.copilot/ where GitHub documents that location",
-    "cross_project_reuse": "copy the repo-scoped files first, then carry docs/jac/ as the longer reference set",
-    "modes": [
-      "always-on",
-      "model-decision",
-      "glob-pattern"
+  "scopes": {
+    "repo_scoped_roots": [
+      ".github/",
+      "AGENTS.md",
+      "README.md",
+      "install.md",
+      "compatibility.md"
     ],
-    "fallback": "manual use of instructions, workflows, templates, and docs"
+    "reference_root": "docs/jac/",
+    "user_scoped_equivalents": [
+      "$HOME/.copilot/copilot-instructions.md",
+      "~/.copilot/skills/",
+      "~/.copilot/agents/"
+    ],
+    "not_claimed": [
+      "a user-scoped hooks directory",
+      "native execution of Markdown workflows",
+      "native consumption of this inventory file"
+    ]
   },
-  "optional_features": {
-    "semantic_memory": "optional and bounded",
-    "native_hook_execution": "documented native surface in agent-capable flows",
-    "native_skill_registration": "documented native surface in agent-capable flows",
-    "markdown_workflow_use": "manual fallback or environment-specific tooling",
-    "structured_trace_export": "manual artifact generation or environment-specific tooling"
-  },
-  "scope_boundaries": {
-    "repo_scoped_files": "Files under .github/ plus AGENTS.md",
-    "reference_docs": "Long-form docs under docs/jac/",
-    "manual_fallback": "Read the repo-scoped files and docs directly when automatic loading is unavailable"
-  },
-  "file_registry": {
+  "anchor_files": {
     "repo_readme": "README.md",
     "install": "install.md",
     "compatibility": "compatibility.md",
-    "agents": "AGENTS.md",
-    "agent_profiles": [
-      ".github/agents/jac.agent.md"
-    ],
-    "copilot_instructions": ".github/copilot-instructions.md",
-    "path_instructions": [
-      ".github/instructions/core.instructions.md",
-      ".github/instructions/review.instructions.md",
-      ".github/instructions/security.instructions.md",
-      ".github/instructions/tests.instructions.md"
-    ],
-    "native_hooks": [
-      ".github/hooks/assumption-recorder.json",
-      ".github/hooks/context-budgeter.json",
-      ".github/hooks/dependency-risk.json",
-      ".github/hooks/error-occurred.json",
-      ".github/hooks/extension-surface-guard.json",
-      ".github/hooks/review-gate.json",
-      ".github/hooks/secrets-scanner.json",
-      ".github/hooks/session-start.json",
-      ".github/hooks/structured-output.json",
-      ".github/hooks/telemetry-emitter.json",
-      ".github/hooks/tool-guardian.json"
-    ],
-    "hook_scripts": [
-      ".github/hooks/scripts/jac_hook.py"
-    ],
-    "native_skills": [
-      ".github/skills/autoresearch/SKILL.md",
-      ".github/skills/compliance-audit/SKILL.md",
-      ".github/skills/correctness-contract/SKILL.md",
-      ".github/skills/doublecheck/SKILL.md",
-      ".github/skills/extension-boundary/SKILL.md",
-      ".github/skills/failure-triage/SKILL.md",
-      ".github/skills/intake-clarifier/SKILL.md",
-      ".github/skills/memory-manager/SKILL.md",
-      ".github/skills/migration-safety/SKILL.md",
-      ".github/skills/pattern-library/SKILL.md",
-      ".github/skills/plan-review/SKILL.md",
-      ".github/skills/repo-onboarding/SKILL.md",
-      ".github/skills/secret-vault-awareness/SKILL.md",
-      ".github/skills/trace-reporter/SKILL.md",
-      ".github/skills/verifier-bridge/SKILL.md"
-    ],
+    "agent_notes": "AGENTS.md",
+    "repo_instructions": ".github/copilot-instructions.md",
     "reference_readme": "docs/jac/README.md",
     "reference_instructions": "docs/jac/instructions.md",
+    "support_matrix": "docs/jac/support-matrix.md",
+    "install_scopes": "docs/jac/install-scopes.md"
+  },
+  "patterns": {
+    "path_instructions": [
+      ".github/instructions/**/*.instructions.md"
+    ],
+    "skills": [
+      ".github/skills/*/SKILL.md"
+    ],
+    "hooks": [
+      ".github/hooks/*.json"
+    ],
+    "hook_scripts": [
+      ".github/hooks/scripts/*.py"
+    ],
+    "agent_profiles": [
+      ".github/agents/*.agent.md"
+    ],
     "rules": [
-      "docs/jac/rules/00-core-role.md",
-      "docs/jac/rules/01-repo-truth.md",
-      "docs/jac/rules/02-boundaries.md",
-      "docs/jac/rules/03-execution-loop.md",
-      "docs/jac/rules/04-ambiguity-policy.md",
-      "docs/jac/rules/05-memory-policy.md",
-      "docs/jac/rules/06-tool-governance.md",
-      "docs/jac/rules/07-output-guardrails.md",
-      "docs/jac/rules/08-research-policy.md",
-      "docs/jac/rules/09-compliance-security-license.md",
-      "docs/jac/rules/10-correctness-contracts.md",
-      "docs/jac/rules/11-review-policy.md",
-      "docs/jac/rules/12-reporting-and-traces.md",
-      "docs/jac/rules/13-stop-conditions.md"
+      "docs/jac/rules/*.md"
     ],
     "workflows": [
-      "docs/jac/workflows/bounded-implementation.md",
-      "docs/jac/workflows/bugfix-with-proof.md",
-      "docs/jac/workflows/compliance-triage.md",
-      "docs/jac/workflows/intake-and-clarify.md",
-      "docs/jac/workflows/plan-review.md",
-      "docs/jac/workflows/research-with-citations.md",
-      "docs/jac/workflows/rollback-and-recovery.md",
-      "docs/jac/workflows/safe-refactor.md",
-      "docs/jac/workflows/secret-handling.md",
-      "docs/jac/workflows/verify-before-claim.md"
+      "docs/jac/workflows/*.md"
     ],
     "templates": [
-      "docs/jac/templates/assumption-record.json",
-      "docs/jac/templates/clarification-request.json",
-      "docs/jac/templates/correctness-contract.json",
-      "docs/jac/templates/plan-review-comment.json",
-      "docs/jac/templates/rollback-note.md",
-      "docs/jac/templates/usage-summary.json",
-      "docs/jac/templates/verification-report.json"
+      "docs/jac/templates/*"
     ],
     "event_contracts": [
-      "docs/jac/event-contracts/agent-trace.schema.json",
-      "docs/jac/event-contracts/correctness-events.schema.json",
-      "docs/jac/event-contracts/memory-events.schema.json",
-      "docs/jac/event-contracts/review-events.schema.json",
-      "docs/jac/event-contracts/tool-events.schema.json"
-    ],
-    "docs": [
-      "docs/jac/design-rationale.md",
-      "docs/jac/extension-boundaries.md",
-      "docs/jac/hook-payloads.md",
-      "docs/jac/install-scopes.md",
-      "docs/jac/policy-design-principles.md",
-      "docs/jac/release-readiness.md",
-      "docs/jac/review-and-approval-model.md",
-      "docs/jac/rotation-runbook.md",
-      "docs/jac/secret-handling-model.md",
-      "docs/jac/support-matrix.md",
-      "docs/jac/trace-taxonomy.md"
-    ],
-    "examples": [
-      "docs/jac/examples/correctness-contract-example.json",
-      "docs/jac/examples/review-comment-example.md",
-      "docs/jac/examples/workflow-example.md",
-      "docs/jac/examples/workspace-rule-example.md"
+      "docs/jac/event-contracts/*.json"
     ],
     "hook_contracts": [
-      "docs/jac/hook-contracts/assumption-recorder/hook.json",
-      "docs/jac/hook-contracts/context-budgeter/hook.json",
-      "docs/jac/hook-contracts/dependency-risk/hook.json",
-      "docs/jac/hook-contracts/error-occurred/hook.json",
-      "docs/jac/hook-contracts/extension-surface-guard/hook.json",
-      "docs/jac/hook-contracts/review-gate/hook.json",
-      "docs/jac/hook-contracts/secrets-scanner/hook.json",
-      "docs/jac/hook-contracts/session-start/hook.json",
-      "docs/jac/hook-contracts/structured-output/hook.json",
-      "docs/jac/hook-contracts/telemetry-emitter/hook.json",
-      "docs/jac/hook-contracts/tool-guardian/hook.json"
+      "docs/jac/hook-contracts/*/hook.json"
+    ],
+    "examples": [
+      "docs/jac/examples/*"
+    ],
+    "support_docs": [
+      "docs/jac/*.md"
     ]
   },
-  "internal_role": "Maintenance inventory for JAC. Not a GitHub Copilot package manifest.",
-  "primary_activation": {
-    "verified_repo_scoped_surfaces": [
+  "support_claims": {
+    "documented_repo_surfaces": [
       ".github/copilot-instructions.md",
-      ".github/instructions/*.instructions.md",
+      ".github/instructions/**/*.instructions.md",
       "AGENTS.md",
-      ".github/skills/<name>/SKILL.md",
+      ".github/skills/*/SKILL.md",
       ".github/hooks/*.json",
       ".github/agents/*.agent.md"
     ],
-    "reference_docs_root": "docs/jac"
+    "manual_fallback": [
+      "docs/jac/rules/*.md",
+      "docs/jac/workflows/*.md",
+      "docs/jac/templates/*",
+      "docs/jac/examples/*",
+      "docs/jac/hook-contracts/*/hook.json"
+    ],
+    "environment_specific": [
+      "skill loading outside agent-capable flows",
+      "hook execution outside documented coding-agent and CLI contexts",
+      "custom agent availability by client"
+    ]
+  },
+  "maintenance": {
+    "update_when": [
+      "a canonical root changes",
+      "a new native file class is introduced",
+      "a docs subtree is renamed",
+      "support-claim boundaries change materially"
+    ],
+    "validation": [
+      "anchor files still exist",
+      "glob patterns still match the expected file classes",
+      "repo-scoped files and docs/jac/ still agree about scope language",
+      "no stale path references survive a move or rename",
+      "claims still match current official GitHub docs"
+    ],
+    "preferred_style": [
+      "track classes of files with patterns rather than enumerating every file",
+      "keep this file stable across ordinary content additions",
+      "use support-matrix.md and install-scopes.md for nuanced prose, not this inventory"
+    ]
   }
 }
