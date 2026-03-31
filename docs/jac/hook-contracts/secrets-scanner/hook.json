@@ -26,5 +26,5 @@
   "limitations": [
     "Heuristic scanning can miss novel secret formats or over-flag random strings."
   ],
-  "fallback_behavior": "Use manual secret review via `workflows/secret-handling.md`."
+  "fallback_behavior": "Use manual secret review via `docs/jac/workflows/secret-handling.md`."
 }

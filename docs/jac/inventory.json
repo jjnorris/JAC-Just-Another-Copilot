@@ -4,7 +4,7 @@
   "display_name": "JAC",
   "version": "0.1.0",
   "kind": "maintenance-inventory",
-  "summary": "Maintenance inventory for JAC's repo-scoped native files and longer reference docs.",
+  "summary": "Maintenance inventory for JAC's anchor files, file classes, and validation targets.",
   "purpose": {
     "why_this_exists": [
       "Record the canonical roots and file classes that make up JAC.",
@@ -44,9 +44,11 @@
     "agent_notes": "AGENTS.md",
     "repo_instructions": ".github/copilot-instructions.md",
     "reference_readme": "docs/jac/README.md",
+    "design_rationale": "docs/jac/design-rationale.md",
     "reference_instructions": "docs/jac/instructions.md",
     "support_matrix": "docs/jac/support-matrix.md",
-    "install_scopes": "docs/jac/install-scopes.md"
+    "install_scopes": "docs/jac/install-scopes.md",
+    "lite_profile": "docs/jac/lite-profile.md"
   },
   "patterns": {
     "path_instructions": [
@@ -106,6 +108,24 @@
       "skill loading outside agent-capable flows",
       "hook execution outside documented coding-agent and CLI contexts",
       "custom agent availability by client"
+    ]
+  },
+  "validation_targets": {
+    "path_reference_docs": [
+      "README.md",
+      "install.md",
+      "compatibility.md",
+      "AGENTS.md",
+      ".github/copilot-instructions.md",
+      "docs/jac/README.md",
+      "docs/jac/design-rationale.md",
+      "docs/jac/install-scopes.md",
+      "docs/jac/support-matrix.md",
+      "docs/jac/hook-payloads.md",
+      "docs/jac/lite-profile.md"
+    ],
+    "path_reference_json_patterns": [
+      "docs/jac/hook-contracts/*/hook.json"
     ]
   },
   "maintenance": {

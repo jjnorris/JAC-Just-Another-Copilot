@@ -25,4 +25,4 @@ Force explicit behavioral requirements and proof obligations before non-trivial 
 - Bad: claim correctness because markdown renders cleanly.
 
 ## interplay
-Uses `templates/correctness-contract.json`, `templates/verification-report.json`, and `workflows/verify-before-claim.md`.
+Uses `docs/jac/templates/correctness-contract.json`, `docs/jac/templates/verification-report.json`, and `docs/jac/workflows/verify-before-claim.md`.

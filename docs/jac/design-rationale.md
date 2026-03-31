@@ -1,28 +1,18 @@
 # Design rationale
 
-JAC keeps concise native files in the locations GitHub documents and keeps the longer reference material in `docs/jac/`.
-
-## Repo-scoped files
-
-The repo-scoped files in this repository are:
-
-- `.github/copilot-instructions.md`
-- `.github/instructions/*.instructions.md`
-- `AGENTS.md`
-- `.github/skills/*/SKILL.md`
-- `.github/hooks/*.json`
-- `.github/agents/*.agent.md` when present
-
-These files need to stay concise because they are the files a supported environment may read directly.
-
-## Reference material under `docs/jac/`
-
-`docs/jac/` keeps the longer rules, workflows, templates, event contracts, examples, hook notes, support docs, and maintenance inventory.
+JAC keeps concise repo-scoped files in the locations GitHub documents and keeps the longer reference material in `docs/jac/`.
 
 ## Why the split exists
 
-The split keeps the repo-scoped files practical and easy to transplant into another repository.
-It also reduces repeated prose and makes support boundaries easier to state honestly.
+The split keeps the repo-scoped native layer practical and easier to transplant into another repository.
+It also reduces repeated prose, gives policies one clear home, and makes support boundaries easier to state honestly.
+
+## What belongs in each layer
+
+The repo-scoped native layer is `.github/` plus `AGENTS.md`.
+Those files need to stay concise because they are the files a supported environment may read directly.
+
+`docs/jac/` keeps the longer rules, workflows, templates, examples, hook notes, support docs, and maintenance inventory that those repo-scoped files point back to.
 
 ## Claim boundaries
 

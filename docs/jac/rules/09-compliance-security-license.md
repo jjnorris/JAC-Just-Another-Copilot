@@ -25,4 +25,4 @@ Raise early warnings for regulated domains, sensitive data, and license conflict
 - Bad: treat payment or healthcare logic like generic CRUD.
 
 ## interplay
-Uses `.github/skills/compliance-audit/SKILL.md`, `workflows/compliance-triage.md`, and `docs/jac/secret-handling-model.md`.
+Uses `.github/skills/compliance-audit/SKILL.md`, `docs/jac/workflows/compliance-triage.md`, and `docs/jac/secret-handling-model.md`.

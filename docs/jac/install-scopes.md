@@ -23,15 +23,15 @@ Repo-scoped means:
 
 ## User-scoped (optional and environment-specific)
 
-Some environments also document user-level Copilot files under the home directory.
+Some environments also document user-scoped Copilot files under the home directory.
 These are not installed by JAC automatically.
 They are separate, manual, per-user setup.
 
 | Path | Purpose |
 |---|---|
-| `$HOME/.copilot/copilot-instructions.md` | personal instructions across that user's projects |
-| `~/.copilot/skills/` | personal skills across projects |
-| `~/.copilot/agents/` | personal custom agents across projects |
+| `$HOME/.copilot/copilot-instructions.md` | user-scoped instructions across that user's projects |
+| `~/.copilot/skills/` | user-scoped skills across projects |
+| `~/.copilot/agents/` | user-scoped custom agents across projects |
 
 User-scoped means:
 - lives in the user's home directory
@@ -53,7 +53,7 @@ Use **repo-scoped** placement when:
 
 Use **user-scoped** placement when:
 - you want personal instructions, skills, or agents across multiple projects
-- the target environment explicitly documents those user-level paths
+- the target environment explicitly documents those user-scoped home-directory paths
 - you accept that the repo itself does not carry that configuration for other contributors
 
 ## Manual fallback

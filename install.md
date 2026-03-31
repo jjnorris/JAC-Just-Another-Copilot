@@ -36,6 +36,7 @@ For a cross-project transplant:
 8. edit only the repo-specific wording that truly needs to change in the target repository
 
 Do not copy only `docs/jac/` and expect GitHub Copilot to discover it on its own.
+If you want a smaller first step, start with `docs/jac/lite-profile.md`.
 
 ## User-scoped equivalents
 
@@ -72,3 +73,4 @@ If your environment does not load the repo-scoped files automatically:
 
 Repository instructions, skills, hooks, and custom agent profiles do not behave the same way everywhere.
 Treat user-scoped support, skill loading, hook execution, and agent profile support as environment-specific unless GitHub documents the behavior for the environment you care about.
+Use `compatibility.md` and `docs/jac/support-matrix.md` when you need the narrower support notes.

@@ -25,4 +25,4 @@ Require explicit review handling before risky or broad execution.
 - Bad: broad refactor executed because the model felt confident.
 
 ## interplay
-Uses `workflows/plan-review.md`, `templates/plan-review-comment.json`, and `.github/hooks/review-gate.json`.
+Uses `docs/jac/workflows/plan-review.md`, `docs/jac/templates/plan-review-comment.json`, and `.github/hooks/review-gate.json`.

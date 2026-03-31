@@ -25,4 +25,4 @@ Use external sources only when they materially improve correctness or reduce unc
 - Bad: invent a platform feature because a blog post implied it might exist.
 
 ## interplay
-Pairs with `workflows/research-with-citations.md` and `.github/skills/autoresearch/SKILL.md`.
+Pairs with `docs/jac/workflows/research-with-citations.md` and `.github/skills/autoresearch/SKILL.md`.

@@ -27,5 +27,5 @@
   "limitations": [
     "Cannot summon real human review by itself."
   ],
-  "fallback_behavior": "Use `workflows/plan-review.md` and task-scoped review comments manually."
+  "fallback_behavior": "Use `docs/jac/workflows/plan-review.md` and task-scoped review comments manually."
 }

@@ -24,4 +24,4 @@ Separate blocking uncertainty from safe, explicit assumptions.
 - Bad: quietly changing the package shape because it felt cleaner.
 
 ## interplay
-Uses `templates/assumption-record.json`, `templates/clarification-request.json`, and `workflows/intake-and-clarify.md`.
+Uses `docs/jac/templates/assumption-record.json`, `docs/jac/templates/clarification-request.json`, and `docs/jac/workflows/intake-and-clarify.md`.

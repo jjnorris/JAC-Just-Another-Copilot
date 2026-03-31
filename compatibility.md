@@ -23,8 +23,8 @@ Hook and skill availability outside agent-capable flows is also environment-spec
 
 ## What `docs/jac/` is
 
-`docs/jac/` is the longer reference set for JAC.
-It includes rules, workflows, templates, event contracts, examples, hook notes, support docs, and `docs/jac/inventory.json`.
+`docs/jac/` is the longer reference set behind the repo-scoped files.
+Use `docs/jac/README.md` for its map.
 Those files support maintenance and manual fallback use.
 They are not described here as native runtime surfaces.
 
@@ -42,3 +42,4 @@ JAC does not claim:
 ## Manual fallback
 
 If a repo-scoped surface is unavailable in your environment, read the `.github/` files and `AGENTS.md` directly, then use `docs/jac/` for the longer reference material.
+Use `docs/jac/support-matrix.md` when you need a more conservative environment-by-environment summary.

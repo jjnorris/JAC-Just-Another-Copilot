@@ -6,23 +6,23 @@ JAC traces meaningful actions instead of relying on vague narration.
 
 ### Agent trace
 Used for assumptions, clarification, research use, route selection, and usage records.
-See `event-contracts/agent-trace.schema.json`.
+See `docs/jac/event-contracts/agent-trace.schema.json`.
 
 ### Review events
 Used for review requests and applied review comments.
-See `event-contracts/review-events.schema.json`.
+See `docs/jac/event-contracts/review-events.schema.json`.
 
 ### Tool events
 Used for denials, budget breaches, changed tool definitions, unresolved dependencies, and secret or PII detections.
-See `event-contracts/tool-events.schema.json`.
+See `docs/jac/event-contracts/tool-events.schema.json`.
 
 ### Memory events
 Used for retrieval and recording of bounded knowledge items.
-See `event-contracts/memory-events.schema.json`.
+See `docs/jac/event-contracts/memory-events.schema.json`.
 
 ### Correctness events
 Used for coverage misses, orphan wiring claims, and duplicate abstraction warnings.
-See `event-contracts/correctness-events.schema.json`.
+See `docs/jac/event-contracts/correctness-events.schema.json`.
 
 ## Minimum event list
 - assumption_added

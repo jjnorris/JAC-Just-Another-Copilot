@@ -23,5 +23,5 @@
   "limitations": [
     "Only useful if extension proposals are actually routed through the pack."
   ],
-  "fallback_behavior": "Use `docs/extension-boundaries.md` as the manual review checklist."
+  "fallback_behavior": "Use `docs/jac/extension-boundaries.md` as the manual review checklist."
 }

@@ -2,15 +2,14 @@
 
 This directory holds the longer reference material behind the repo-scoped files in `.github/` and `AGENTS.md`.
 
-## What is in here
+## Use this directory as a map
 
-- long-form instructions
-- rules and workflows
-- templates and event contracts
-- examples
-- hook notes under `hook-contracts/`
-- support docs
-- maintenance inventory in `inventory.json`
+- `design-rationale.md` explains why JAC keeps the repo-scoped native layer short and keeps the longer canon here
+- `install-scopes.md` separates repo-scoped placement from user-scoped equivalents some environments document
+- `support-matrix.md` keeps support claims conservative and environment-specific
+- `hook-payloads.md` explains what the shared hook runner actually reads
+- `rules/`, `workflows/`, `templates/`, and `examples/` hold the longer policy, support notes, and reusable artifacts
+- `inventory.json` is maintenance inventory for anchors, file classes, and validation targets
 
 ## When to use this directory
 

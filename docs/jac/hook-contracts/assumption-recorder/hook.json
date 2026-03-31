@@ -24,5 +24,5 @@
   "limitations": [
     "Requires either an adapter or disciplined manual use to ensure every assumption is logged."
   ],
-  "fallback_behavior": "Use `templates/assumption-record.json` and `templates/clarification-request.json` directly."
+  "fallback_behavior": "Use `docs/jac/templates/assumption-record.json` and `docs/jac/templates/clarification-request.json` directly."
 }

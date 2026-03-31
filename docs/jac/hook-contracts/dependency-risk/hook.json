@@ -27,5 +27,5 @@
   "limitations": [
     "Does not replace package-manager auditing or legal review."
   ],
-  "fallback_behavior": "Use `workflows/compliance-triage.md` and document the gap honestly."
+  "fallback_behavior": "Use `docs/jac/workflows/compliance-triage.md` and document the gap honestly."
 }
