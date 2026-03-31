@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INVENTORY_PATH = ROOT / "docs/jac/inventory.json"
 FRONTMATTER_REQUIRED = {"name", "description"}
 PATH_SUFFIXES = (".md", ".json")
+STALE_PATH_SENTINEL = "".join(("jac-", "copilot/"))
 INVISIBLE_CHARS = {
     "\u200b",
     "\u200c",
@@ -252,8 +253,8 @@ def check_stale_paths(failures: list[str]) -> None:
         if is_binary(data):
             continue
         text = data.decode("utf-8")
-        if "jac-" "copilot/" in text:
-            failures.append(f"{rel(path)}: stale jac-" "copilot/ path reference found")
+        if STALE_PATH_SENTINEL in text:
+            failures.append(f"{rel(path)}: stale {STALE_PATH_SENTINEL} path reference found")
 
 
 def check_text_hygiene(failures: list[str]) -> None:

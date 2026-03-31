@@ -24,6 +24,11 @@ PATH_KEY_TOKENS = (
     "from",
     "to",
 )
+CLIENT_TRUTH_PATTERNS = (
+    "".join((r"authoritative ", r"gate")),
+    "".join((r"canonical ", r"truth in client")),
+    "".join((r"ui state is ", r"canonical")),
+)
 
 
 @dataclass
@@ -379,14 +384,7 @@ def infra_or_migration_path(ctx: HookContext) -> bool:
 
 
 def client_truth_claim(ctx: HookContext) -> bool:
-    return matches_any(
-        ctx.raw_text,
-        [
-            r"authoritative " r"gate",
-            r"canonical " r"truth in client",
-            r"ui state is " r"canonical",
-        ],
-    )
+    return matches_any(ctx.raw_text, CLIENT_TRUTH_PATTERNS)
 
 
 def parse_structured_output(ctx: HookContext) -> bool:
