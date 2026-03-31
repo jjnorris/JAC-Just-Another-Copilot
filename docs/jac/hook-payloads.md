@@ -1,53 +1,69 @@
 # Hook payloads
 
-This document explains how JAC uses hook event payloads and what `jac_hook.py` is expected to inspect.
+This document explains how JAC's native hooks are wired, what payload fields the hook runner actually reads, and where the hook notes stop.
 
-## How hooks work in JAC
+## How JAC hooks are wired
 
-JAC hooks are JSON files under `.github/hooks/*.json`.
-Each file declares one or more hook event types and a command to run when that event fires.
-The command runs `jac_hook.py <hook-name>` and receives a JSON payload on stdin.
+- Native hook configs live in `.github/hooks/*.json`.
+- The configs invoke `.github/hooks/scripts/jac_hook.py`.
+- The hook runner reads JSON from stdin, applies a small set of policy checks, and then either:
+  - exits silently and allows the action,
+  - writes a deny response to stdout and exits successfully, or
+  - writes an advisory message to stderr.
 
-The script reads the payload, applies policy rules, and either:
-- exits silently (allow)
-- writes a structured deny response to stdout and exits 0 (deny)
-- writes a warning to stderr (advisory)
+The design here is intentionally small:
+- native config in `.github/hooks/`
+- one shared runner script
+- longer rationale in `docs/jac/hook-contracts/`
 
-## Payload fields used by jac_hook.py
+## Payload fields the runner uses
 
 | Field | Type | Used by |
 |---|---|---|
-| `cwd` | string | all — sets the working directory for log output |
-| `toolArgs` | string or object | preToolUse hooks — contains the tool call arguments |
-| `prompt` | string | userPromptSubmitted and some JAC preToolUse checks — contains the submitted prompt when present |
-| `initialPrompt` | string | sessionStart — contains the initial prompt for a new or resumed session when provided |
-| `toolResult` | string or object | postToolUse hooks — contains the tool output |
-| `error` | object | errorOccurred hooks — contains `message`, `name`, and `stack` when available |
+| `cwd` | string | all events — used to resolve the effective working directory and Git log location |
+| `toolName` | string | `preToolUse` — used to separate shell checks from file/path checks |
+| `toolArgs` | string or object | `preToolUse` — parsed when possible for shell commands and path-aware checks |
+| `prompt` | string | `userPromptSubmitted` — used for prompt-size and assumption advisories |
+| `initialPrompt` | string | `sessionStart` — used for session-start inspection |
+| `toolResult` | string or object | `postToolUse` — used for structured-output checks |
+| `error` | object | `errorOccurred` — uses `message`, `name`, and `stack` when available |
 
-## What the script inspects
+## Compatibility fallback
 
-The script lowercases and concatenates `toolArgs`, prompt text (`prompt` or `initialPrompt`), `toolResult`, and error details into a single string for pattern matching.
-For compatibility, `jac_hook.py` prefers the documented `initialPrompt` and `error.message` / `error.name` fields, but it still falls back to the older flat keys when they are present.
-This makes the matching simple and portable but means false positives are possible on legitimate content.
+The runner prefers the currently documented fields:
+- `initialPrompt` for `sessionStart`
+- `error.message` and `error.name` for `errorOccurred`
 
-Pattern matching is used for:
-- destructive command detection (`tool-guardian`)
-- dependency install risk (`dependency-risk`)
-- destructive action gate (`review-gate`)
-- secret-like value detection (`secrets-scanner`)
-- client-authority claim detection (`extension-surface-guard`)
-- prompt size advisory (`context-budgeter`)
-- assumption detection (`assumption-recorder`)
-- piped-install command detection in network exfiltration checks
+For compatibility, it can still fall back to older flat keys such as:
+- `prompt`
+- `errorMessage`
+- `errorCode`
 
-## Hook event types covered
+That fallback is there to keep the checks from failing hard when payload shapes vary.
+It is not a claim that the older flat keys are the preferred current schema.
 
-| Event | Hooks using it |
+## What the runner actually inspects
+
+JAC does **not** treat every hook payload as one giant undifferentiated blob anymore.
+It now inspects payloads in a more structured way:
+
+- shell-oriented checks read the shell command when the tool is a shell tool
+- path-sensitive checks inspect candidate file paths when the tool is a write/edit style tool
+- prompt advisories read `prompt` or `initialPrompt`
+- structured-output checks inspect `toolResult`
+- error logging reads the nested `error` object when present
+
+A lowercased aggregate text form is still used for a few generic pattern checks, but the runner should prefer structured fields when they are available.
+
+## Hook event coverage in JAC
+
+| Event | JAC use |
 |---|---|
-| `preToolUse` | tool-guardian, dependency-risk, review-gate, secrets-scanner, extension-surface-guard, context-budgeter, assumption-recorder |
-| `postToolUse` | structured-output, telemetry-emitter |
-| `sessionStart` | session-start |
-| `errorOccurred` | error-occurred |
+| `sessionStart` | prompt-length logging, session-start secret advisory |
+| `userPromptSubmitted` | prompt-size and assumption advisories |
+| `preToolUse` | command, path, dependency, secret, review, and extension-boundary checks |
+| `postToolUse` | structured-output validation and telemetry note |
+| `errorOccurred` | compact error artifact logging |
 
 ## Deny response format
 
@@ -58,21 +74,3 @@ When a hook denies a tool use, the response written to stdout must be:
   "permissionDecision": "deny",
   "permissionDecisionReason": "short plain-text reason"
 }
-```
-
-The script exits 0 after writing the deny response.
-
-## Audit log
-
-Every hook invocation appends a JSONL record to `.git/jac-hooks/<hook-name>.jsonl`.
-This is local-only and not committed.
-It is intended for manual review, not automated processing.
-
-## Limitations
-
-- The hook script runs as a subprocess and cannot observe session state between calls.
-- Pattern matching on lowercased concatenated text is approximate and may produce false positives.
-- Hooks are only active in environments where GitHub documents hook execution (agent-capable flows).
-
-See `.github/hooks/scripts/jac_hook.py` for the implementation.
-See `docs/jac/hook-contracts/` for the per-hook rationale.
