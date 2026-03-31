@@ -1,44 +1,66 @@
 # Install scopes
 
-JAC ships two distinct placement scopes: repo-scoped and user-scoped.
-They are not interchangeable.
+Use this file to distinguish JAC's repo-scoped layout from user-scoped equivalents that some environments document.
 
-## Repo-scoped (primary)
+## Repo-scoped (the primary JAC layout)
 
-These files are committed inside this repository under `.github/` plus `AGENTS.md`.
-They are active for anyone working in this repo on a supported Copilot surface.
+These files live in the repository and are the main way JAC is shipped:
 
-| File or path | What it does |
+| Path | Purpose |
 |---|---|
-| `.github/copilot-instructions.md` | Broad repo-level instructions for Copilot |
-| `.github/instructions/**/*.instructions.md` | Path-specific or topic-specific instruction files |
-| `.github/skills/*/SKILL.md` | Named agent skills for agent-capable flows |
-| `.github/hooks/*.json` | Agent hooks for documented hook event types |
-| `AGENTS.md` | Agent operating notes, read by agent-capable flows |
-| `.github/agents/*.agent.md` | Custom agent profiles, if present |
+| `.github/copilot-instructions.md` | broad repo-wide instructions |
+| `.github/instructions/**/*.instructions.md` | path-specific or topic-specific instructions |
+| `.github/skills/*/SKILL.md` | repo-scoped skills for supported agent-capable flows |
+| `.github/hooks/*.json` | repo-scoped hooks |
+| `AGENTS.md` | contributor / agent operating notes for this repo |
+| `.github/agents/*.agent.md` | repo-scoped custom agent profiles, if present |
+| `docs/jac/` | longer reference material, maintenance docs, templates, examples, and support notes |
 
-Repo-scoped files require no home-directory setup.
-They are active when the repo is open in a supported environment.
+Repo-scoped means:
+- committed with the repository
+- available to anyone using the repository in a supported environment
+- the primary distribution model for JAC
 
-## User-scoped (optional, environment-dependent)
+## User-scoped (optional and environment-specific)
 
-Some Copilot environments document user-level placement under the home directory.
-These are separate from this repository and require manual setup by the individual user.
+Some environments also document user-level Copilot files under the home directory.
+These are not installed by JAC automatically.
+They are separate, manual, per-user setup.
 
-| Path | What it does |
+| Path | Purpose |
 |---|---|
-| `$HOME/.copilot/copilot-instructions.md` | Personal instructions applied across that user's projects |
-| `~/.copilot/skills/` | Personal named skills |
-| `~/.copilot/agents/` | Personal custom agent profiles |
+| `$HOME/.copilot/copilot-instructions.md` | personal instructions across that user's projects |
+| `~/.copilot/skills/` | personal skills across projects |
+| `~/.copilot/agents/` | personal custom agents across projects |
 
-User-scoped files are optional and environment-specific.
-Not every Copilot surface loads them.
-This repository does not install anything into your home directory.
+User-scoped means:
+- lives in the user's home directory
+- can apply across multiple projects in supported environments
+- separate from this repository's committed files
 
-## Hooks are not user-scoped
+## Hooks remain repo-scoped
 
 JAC does not claim a user-scoped hooks directory.
-Hook files live under `.github/hooks/` and are repo-scoped.
-No user-scoped hook placement is documented by GitHub as of this writing.
+Hooks are kept repo-scoped under `.github/hooks/*.json`.
+For CLI, GitHub documents hook loading from the current working directory, which still aligns with repo-scoped placement rather than a shared user hook directory.
 
-See `docs/jac/support-matrix.md` for environment-specific details.
+## When to use each scope
+
+Use **repo-scoped** placement when:
+- you want JAC to travel with the repository
+- you want collaborators to get the same native files
+- you want support boundaries to be visible in version control
+
+Use **user-scoped** placement when:
+- you want personal instructions, skills, or agents across multiple projects
+- the target environment explicitly documents those user-level paths
+- you accept that the repo itself does not carry that configuration for other contributors
+
+## Manual fallback
+
+If a native surface is unavailable in your environment:
+1. read the repo-scoped files directly
+2. use `docs/jac/` as the longer reference set
+3. keep support claims narrow and environment-specific
+
+See `docs/jac/support-matrix.md` for environment notes.
