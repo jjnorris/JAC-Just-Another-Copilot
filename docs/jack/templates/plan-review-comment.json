@@ -1,0 +1,20 @@
+{
+  "template_version": "jac-template-v1",
+  "task_id": "",
+  "review_mode": "request_review",
+  "status": "comment",
+  "scope": "",
+  "risk_class": "",
+  "correctness_contract_ref": "",
+  "plan_steps": [],
+  "evidence_expectations": [],
+  "approval_needed_for": [],
+  "comments": [
+    {
+      "id": "",
+      "severity": "warning",
+      "message": "",
+      "required_before_proceed": false
+    }
+  ]
+}

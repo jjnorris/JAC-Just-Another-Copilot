@@ -1,0 +1,16 @@
+{
+    "template_version": "jac-template-v1",
+    "task": "<task id or description>",
+    "generated_at": "<ISO-8601 timestamp>",
+    "review_scope": "post_validation",
+    "evidence_inputs": [
+        "jack/repo-task-validation-report.json",
+        "jack/repo-task-transition-ledger.json"
+    ],
+    "findings": [],
+    "acceptance_recommendation": "accept",
+    "confidence": 0.75,
+    "rationale": "Short human- or tool-readable rationale for the recommendation.",
+    "unresolved_gaps": [],
+    "recommended_return_stage": "none"
+}

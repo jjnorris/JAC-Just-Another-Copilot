@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "comment": "JACK native hook for structured-output. Canonical rationale stays in docs/jack/hook-contracts/structured-output/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py structured-output",
+        "powershell": "python .github/hooks/scripts/jac_hook.py structured-output",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
+
+

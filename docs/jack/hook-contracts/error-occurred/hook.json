@@ -1,0 +1,18 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "error-occurred",
+  "event": "errorOccurred",
+  "intent": "Capture a compact structured failure artifact when an error occurs during an agent session.",
+  "fires_on": "errorOccurred",
+  "deny_conditions": [],
+  "advisory_conditions": [],
+  "emits": [
+    "structured error_occurred artifact to stderr with error_code and error_snippet",
+    "durable JSONL record to .git/jac-hooks/error-occurred.jsonl"
+  ],
+  "notes": [
+    "Does not deny. Purely observational.",
+    "Keeps only the first 200 characters of the error message in the snippet.",
+    "Appends to .git/jac-hooks/error-occurred.jsonl for durable local audit."
+  ]
+}

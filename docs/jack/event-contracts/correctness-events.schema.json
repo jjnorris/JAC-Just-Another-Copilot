@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jac.local/event-contracts/correctness-events.schema.json",
+  "title": "Correctness Event",
+  "type": "object",
+  "required": [
+    "event_type",
+    "timestamp",
+    "task_id",
+    "payload"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "coverage_miss",
+        "wiring_claim_orphan",
+        "duplicate_abstraction_candidate"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_ref": {
+          "type": "string"
+        },
+        "missing_evidence_for": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wiring_claim": {
+          "type": "string"
+        },
+        "orphan_symbol": {
+          "type": "string"
+        },
+        "candidate_symbol": {
+          "type": "string"
+        },
+        "canonical_alternative": {
+          "type": "string"
+        },
+        "remediation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

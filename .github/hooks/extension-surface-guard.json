@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "comment": "JACK native hook for extension-surface-guard. Canonical rationale stays in docs/jack/hook-contracts/extension-surface-guard/hook.json.",
+        "bash": "python3 .github/hooks/scripts/jac_hook.py extension-surface-guard",
+        "powershell": "python .github/hooks/scripts/jac_hook.py extension-surface-guard",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
+
+

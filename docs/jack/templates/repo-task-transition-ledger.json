@@ -1,0 +1,16 @@
+{
+    "template_version": "jac-template-v1",
+    "task": "",
+    "started_at": "",
+    "finished_at": "",
+    "stages": [
+        {
+            "stage_name": "",
+            "status": "completed",
+            "artifact_paths": [],
+            "reason": ""
+        }
+    ],
+    "optional_stages_encountered": [],
+    "final_status": "completed"
+}

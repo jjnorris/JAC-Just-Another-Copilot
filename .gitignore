@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+_bin/
+jack/*.json
+jack/*.md
+jack/*.jsonl
+.venv/
+venv/
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/

@@ -1,0 +1,27 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "structured-output",
+  "trigger": "Before returning JSON or schema-bound output.",
+  "inspects": [
+    "target schema",
+    "payload shape",
+    "required fields"
+  ],
+  "warns_on": [
+    "missing optional context",
+    "weakly typed coercions"
+  ],
+  "blocks_on": [],
+  "enforcement": "advisory",
+  "remediation": [
+    "Validate locally with the same schema and return an honest failure description."
+  ],
+  "emitted_events": [
+    "usage_recorded"
+  ],
+  "limitations": [
+    "Cannot guarantee downstream consumer behavior if no adapter validates schemas.",
+    "The runner only warns on parse failures; it does not retry or block."
+  ],
+  "fallback_behavior": "Validate with local JSON parsing and schema review before claiming success."
+}

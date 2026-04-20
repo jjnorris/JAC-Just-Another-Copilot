@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jac.local/event-contracts/memory-events.schema.json",
+  "title": "Memory Event",
+  "type": "object",
+  "required": [
+    "event_type",
+    "timestamp",
+    "task_id",
+    "payload"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "memory_retrieved",
+        "memory_recorded"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "summary",
+        "memory_item"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "memory_item": {
+          "type": "object",
+          "required": [
+            "title",
+            "summary",
+            "artifacts",
+            "scope"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "artifacts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rejected_approaches": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unresolved_risks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
