@@ -594,7 +594,7 @@ def handle_post_tool_use(ctx: HookContext) -> None:
             ctx.logger.advisory("emitted JSON-looking output that did not parse cleanly.")
         return
     if ctx.hook == "telemetry-emitter":
-        ctx.logger.advisory("recorded a trace event in .git/jac-hooks/ when a Git directory was available.")
+        ctx.logger.advisory("recorded a trace event in .git/jack-hooks/ when a Git directory was available.")
 
 
 def handle_error_occurred(ctx: HookContext) -> None:
