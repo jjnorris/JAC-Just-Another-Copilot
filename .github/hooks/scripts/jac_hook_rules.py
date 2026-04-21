@@ -151,11 +151,23 @@ def collect_strings(value: Any) -> Iterator[str]:
 
 
 def normalize_path(value: str) -> str:
-    return value.strip().strip("'\"")
+    s = value.strip().strip("'\"")
+    # Convert Windows backslashes to forward slashes for consistent matching
+    s = s.replace('\\\\', '/').replace('\\', '/')
+    # Collapse repeated slashes
+    s = re.sub(r"/+", "/", s)
+    # Remove trailing slash except for drive roots like 'C:/'
+    if len(s) > 3 and s.endswith("/"):
+        s = s.rstrip("/")
+    return s
 
 
 def regex_candidate_paths(text: str) -> Iterator[str]:
-    for match in re.finditer(r"([./A-Za-z0-9_-]+(?:/[./A-Za-z0-9_-]+)+)", text):
+    # Match Windows drive-letter absolute paths like C:\\path\\to\\file
+    for match in re.finditer(r"[A-Za-z]:\\\\(?:[^\\\\\n]+(?:\\\\[^\\\\\n]+)*)", text):
+        yield normalize_path(match.group(0))
+    # Match posix-like or backslash-separated paths with multiple segments
+    for match in re.finditer(r"([A-Za-z0-9_.\s-]+(?:[\\/][A-Za-z0-9_.\s-]+)+)", text):
         yield normalize_path(match.group(1))
 
 
@@ -420,7 +432,21 @@ def has_review_approval(ctx: HookContext) -> bool:
     Detect a repository-local review approval artifact.
     Supports both legacy '.git/jac-hooks' and new '.git/jack-hooks' artifact directories,
     as well as repo-level 'jack/' or 'jac/' directories and fallback files.
+
+    To reduce spoofing risk, only accept artifacts that include explicit provenance
+    (for example: provider, workflow, run_id, run_url, signed_by, approval_signature).
     """
+    provenance_keys = (
+        "workflow",
+        "run_id",
+        "provider",
+        "approval_signature",
+        "signed_by",
+        "pr_number",
+        "ci_provider",
+        "run_url",
+        "source",
+    )
     try:
         if ctx.git_dir:
             for hooks_name in ("jac-hooks", "jack-hooks"):
@@ -438,7 +464,16 @@ def has_review_approval(ctx: HookContext) -> bool:
                                 data = json.loads(line)
                             except Exception:
                                 continue
-                            if isinstance(data, dict) and data.get("approved") is True:
+                            if not isinstance(data, dict):
+                                continue
+                            if data.get("approved") is not True:
+                                continue
+                            # Accept only if provenance is present
+                            if any(k in data and data.get(k) for k in provenance_keys):
+                                return True
+                            # Allow structured approved_by with a login as provenance
+                            approved_by = data.get("approved_by")
+                            if isinstance(approved_by, dict) and approved_by.get("login"):
                                 return True
                     except Exception:
                         continue
@@ -449,11 +484,33 @@ def has_review_approval(ctx: HookContext) -> bool:
                 if repo_level.exists():
                     approved = repo_level / "review-approved.jsonl"
                     if approved.exists():
-                        return True
+                        try:
+                            for line in approved.read_text(encoding="utf-8").splitlines():
+                                try:
+                                    data = json.loads(line)
+                                except Exception:
+                                    continue
+                                if not isinstance(data, dict):
+                                    continue
+                                if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
+                                    return True
+                        except Exception:
+                            pass
             for fallback_name in (".jack-review.jsonl", ".jac-review.jsonl"):
                 fallback = ctx.cwd / fallback_name
                 if fallback.exists():
-                    return True
+                    try:
+                        for line in fallback.read_text(encoding="utf-8").splitlines():
+                            try:
+                                data = json.loads(line)
+                            except Exception:
+                                continue
+                            if not isinstance(data, dict):
+                                continue
+                            if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
+                                return True
+                    except Exception:
+                        pass
     except Exception:
         pass
     return False

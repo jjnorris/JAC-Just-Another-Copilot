@@ -269,7 +269,7 @@ class HookRegressionTests(unittest.TestCase):
             (repo_root / ".git").mkdir()
             hooks_dir = repo_root / ".git" / "jac-hooks"
             hooks_dir.mkdir(parents=True, exist_ok=True)
-            (hooks_dir / "review-approved.jsonl").write_text(json.dumps({"approved": True}), encoding="utf-8")
+            (hooks_dir / "review-approved.jsonl").write_text(json.dumps({"approved": True, "provider": "local-test", "workflow": "hook-regression", "run_id": 1}), encoding="utf-8")
             ctx_with_flag.git_dir = repo_root / ".git"
             stdout_with_flag, stderr_with_flag = capture_run(ctx_with_flag)
 
@@ -614,6 +614,13 @@ class HookRegressionTests(unittest.TestCase):
             log_path = repo_root / ".git" / "jac-hooks" / "structured-output.jsonl"
             self.assertFalse(log_path.exists())
 
+    def test_candidate_paths_detects_windows_paths(self) -> None:
+        # Ensure Windows backslash paths are normalized to forward-slash style candidate paths
+        payload = {"prompt": "Edit file", "toolName": "edit", "toolArgs": {"path": "C:\\Users\\Alice\\project\\notes.txt"}}
+        ctx = build_context(hook="assumption-recorder", payload=payload, cwd=ROOT, git_dir=None, logger=RecordingLogger("assumption-recorder"))
+        paths = [p.lower() for p in ctx.candidate_paths]
+        self.assertIn("c:/users/alice/project/notes.txt", paths)
+
     def test_tool_guardian_changes_behavior_with_jac_review_ok(self) -> None:
         payload = {"prompt": "Force push.", "toolName": "shell", "toolArgs": {"command": "git push origin main --force"}}
         ctx_without_flag = build_context(hook="tool-guardian", payload=payload, cwd=ROOT, git_dir=None, logger=RecordingLogger("tool-guardian"))
@@ -634,7 +641,7 @@ class HookRegressionTests(unittest.TestCase):
             (repo_root / ".git").mkdir()
             hooks_dir = repo_root / ".git" / "jac-hooks"
             hooks_dir.mkdir(parents=True, exist_ok=True)
-            (hooks_dir / "review-approved.jsonl").write_text(json.dumps({"approved": True}), encoding="utf-8")
+            (hooks_dir / "review-approved.jsonl").write_text(json.dumps({"approved": True, "provider": "local-test", "workflow": "hook-regression", "run_id": 1}), encoding="utf-8")
             ctx_with_flag.git_dir = repo_root / ".git"
             stdout_with, stderr_with = capture_run(ctx_with_flag)
 
