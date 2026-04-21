@@ -1,0 +1,7 @@
+title = "gitleaks baseline"
+
+[[rules]]
+  id = "baseline-ignore"
+  description = "Ignore placeholder baseline rule"
+  regex = '''^$'''
+  tags = ["baseline"]
