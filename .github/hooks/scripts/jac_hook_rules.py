@@ -611,15 +611,13 @@ def handle_session_start(ctx: HookContext) -> None:
 
 
 def handle_pre_tool_use(ctx: HookContext) -> None:
-    jack_review_env = os.environ.get("JACK_REVIEW_OK")
-    review_ok_env = jack_review_env == "1"
-    # Deprecation advisory: prefer server-verified review artifacts over env bypass.
-    if review_ok_env:
-        try:
-            ctx.logger.advisory("DEPRECATED: environment variable JACK_REVIEW_OK is set. This env var is deprecated and will be removed. Migrate to server-verified review artifacts (see docs/jacks/deprecate_jack_review_ok.md).")
-        except Exception:
-            pass
-    review_ok = review_ok_env or has_review_approval(ctx)
+    # JACK_REVIEW_OK env-var removed: always require server-verified review artifacts.
+    try:
+        if os.environ.get("JACK_REVIEW_OK") is not None:
+            ctx.logger.advisory("JACK_REVIEW_OK is ignored; migrate to server-verified review artifacts (see docs/jacks/deprecate_jack_review_ok.md).")
+    except Exception:
+        pass
+    review_ok = has_review_approval(ctx)
 
 
     if ctx.hook == "tool-guardian":

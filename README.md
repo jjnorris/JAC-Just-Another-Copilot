@@ -6,6 +6,8 @@ It is meant to make Copilot a little more cautious, explicit, and reviewable ins
 This repository keeps the repo-scoped native layer in `.github/` and `AGENTS.md`.
 The longer canon and support material live in `docs/jacks/`.
 
+Migration note: The JACK_REVIEW_OK environment variable override has been removed. If your workflows or environments used JACK_REVIEW_OK to bypass review checks, migrate to server-verified review artifacts. See .github/ISSUE_TEMPLATE/migrate-jack-review-ok.md for guidance.
+
 ## Start here
 
 - `install.md` for repo-scoped placement, cross-project copying, and user-scoped equivalents that some environments document
