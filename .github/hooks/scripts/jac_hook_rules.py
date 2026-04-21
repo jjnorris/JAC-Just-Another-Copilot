@@ -4,6 +4,8 @@ import json
 import os
 import re
 import sys
+import urllib.request
+import urllib.error
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, cast
@@ -427,14 +429,36 @@ def parse_structured_output(ctx: HookContext) -> bool:
     return True
 
 
+def _verify_github_run(repo: str, run_id: int, token: str) -> bool:
+    """Verify a GitHub Actions workflow run is successful using the API.
+
+    Returns True when the run exists and its conclusion is 'success'.
+    This is a best-effort check and will silently fail if the network or token
+    are not available.
+    """
+    if not repo or not run_id or not token:
+        return False
+    try:
+        url = f"https://api.github.com/repos/{repo}/actions/runs/{int(run_id)}"
+        req = urllib.request.Request(url, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github+json", "User-Agent": "JACK-hook"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            payload = json.load(resp)
+        conclusion = payload.get("conclusion")
+        return conclusion == "success"
+    except Exception:
+        return False
+
+
 def has_review_approval(ctx: HookContext) -> bool:
     """
     Detect a repository-local review approval artifact.
-    Supports both legacy '.git/jac-hooks' and new '.git/jack-hooks' artifact directories,
-    as well as repo-level 'jack/' or 'jac/' directories and fallback files.
+    Supports the standard '.git/jack-hooks' artifact directory as well as repo-level
+    'jack/' (and legacy 'jac/') directories and fallback files.
 
-    To reduce spoofing risk, only accept artifacts that include explicit provenance
-    (for example: provider, workflow, run_id, run_url, signed_by, approval_signature).
+    To reduce spoofing risk, prefer server-side verification when a GitHub Actions
+    run_id and provider are present — this attempts to verify the workflow run
+    via the GitHub API when a GITHUB_TOKEN and GITHUB_REPOSITORY are available.
+    Otherwise the function falls back to presence of provenance keys.
     """
     provenance_keys = (
         "workflow",
@@ -447,6 +471,7 @@ def has_review_approval(ctx: HookContext) -> bool:
         "run_url",
         "source",
     )
+
     try:
         if ctx.git_dir:
             for hooks_name in ("jack-hooks",):
@@ -468,15 +493,32 @@ def has_review_approval(ctx: HookContext) -> bool:
                                 continue
                             if data.get("approved") is not True:
                                 continue
-                            # Accept only if provenance is present
+
+                            # If the artifact claims a GitHub provider and includes a run_id,
+                            # try to verify it server-side when a token and repository are set.
+                            provider = str(data.get("provider", "")).lower()
+                            run_id = data.get("run_id")
+                            if provider in ("github", "github-actions", "github.com") and run_id:
+                                repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
+                                token = os.environ.get("GITHUB_TOKEN")
+                                if repo_name and token:
+                                    try:
+                                        if _verify_github_run(repo_name, int(run_id), token):
+                                            return True
+                                    except Exception:
+                                        pass
+
+                            # Fallback acceptance when any provenance key is present
                             if any(k in data and data.get(k) for k in provenance_keys):
                                 return True
+
                             # Allow structured approved_by with a login as provenance
                             approved_by = data.get("approved_by")
                             if isinstance(approved_by, dict) and approved_by.get("login"):
                                 return True
                     except Exception:
                         continue
+
         # Some CI flows may place approval artifacts under repo/jack or repo/jac, or write fallback files.
         if ctx.cwd:
             for repo_dir in ("jack", "jac"):
@@ -492,6 +534,19 @@ def has_review_approval(ctx: HookContext) -> bool:
                                     continue
                                 if not isinstance(data, dict):
                                     continue
+
+                                provider = str(data.get("provider", "")).lower()
+                                run_id = data.get("run_id")
+                                if provider in ("github", "github-actions", "github.com") and run_id:
+                                    repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
+                                    token = os.environ.get("GITHUB_TOKEN")
+                                    if repo_name and token:
+                                        try:
+                                            if _verify_github_run(repo_name, int(run_id), token):
+                                                return True
+                                        except Exception:
+                                            pass
+
                                 if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
                                     return True
                         except Exception:
@@ -507,6 +562,19 @@ def has_review_approval(ctx: HookContext) -> bool:
                                 continue
                             if not isinstance(data, dict):
                                 continue
+
+                            provider = str(data.get("provider", "")).lower()
+                            run_id = data.get("run_id")
+                            if provider in ("github", "github-actions", "github.com") and run_id:
+                                repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
+                                token = os.environ.get("GITHUB_TOKEN")
+                                if repo_name and token:
+                                    try:
+                                        if _verify_github_run(repo_name, int(run_id), token):
+                                            return True
+                                    except Exception:
+                                        pass
+
                             if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
                                 return True
                     except Exception:
