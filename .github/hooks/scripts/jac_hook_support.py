@@ -70,27 +70,19 @@ class HookLogger:
             return
 
     def append_jsonl(self, file_name: str, payload: Dict[str, Any]) -> None:
-        # Allow overriding the artifact directory via env var. Support both legacy
-        # `JAC_ARTIFACT_DIR` and new `JACK_ARTIFACT_DIR`. Prefer 'jack-hooks' for
-        # new artifacts but preserve legacy 'jac-hooks' when present.
-        artifact_override = os.environ.get("JACK_ARTIFACT_DIR") or os.environ.get("JAC_ARTIFACT_DIR")
+        # Allow overriding the artifact directory via env var. Prefer the new
+        # `JACK_ARTIFACT_DIR` and standardize on 'jack-hooks' for artifact storage.
+        artifact_override = os.environ.get("JACK_ARTIFACT_DIR")
         if artifact_override:
             try:
-                # If a JACK-specific override is provided, use 'jack-hooks'.
-                if os.environ.get("JACK_ARTIFACT_DIR"):
-                    log_dir = Path(artifact_override) / "jack-hooks"
-                else:
-                    # preserve legacy behavior for JAC_ARTIFACT_DIR users
-                    log_dir = Path(artifact_override) / "jac-hooks"
+                log_dir = Path(artifact_override) / "jack-hooks"
             except Exception:
                 return
         else:
             if self.git_dir is None:
                 return
-            # Default to the historical 'jac-hooks' directory to preserve legacy
-            # behavior. Explicit JACK_ARTIFACT_DIR or JACK_ARTIFACT_DIR users may opt
-            # into 'jack-hooks' when desired.
-            log_dir = self.git_dir / "jac-hooks"
+            # Default to the standardized 'jack-hooks' directory.
+            log_dir = self.git_dir / "jack-hooks"
 
         try:
             log_dir.mkdir(parents=True, exist_ok=True)

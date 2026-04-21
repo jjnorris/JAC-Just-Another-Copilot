@@ -449,7 +449,7 @@ def has_review_approval(ctx: HookContext) -> bool:
     )
     try:
         if ctx.git_dir:
-            for hooks_name in ("jac-hooks", "jack-hooks"):
+            for hooks_name in ("jack-hooks",):
                 hooks_dir = ctx.git_dir / hooks_name
                 if not hooks_dir.exists():
                     continue

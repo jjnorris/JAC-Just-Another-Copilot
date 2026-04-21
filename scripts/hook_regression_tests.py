@@ -157,7 +157,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stderr, "")
             self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": EXTENSION_SURFACE_GUARD_DENY_REASON})
 
-            log_path = repo_root / ".git" / "jac-hooks" / "extension-surface-guard.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "extension-surface-guard.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "extension-surface-guard", "payload": payload})
@@ -174,7 +174,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "extension-surface-guard.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "extension-surface-guard.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "extension-surface-guard", "payload": payload})
@@ -216,7 +216,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr.strip(), f"JACK assumption-recorder: {ASSUMPTION_RECORDER_ADVISORY_REASON}")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "assumption-recorder.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "assumption-recorder.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "assumption-recorder", "payload": payload})
@@ -233,7 +233,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "assumption-recorder.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "assumption-recorder.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "assumption-recorder", "payload": payload})
@@ -267,7 +267,7 @@ class HookRegressionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmprepo:
             repo_root = Path(tmprepo)
             (repo_root / ".git").mkdir()
-            hooks_dir = repo_root / ".git" / "jac-hooks"
+            hooks_dir = repo_root / ".git" / "jack-hooks"
             hooks_dir.mkdir(parents=True, exist_ok=True)
             (hooks_dir / "review-approved.jsonl").write_text(json.dumps({"approved": True, "provider": "local-test", "workflow": "hook-regression", "run_id": 1}), encoding="utf-8")
             ctx_with_flag.git_dir = repo_root / ".git"
@@ -309,7 +309,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stderr, "")
             self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": "JACK review gate blocked a destructive action until a review artifact is in place."})
 
-            log_path = repo_root / ".git" / "jac-hooks" / "review-gate.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "review-gate.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "review-gate", "payload": payload})
@@ -330,7 +330,7 @@ class HookRegressionTests(unittest.TestCase):
                 self.assertEqual(result.stderr, "")
                 self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": "JACK review gate blocked a destructive action until a review artifact is in place."})
 
-                log_path = repo_root / ".git" / "jac-hooks" / "review-gate.jsonl"
+                log_path = repo_root / ".git" / "jack-hooks" / "review-gate.jsonl"
                 self.assertFalse(log_path.exists())
 
     def test_review_gate_cli_stays_quiet_on_benign_command_without_git_dir(self) -> None:
@@ -348,7 +348,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "review-gate.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "review-gate.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_review_gate_cli_appends_payload_and_stays_quiet_on_benign_command_when_git_dir_exists(self) -> None:
@@ -367,7 +367,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "review-gate.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "review-gate.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "review-gate", "payload": payload})
@@ -421,7 +421,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stderr, "")
             self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": DEPENDENCY_RISK_DENY_REASON})
 
-            log_path = repo_root / ".git" / "jac-hooks" / "dependency-risk.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "dependency-risk.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "dependency-risk", "payload": payload})
@@ -442,7 +442,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "dependency-risk.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "dependency-risk.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "dependency-risk", "payload": payload})
@@ -504,7 +504,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stderr, "")
             self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": SECRETS_SCANNER_DENY_REASON})
 
-            log_path = repo_root / ".git" / "jac-hooks" / "secrets-scanner.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "secrets-scanner.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "secrets-scanner", "payload": payload})
@@ -525,7 +525,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "secrets-scanner.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "secrets-scanner.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "secrets-scanner", "payload": payload})
@@ -564,7 +564,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "structured-output.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "structured-output.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "structured-output", "payload": payload})
@@ -581,7 +581,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr.strip(), "JACK structured-output: emitted JSON-looking output that did not parse cleanly.")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "structured-output.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "structured-output.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "structured-output", "payload": payload})
@@ -597,7 +597,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr.strip(), f"JACK structured-output: {STRUCTURED_OUTPUT_ADVISORY_REASON}")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "structured-output.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "structured-output.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_structured_output_cli_stays_quiet_without_git_dir_on_valid_json_and_writes_no_local_artifact(self) -> None:
@@ -611,7 +611,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "structured-output.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "structured-output.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_candidate_paths_detects_windows_paths(self) -> None:
@@ -639,7 +639,7 @@ class HookRegressionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmprepo:
             repo_root = Path(tmprepo)
             (repo_root / ".git").mkdir()
-            hooks_dir = repo_root / ".git" / "jac-hooks"
+            hooks_dir = repo_root / ".git" / "jack-hooks"
             hooks_dir.mkdir(parents=True, exist_ok=True)
             (hooks_dir / "review-approved.jsonl").write_text(json.dumps({"approved": True, "provider": "local-test", "workflow": "hook-regression", "run_id": 1}), encoding="utf-8")
             ctx_with_flag.git_dir = repo_root / ".git"
@@ -698,7 +698,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stderr, "")
             self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": TOOL_GUARDIAN_DENY_REASON})
 
-            log_path = repo_root / ".git" / "jac-hooks" / "tool-guardian.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "tool-guardian.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "tool-guardian", "payload": payload})
@@ -718,7 +718,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stderr, "")
             self.assertEqual(json.loads(result.stdout), {"permissionDecision": "deny", "permissionDecisionReason": TOOL_GUARDIAN_DENY_REASON})
 
-            log_path = repo_root / ".git" / "jac-hooks" / "tool-guardian.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "tool-guardian.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_tool_guardian_cli_stays_quiet_on_benign_command_without_git_dir(self) -> None:
@@ -736,7 +736,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "tool-guardian.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "tool-guardian.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_tool_guardian_cli_appends_payload_and_stays_quiet_on_benign_command_when_git_dir_exists(self) -> None:
@@ -755,7 +755,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "tool-guardian.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "tool-guardian.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "tool-guardian", "payload": payload})
@@ -814,7 +814,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(Path(emitted["gitDir"]).name, ".git")
             self.assertTrue(Path(emitted["gitDir"]).exists())
 
-            log_path = repo_root / ".git" / "jac-hooks" / "session-start.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "session-start.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "session-start", "payload": payload})
@@ -840,7 +840,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(Path(emitted["gitDir"]).name, ".git")
             self.assertTrue(Path(emitted["gitDir"]).exists())
 
-            log_path = repo_root / ".git" / "jac-hooks" / "session-start.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "session-start.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "session-start", "payload": payload})
@@ -865,7 +865,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(emitted["prompt_length"], len(prompt))
             self.assertIsNone(emitted.get("gitDir"))
 
-            log_path = repo_root / ".git" / "jac-hooks" / "session-start.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "session-start.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_session_start_cli_emits_json_without_git_dir_and_writes_no_local_artifact(self) -> None:
@@ -887,7 +887,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(emitted["prompt_length"], len(prompt))
             self.assertIsNone(emitted.get("gitDir"))
 
-            log_path = repo_root / ".git" / "jac-hooks" / "session-start.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "session-start.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_error_occurred_emits_json_payload_shape(self) -> None:
@@ -924,7 +924,7 @@ class HookRegressionTests(unittest.TestCase):
 
             self.assertEqual(stdout, "")
             emitted = json.loads(stderr.strip())
-            log_path = git_dir / "jac-hooks" / ERROR_OCCURRED_LOG_FILE
+            log_path = git_dir / "jack-hooks" / ERROR_OCCURRED_LOG_FILE
             self.assertEqual(emitted["event"], "error_occurred")
             self.assertEqual(emitted["error_name"], "RuntimeError")
             self.assertTrue(log_path.exists())
@@ -951,7 +951,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(emitted["error_snippet"], ERROR_OCCURRED_MESSAGE)
             self.assertTrue(emitted["gitDirFound"])
 
-            log_path = repo_root / ".git" / "jac-hooks" / ERROR_OCCURRED_LOG_FILE
+            log_path = repo_root / ".git" / "jack-hooks" / ERROR_OCCURRED_LOG_FILE
             self.assertTrue(log_path.exists())
             log_lines = log_path.read_text(encoding="utf-8").splitlines()
             self.assertEqual(len(log_lines), 2)
@@ -977,7 +977,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(emitted["error_snippet"], ERROR_OCCURRED_MESSAGE)
             self.assertFalse(emitted["gitDirFound"])
 
-            log_path = repo_root / ".git" / "jac-hooks" / ERROR_OCCURRED_LOG_FILE
+            log_path = repo_root / ".git" / "jack-hooks" / ERROR_OCCURRED_LOG_FILE
             self.assertFalse(log_path.exists())
 
     def test_telemetry_emitter_appends_cli_payload_jsonl_when_git_dir_exists(self) -> None:
@@ -990,9 +990,9 @@ class HookRegressionTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0)
             self.assertEqual(result.stdout, "")
-            self.assertEqual(result.stderr.strip(), "JACK telemetry-emitter: recorded a trace event in .git/jac-hooks/ when a Git directory was available.")
+            self.assertEqual(result.stderr.strip(), "JACK telemetry-emitter: recorded a trace event in .git/jack-hooks/ when a Git directory was available.")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "telemetry-emitter.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "telemetry-emitter.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "telemetry-emitter", "payload": payload})
@@ -1006,9 +1006,9 @@ class HookRegressionTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0)
             self.assertEqual(result.stdout, "")
-            self.assertEqual(result.stderr.strip(), "JACK telemetry-emitter: recorded a trace event in .git/jac-hooks/ when a Git directory was available.")
+            self.assertEqual(result.stderr.strip(), "JACK telemetry-emitter: recorded a trace event in .git/jack-hooks/ when a Git directory was available.")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "telemetry-emitter.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "telemetry-emitter.jsonl"
             self.assertFalse(log_path.exists())
 
     def test_context_budgeter_is_quiet_at_threshold(self) -> None:
@@ -1045,7 +1045,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr, "")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "context-budgeter.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "context-budgeter.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "context-budgeter", "payload": payload})
@@ -1062,7 +1062,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(result.stdout, "")
             self.assertEqual(result.stderr.strip(), f"JACK context-budgeter: {CONTEXT_BUDGETER_ADVISORY_REASON}")
 
-            log_path = repo_root / ".git" / "jac-hooks" / "context-budgeter.jsonl"
+            log_path = repo_root / ".git" / "jack-hooks" / "context-budgeter.jsonl"
             self.assertTrue(log_path.exists())
             stored = json.loads(log_path.read_text(encoding="utf-8").strip())
             self.assertEqual(stored, {"hook": "context-budgeter", "payload": payload})
@@ -1070,4 +1070,5 @@ class HookRegressionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
 
