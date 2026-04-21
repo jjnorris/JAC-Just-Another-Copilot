@@ -87,10 +87,10 @@ class HookLogger:
         else:
             if self.git_dir is None:
                 return
-            legacy = self.git_dir / "jac-hooks"
-            modern = self.git_dir / "jack-hooks"
-            # Prefer legacy if it exists, otherwise use modern (create it)
-            log_dir = legacy if legacy.exists() else modern
+            # Default to the historical 'jac-hooks' directory to preserve legacy
+            # behavior. Explicit JACK_ARTIFACT_DIR or JACK_ARTIFACT_DIR users may opt
+            # into 'jack-hooks' when desired.
+            log_dir = self.git_dir / "jac-hooks"
 
         try:
             log_dir.mkdir(parents=True, exist_ok=True)
