@@ -14,8 +14,8 @@
     "evidence plan is weak"
   ],
   "blocks_on": [
-    "destructive shell action without `JAC_REVIEW_OK`",
-    "secret-like write without `JAC_REVIEW_OK`"
+    "destructive shell action without `JACK_REVIEW_OK`",
+    "secret-like write without `JACK_REVIEW_OK`"
   ],
   "enforcement": "mixed",
   "remediation": [
@@ -27,7 +27,7 @@
   ],
   "limitations": [
     "Cannot summon real human review by itself.",
-    "The runner gates on `JAC_REVIEW_OK`; it does not verify a separate review artifact."
+    "The runner gates on `JACK_REVIEW_OK`; it does not verify a separate review artifact."
   ],
   "fallback_behavior": "Use `docs/jack/workflows/plan-review.md` and task-scoped review comments manually."
 }

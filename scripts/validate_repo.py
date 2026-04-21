@@ -9,12 +9,12 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-# Accept either docs/jack or docs/jackk inventory for compatibility with rename
-CANDIDATE_INVENTORY_PATHS = [ROOT / "docs/jack/inventory.json", ROOT / "docs/jackk/inventory.json"]
+# Accept either docs/jack or docs/jac inventory for compatibility with rename
+CANDIDATE_INVENTORY_PATHS = [ROOT / "docs/jack/inventory.json", ROOT / "docs/jac/inventory.json"]
 INVENTORY_PATH = next((p for p in CANDIDATE_INVENTORY_PATHS if p.exists()), CANDIDATE_INVENTORY_PATHS[0])
 FRONTMATTER_REQUIRED = {"name", "description"}
 PATH_SUFFIXES = (".md", ".json")
-STALE_PATH_SENTINEL = "".join(("jac-", "copilot/"))
+STALE_PATH_SENTINELS = ("jac-copilot/", "jack-copilot/")
 INVISIBLE_CHARS = {
     "\u200b",
     "\u200c",
@@ -259,8 +259,9 @@ def check_stale_paths(failures: list[str]) -> None:
         if is_binary(data):
             continue
         text = data.decode("utf-8")
-        if STALE_PATH_SENTINEL in text:
-            failures.append(f"{rel(path)}: stale {STALE_PATH_SENTINEL} path reference found")
+        for sentinel in STALE_PATH_SENTINELS:
+            if sentinel in text:
+                failures.append(f"{rel(path)}: stale {sentinel} path reference found")
 
 
 def check_text_hygiene(failures: list[str]) -> None:

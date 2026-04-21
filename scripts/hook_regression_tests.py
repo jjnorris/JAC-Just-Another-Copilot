@@ -246,7 +246,7 @@ class HookRegressionTests(unittest.TestCase):
             command=REVIEW_GATE_DESTRUCTIVE_COMMAND,
         )
 
-        with temporary_env("JACK_REVIEW_OK", None), temporary_env("JAC_REVIEW_OK", None):
+        with temporary_env("JACK_REVIEW_OK", None):
             stdout_without_flag = io.StringIO()
             stderr_without_flag = io.StringIO()
             with contextlib.redirect_stdout(stdout_without_flag), contextlib.redirect_stderr(stderr_without_flag), self.assertRaises(SystemExit) as exc_without_flag:
@@ -302,7 +302,7 @@ class HookRegressionTests(unittest.TestCase):
                 "toolArgs": {"command": REVIEW_GATE_DESTRUCTIVE_COMMAND},
             }
 
-            with temporary_env("JACK_REVIEW_OK", None), temporary_env("JAC_REVIEW_OK", None):
+            with temporary_env("JACK_REVIEW_OK", None):
                 result = run_hook_cli("review-gate", payload, repo_root)
 
             self.assertEqual(result.returncode, 0)
@@ -315,7 +315,7 @@ class HookRegressionTests(unittest.TestCase):
             self.assertEqual(stored, {"hook": "review-gate", "payload": payload})
 
     def test_review_gate_cli_denies_destructive_without_git_dir(self) -> None:
-        with temporary_env("JACK_REVIEW_OK", None), temporary_env("JAC_REVIEW_OK", None):
+        with temporary_env("JACK_REVIEW_OK", None):
             with tempfile.TemporaryDirectory() as tmpdir:
                 repo_root = Path(tmpdir)
                 payload = {

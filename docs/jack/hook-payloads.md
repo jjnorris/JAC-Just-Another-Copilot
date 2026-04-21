@@ -16,7 +16,7 @@ The design here is intentionally small:
 - one shared runner script
 - longer rationale in `docs/jack/hook-contracts/`
 
-Note: The runner recognizes an operational environment flag `JAC_REVIEW_OK`. When set to `1`, checks in `review-gate` and `tool-guardian` treat the environment as review-approved (for example, allowing some destructive git or shell actions that would otherwise be denied). This flag is intended for trusted CI or administrator-controlled contexts; do not use it in untrusted interactive sessions.
+Note: The runner recognizes an operational environment flag `JACK_REVIEW_OK`. When set to `1`, checks in `review-gate` and `tool-guardian` treat the environment as review-approved (for example, allowing some destructive git or shell actions that would otherwise be denied). This flag is intended for trusted CI or administrator-controlled contexts; do not use it in untrusted interactive sessions.
 
 ## Payload fields the runner uses
 

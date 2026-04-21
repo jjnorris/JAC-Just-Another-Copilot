@@ -8,7 +8,7 @@ Legend for current enforcement class:
 - `deny-enforced` = the runner can deny matching actions.
 - `advisory-only` = the runner only warns or records notes.
 - `adapter-required` = durable effect depends on external adapter/manual artifact support.
-- `mixed` = the runner has a mix of deny and advisory behavior, or behavior gated by `JAC_REVIEW_OK`.
+- `mixed` = the runner has a mix of deny and advisory behavior, or behavior gated by `JACK_REVIEW_OK`.
 
 | Hook | Contract path | Actual enforcement class today | Evidence from runner/config | Current contract wording |
 | --- | --- | --- | --- | --- |
@@ -20,9 +20,9 @@ Legend for current enforcement class:
 | `telemetry-emitter` | `docs/jack/hook-contracts/telemetry-emitter/hook.json` | `advisory-only` | `.github/hooks/telemetry-emitter.json` dispatches the shared runner; `handle_post_tool_use()` only calls `logger.advisory()`, and `HookLogger.append_jsonl()` writes local JSONL only when a Git directory is available. | accurate |
 | `dependency-risk` | `docs/jack/hook-contracts/dependency-risk/hook.json` | `mixed` | `.github/hooks/dependency-risk.json` dispatches the shared runner; `handle_pre_tool_use()` denies global install paths and piped installs, but the runner does not inspect license compatibility. | accurate |
 | `extension-surface-guard` | `docs/jack/hook-contracts/extension-surface-guard/hook.json` | `deny-enforced` | `.github/hooks/extension-surface-guard.json` dispatches the shared runner; `handle_pre_tool_use()` calls `deny()` when a client-side truth claim is detected. | accurate |
-| `review-gate` | `docs/jack/hook-contracts/review-gate/hook.json` | `mixed` | `.github/hooks/review-gate.json` dispatches the shared runner; `handle_pre_tool_use()` denies destructive shell and secret-like writes when `JAC_REVIEW_OK != 1`, and only warns on broad writes or migration-like scopes. | accurate |
+| `review-gate` | `docs/jack/hook-contracts/review-gate/hook.json` | `mixed` | `.github/hooks/review-gate.json` dispatches the shared runner; `handle_pre_tool_use()` denies destructive shell and secret-like writes when `JACK_REVIEW_OK != 1`, and only warns on broad writes or migration-like scopes. | accurate |
 | `secrets-scanner` | `docs/jack/hook-contracts/secrets-scanner/hook.json` | `deny-enforced` | `.github/hooks/secrets-scanner.json` dispatches the shared runner; `handle_pre_tool_use()` calls `deny()` for token-like values and secret-like paths. | accurate |
-| `tool-guardian` | `docs/jack/hook-contracts/tool-guardian/hook.json` | `mixed` | `.github/hooks/tool-guardian.json` dispatches the shared runner; `handle_pre_tool_use()` denies destructive shell, piped installs, destructive git without `JAC_REVIEW_OK`, and suspected exfiltration, while broad write scope only warns. | accurate |
+| `tool-guardian` | `docs/jack/hook-contracts/tool-guardian/hook.json` | `mixed` | `.github/hooks/tool-guardian.json` dispatches the shared runner; `handle_pre_tool_use()` denies destructive shell, piped installs, destructive git without `JACK_REVIEW_OK`, and suspected exfiltration, while broad write scope only warns. | accurate |
 
 Notes
 

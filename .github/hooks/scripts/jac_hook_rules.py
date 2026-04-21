@@ -418,36 +418,42 @@ def parse_structured_output(ctx: HookContext) -> bool:
 def has_review_approval(ctx: HookContext) -> bool:
     """
     Detect a repository-local review approval artifact.
-    Looks for JSONL artifacts in .git/jac-hooks/ or repo-level jack/ artifacts.
+    Supports both legacy '.git/jac-hooks' and new '.git/jack-hooks' artifact directories,
+    as well as repo-level 'jack/' or 'jac/' directories and fallback files.
     """
     try:
         if ctx.git_dir:
-            hooks_dir = ctx.git_dir / "jac-hooks"
-            if hooks_dir.exists():
+            for hooks_name in ("jac-hooks", "jack-hooks"):
+                hooks_dir = ctx.git_dir / hooks_name
+                if not hooks_dir.exists():
+                    continue
                 # Check common artifact names for approval markers
                 for name in ("review-approved.jsonl", "review-gate.jsonl", "review_ok.jsonl"):
                     candidate = hooks_dir / name
-                    if candidate.exists():
-                        try:
-                            for line in candidate.read_text(encoding="utf-8").splitlines():
-                                try:
-                                    data = json.loads(line)
-                                except Exception:
-                                    continue
-                                if isinstance(data, dict) and data.get("approved") is True:
-                                    return True
-                        except Exception:
-                            continue
-        # Some CI flows may place approval artifacts under repo/jack or .jack-review.jsonl
+                    if not candidate.exists():
+                        continue
+                    try:
+                        for line in candidate.read_text(encoding="utf-8").splitlines():
+                            try:
+                                data = json.loads(line)
+                            except Exception:
+                                continue
+                            if isinstance(data, dict) and data.get("approved") is True:
+                                return True
+                    except Exception:
+                        continue
+        # Some CI flows may place approval artifacts under repo/jack or repo/jac, or write fallback files.
         if ctx.cwd:
-            repo_level = ctx.cwd / "jack"
-            if repo_level.exists():
-                approved = repo_level / "review-approved.jsonl"
-                if approved.exists():
+            for repo_dir in ("jack", "jac"):
+                repo_level = ctx.cwd / repo_dir
+                if repo_level.exists():
+                    approved = repo_level / "review-approved.jsonl"
+                    if approved.exists():
+                        return True
+            for fallback_name in (".jack-review.jsonl", ".jac-review.jsonl"):
+                fallback = ctx.cwd / fallback_name
+                if fallback.exists():
                     return True
-            fallback = ctx.cwd / ".jack-review.jsonl"
-            if fallback.exists():
-                return True
     except Exception:
         pass
     return False

@@ -12,11 +12,11 @@ This repository includes a small standard-library regression harness for the cur
  - Wrapper-plus-hook dual-surface coverage: `assumption-recorder` appends the incoming payload into `.git/jac-hooks/assumption-recorder.jsonl` when a Git directory is available and stays quiet on a neutral prompt.
  - Wrapper-plus-hook dual-surface coverage: `extension-surface-guard` appends the incoming payload into `.git/jac-hooks/extension-surface-guard.jsonl` when a Git directory is available and still denies a client-authority claim.
  - Wrapper-plus-hook dual-surface coverage: `extension-surface-guard` appends the incoming payload into `.git/jac-hooks/extension-surface-guard.jsonl` when a Git directory is available and stays quiet on a neutral prompt.
- - One mixed case: `review-gate` denies a destructive shell command when `JAC_REVIEW_OK` is unset and allows the same command when `JAC_REVIEW_OK=1`.
+ - One mixed case: `review-gate` denies a destructive shell command when `JACK_REVIEW_OK` is unset and allows the same command when `JACK_REVIEW_OK=1`. 
  - Additional quiet case: `review-gate` stays quiet on a benign shell command.
- - Wrapper-plus-hook dual-surface coverage: `review-gate` appends the incoming payload into `.git/jac-hooks/review-gate.jsonl` when a Git directory is available and still denies a destructive shell command when `JAC_REVIEW_OK` is unset.
+ - Wrapper-plus-hook dual-surface coverage: `review-gate` appends the incoming payload into `.git/jack-hooks/review-gate.jsonl` when a Git directory is available and still denies a destructive shell command when `JACK_REVIEW_OK` is unset.
  - Wrapper-plus-hook dual-surface coverage: `review-gate` appends the incoming payload into `.git/jac-hooks/review-gate.jsonl` when a Git directory is available and stays quiet on a benign shell command.
- - Wrapper-plus-hook no-Git coverage: `review-gate` through the CLI wrapper without a Git directory denies a destructive shell command when `JAC_REVIEW_OK` is unset and does not write a `.git/jac-hooks/review-gate.jsonl` artifact.
+ - Wrapper-plus-hook no-Git coverage: `review-gate` through the CLI wrapper without a Git directory denies a destructive shell command when `JACK_REVIEW_OK` is unset and does not write a `.git/jack-hooks/review-gate.jsonl` artifact.
  - Wrapper-plus-hook no-Git coverage: `review-gate` through the CLI wrapper without a Git directory stays quiet on a benign shell command and does not write a `.git/jac-hooks/review-gate.jsonl` artifact.
  - Additional quiet case: `dependency-risk` stays quiet on a benign install/update command.
  - Wrapper-plus-hook dual-surface coverage: `dependency-risk` appends the incoming payload into `.git/jac-hooks/dependency-risk.jsonl` when a Git directory is available and still blocks a piped install path that needs explicit review.
@@ -29,7 +29,7 @@ This repository includes a small standard-library regression harness for the cur
  - Wrapper-plus-hook dual-surface coverage: `structured-output` appends a valid-JSON incoming payload into `.git/jac-hooks/structured-output.jsonl` when a Git directory is available and stays quiet because the JSON parses cleanly.
  - Wrapper-plus-hook no-Git coverage: `structured-output` through the CLI wrapper without a Git directory emits its parse advisory for invalid JSON-like output and does not write a `.git/jac-hooks/structured-output.jsonl` artifact.
  - Wrapper-plus-hook no-Git coverage: `structured-output` through the CLI wrapper without a Git directory stays quiet for valid JSON output and does not write a `.git/jac-hooks/structured-output.jsonl` artifact.
- - Additional mixed case: `tool-guardian` blocks destructive git operations unless `JAC_REVIEW_OK=1` is set.
+ - Additional mixed case: `tool-guardian` blocks destructive git operations unless `JACK_REVIEW_OK=1` is set.
  - Additional deny-enforced case: `tool-guardian` blocks a suspected network exfiltration command.
  - Additional quiet case: `tool-guardian` stays quiet on a benign shell command.
  - Wrapper-plus-hook dual-surface coverage: `tool-guardian` appends the incoming payload into `.git/jac-hooks/tool-guardian.jsonl` when a Git directory is available and still denies a suspected network exfiltration command.
