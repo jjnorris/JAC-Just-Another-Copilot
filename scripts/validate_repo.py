@@ -9,8 +9,8 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-# Accept either docs/jack or docs/jac inventory for compatibility with rename
-CANDIDATE_INVENTORY_PATHS = [ROOT / "docs/jack/inventory.json", ROOT / "docs/jac/inventory.json"]
+# Accept either docs/jacks or docs/jac inventory for compatibility with rename
+CANDIDATE_INVENTORY_PATHS = [ROOT / "docs/jacks/inventory.json", ROOT / "docs/jac/inventory.json"]
 INVENTORY_PATH = next((p for p in CANDIDATE_INVENTORY_PATHS if p.exists()), CANDIDATE_INVENTORY_PATHS[0])
 FRONTMATTER_REQUIRED = {"name", "description"}
 PATH_SUFFIXES = (".md", ".json")
@@ -136,7 +136,7 @@ def resolve_local_path(source: Path, ref: str) -> Path:
     repo_candidate = (ROOT / candidate).resolve()
     if repo_candidate.exists():
         return repo_candidate
-    for docs_dir in ("docs/jack", "docs/jackk"):
+    for docs_dir in ("docs/jacks", "docs/jacksk"):
         docs_candidate = (ROOT / docs_dir / candidate).resolve()
         if docs_candidate.exists():
             return docs_candidate
@@ -170,35 +170,35 @@ def check_frontmatter_files(failures: list[str]) -> None:
 
 def check_inventory(inventory: Any, failures: list[str]) -> None:
     if not isinstance(inventory, dict):
-        failures.append("docs/jack/inventory.json: did not parse into a JSON object")
+        failures.append("docs/jacks/inventory.json: did not parse into a JSON object")
         return
 
     anchor_files = inventory.get("anchor_files", {})
     if not isinstance(anchor_files, dict):
-        failures.append("docs/jack/inventory.json: anchor_files must be an object")
+        failures.append("docs/jacks/inventory.json: anchor_files must be an object")
     else:
         for name, value in sorted(anchor_files.items()):
             if not isinstance(value, str):
-                failures.append(f"docs/jack/inventory.json: anchor_files.{name} must be a string")
+                failures.append(f"docs/jacks/inventory.json: anchor_files.{name} must be a string")
                 continue
             if not (ROOT / value).exists():
-                failures.append(f"docs/jack/inventory.json: anchor file missing: {value}")
+                failures.append(f"docs/jacks/inventory.json: anchor file missing: {value}")
 
     patterns = inventory.get("patterns", {})
     if not isinstance(patterns, dict):
-        failures.append("docs/jack/inventory.json: patterns must be an object")
+        failures.append("docs/jacks/inventory.json: patterns must be an object")
     else:
         for name, values in sorted(patterns.items()):
             if not isinstance(values, list):
-                failures.append(f"docs/jack/inventory.json: patterns.{name} must be an array")
+                failures.append(f"docs/jacks/inventory.json: patterns.{name} must be an array")
                 continue
             for pattern in values:
                 if not isinstance(pattern, str):
-                    failures.append(f"docs/jack/inventory.json: patterns.{name} contains a non-string entry")
+                    failures.append(f"docs/jacks/inventory.json: patterns.{name} contains a non-string entry")
                     continue
                 matches = [path for path in ROOT.glob(pattern) if path.exists()]
                 if not matches:
-                    failures.append(f"docs/jack/inventory.json: pattern matched no files: {pattern}")
+                    failures.append(f"docs/jacks/inventory.json: pattern matched no files: {pattern}")
 
 
 def check_path_references(inventory: Any, failures: list[str]) -> None:
@@ -207,37 +207,37 @@ def check_path_references(inventory: Any, failures: list[str]) -> None:
 
     validation_targets = inventory.get("validation_targets", {})
     if not isinstance(validation_targets, dict):
-        failures.append("docs/jack/inventory.json: validation_targets must be an object")
+        failures.append("docs/jacks/inventory.json: validation_targets must be an object")
         return
 
     doc_targets = validation_targets.get("path_reference_docs", [])
     json_patterns = validation_targets.get("path_reference_json_patterns", [])
 
     if not isinstance(doc_targets, list):
-        failures.append("docs/jack/inventory.json: validation_targets.path_reference_docs must be an array")
+        failures.append("docs/jacks/inventory.json: validation_targets.path_reference_docs must be an array")
         doc_targets = []
     if not isinstance(json_patterns, list):
-        failures.append("docs/jack/inventory.json: validation_targets.path_reference_json_patterns must be an array")
+        failures.append("docs/jacks/inventory.json: validation_targets.path_reference_json_patterns must be an array")
         json_patterns = []
 
     targets: list[Path] = []
     for doc in doc_targets:
         if not isinstance(doc, str):
-            failures.append("docs/jack/inventory.json: validation target doc entries must be strings")
+            failures.append("docs/jacks/inventory.json: validation target doc entries must be strings")
             continue
         path = ROOT / doc
         if not path.exists():
-            failures.append(f"docs/jack/inventory.json: validation target missing: {doc}")
+            failures.append(f"docs/jacks/inventory.json: validation target missing: {doc}")
             continue
         targets.append(path)
 
     for pattern in json_patterns:
         if not isinstance(pattern, str):
-            failures.append("docs/jack/inventory.json: validation target JSON patterns must be strings")
+            failures.append("docs/jacks/inventory.json: validation target JSON patterns must be strings")
             continue
         matched = list(ROOT.glob(pattern))
         if not matched:
-            failures.append(f"docs/jack/inventory.json: validation target JSON pattern matched no files: {pattern}")
+            failures.append(f"docs/jacks/inventory.json: validation target JSON pattern matched no files: {pattern}")
             continue
         targets.extend(sorted(path for path in matched if path.is_file()))
 
@@ -293,7 +293,7 @@ def check_hook_contract_keys(warnings: list[str]) -> None:
 
     This is intentionally non-fatal: it surfaces drift without failing CI.
     """
-    contract_paths = sorted(ROOT.glob("docs/jack/hook-contracts/*/hook.json"))
+    contract_paths = sorted(ROOT.glob("docs/jacks/hook-contracts/*/hook.json"))
     if not contract_paths:
         return
 
@@ -351,7 +351,7 @@ def check_hook_contract_keys(warnings: list[str]) -> None:
             if "hook_name" in keys:
                 seen.add("hook_name")
     if len(seen) == 2:
-        warnings.append("docs/jack/hook-contracts: mixed use of 'name' and 'hook_name' found; prefer 'name' consistently")
+        warnings.append("docs/jacks/hook-contracts: mixed use of 'name' and 'hook_name' found; prefer 'name' consistently")
 
 
 def main() -> int:
@@ -383,5 +383,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
 

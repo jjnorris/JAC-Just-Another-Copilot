@@ -21,10 +21,10 @@ This repository also ships `.github/agents/jac.agent.md` as a custom agent profi
 User-scoped instructions, skills, and agent profiles may exist in some environments, but they remain environment-specific.
 Hook and skill availability outside agent-capable flows is also environment-specific.
 
-## What `docs/jack/` is
+## What `docs/jacks/` is
 
-`docs/jack/` is the longer reference set behind the repo-scoped files.
-Use `docs/jack/README.md` for its map.
+`docs/jacks/` is the longer reference set behind the repo-scoped files.
+Use `docs/jacks/README.md` for its map.
 Those files support maintenance and manual fallback use.
 They are not described here as native runtime surfaces.
 
@@ -32,7 +32,7 @@ They are not described here as native runtime surfaces.
 
 JACK does not claim:
 
-- undocumented runtime support for `docs/jack/inventory.json`
+- undocumented runtime support for `docs/jacks/inventory.json`
 - undocumented command execution from Markdown workflow files
 - any extra hook fields beyond GitHub's documented hook configuration
 - a user-scoped hooks directory
@@ -41,7 +41,8 @@ JACK does not claim:
 
 ## Manual fallback
 
-If a repo-scoped surface is unavailable in your environment, read the `.github/` files and `AGENTS.md` directly, then use `docs/jack/` for the longer reference material.
-Use `docs/jack/support-matrix.md` when you need a more conservative environment-by-environment summary.
+If a repo-scoped surface is unavailable in your environment, read the `.github/` files and `AGENTS.md` directly, then use `docs/jacks/` for the longer reference material.
+Use `docs/jacks/support-matrix.md` when you need a more conservative environment-by-environment summary.
+
 
 

@@ -47,6 +47,7 @@ Create and enforce the pre-write behavioral contract for non-trivial work.
 - May state and validate behavioral obligations. It may not waive them for convenience.
 
 ## Related docs
-- `docs/jack/rules/10-correctness-contracts.md`
-- `docs/jack/templates/correctness-contract.json`
+- `docs/jacks/rules/10-correctness-contracts.md`
+- `docs/jacks/templates/correctness-contract.json`
+
 

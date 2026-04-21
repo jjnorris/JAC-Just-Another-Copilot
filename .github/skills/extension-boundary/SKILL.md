@@ -46,6 +46,7 @@ Keep the client surface limited to display, relay, and focused local interaction
 - May validate surface scope. It may not move policy ownership out of the shared rules.
 
 ## Related docs
-- `docs/jack/rules/02-boundaries.md`
-- `docs/jack/extension-boundaries.md`
+- `docs/jacks/rules/02-boundaries.md`
+- `docs/jacks/extension-boundaries.md`
+
 

@@ -4,7 +4,7 @@
     "userPromptSubmitted": [
       {
         "type": "command",
-        "comment": "JACK native hook for assumption-recorder. Canonical rationale stays in docs/jack/hook-contracts/assumption-recorder/hook.json.",
+        "comment": "JACK native hook for assumption-recorder. Canonical rationale stays in docs/jacks/hook-contracts/assumption-recorder/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py assumption-recorder",
         "powershell": "python .github/hooks/scripts/jac_hook.py assumption-recorder",
         "cwd": ".",
@@ -13,5 +13,6 @@
     ]
   }
 }
+
 
 

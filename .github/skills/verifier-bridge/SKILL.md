@@ -47,6 +47,7 @@ Translate raw tests, diffs, runtime checks, and file inspections into verificati
 - May classify evidence quality. It may not manufacture proof from unrelated signals.
 
 ## Related docs
-- `docs/jack/workflows/verify-before-claim.md`
-- `docs/jack/templates/verification-report.json`
+- `docs/jacks/workflows/verify-before-claim.md`
+- `docs/jacks/templates/verification-report.json`
+
 

@@ -4,7 +4,7 @@
     "errorOccurred": [
       {
         "type": "command",
-        "comment": "JACK native hook for error-occurred. Canonical rationale stays in docs/jack/hook-contracts/error-occurred/hook.json.",
+        "comment": "JACK native hook for error-occurred. Canonical rationale stays in docs/jacks/hook-contracts/error-occurred/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py error-occurred",
         "powershell": "python .github/hooks/scripts/jac_hook.py error-occurred",
         "cwd": ".",
@@ -13,5 +13,6 @@
     ]
   }
 }
+
 
 

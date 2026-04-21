@@ -54,7 +54,8 @@ Classify schema, migration, infra, or config changes by risk level and require a
 - Classification and gate only. Does not approve, apply, or roll back changes.
 
 ## Related docs
-- `docs/jack/rules/11-review-policy.md`
-- `docs/jack/templates/rollback-note.md`
-- `docs/jack/hook-payloads.md`
+- `docs/jacks/rules/11-review-policy.md`
+- `docs/jacks/templates/rollback-note.md`
+- `docs/jacks/hook-payloads.md`
+
 

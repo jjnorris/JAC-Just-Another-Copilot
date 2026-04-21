@@ -12,7 +12,7 @@ These files are committed in this repository and are the primary install shape f
 4. `.github/skills/*/SKILL.md`
 5. `.github/hooks/*.json`
 6. `.github/agents/*.agent.md` if present
-7. `docs/jack/`
+7. `docs/jacks/`
 
 Repository instructions and `AGENTS.md` provide broad repo guidance.
 Skills, hooks, and custom agent profiles are narrower surfaces and should only be described where GitHub documents them.
@@ -32,11 +32,11 @@ For a cross-project transplant:
 4. copy `.github/hooks/`
 5. copy `AGENTS.md`
 6. copy `.github/agents/` if you want the custom agent profile
-7. copy `docs/jack/`
+7. copy `docs/jacks/`
 8. edit only the repo-specific wording that truly needs to change in the target repository
 
-Do not copy only `docs/jack/` and expect GitHub Copilot to discover it on its own.
-If you want a smaller first step, start with `docs/jack/lite-profile.md`.
+Do not copy only `docs/jacks/` and expect GitHub Copilot to discover it on its own.
+If you want a smaller first step, start with `docs/jacks/lite-profile.md`.
 
 ## User-scoped equivalents
 
@@ -57,7 +57,7 @@ Hooks stay repo-scoped here.
 This repository does not claim a user-scoped hooks directory because GitHub does not document one for JACK to rely on.
 
 The repo-scoped `.github/` files and `AGENTS.md` are the install target.
-`docs/jack/` remains the longer reference set for rules, workflows, templates, examples, hook notes, support docs, and maintenance inventory in `docs/jack/inventory.json`.
+`docs/jacks/` remains the longer reference set for rules, workflows, templates, examples, hook notes, support docs, and maintenance inventory in `docs/jacks/inventory.json`.
 
 ## Manual fallback
 
@@ -67,12 +67,13 @@ If your environment does not load the repo-scoped files automatically:
 2. read the relevant file under `.github/instructions/`
 3. read `AGENTS.md` if you are working in an agent-style flow
 4. read the matching skill, hook, or agent profile under `.github/` if the task is narrow
-5. use `docs/jack/` for the longer rule set and support notes
+5. use `docs/jacks/` for the longer rule set and support notes
 
 ## Environment differences
 
 Repository instructions, skills, hooks, and custom agent profiles do not behave the same way everywhere.
 Treat user-scoped support, skill loading, hook execution, and agent profile support as environment-specific unless GitHub documents the behavior for the environment you care about.
-Use `compatibility.md` and `docs/jack/support-matrix.md` when you need the narrower support notes.
+Use `compatibility.md` and `docs/jacks/support-matrix.md` when you need the narrower support notes.
+
 
 

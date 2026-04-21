@@ -48,6 +48,7 @@ Maintain bounded working memory and compact long-term knowledge records.
 - May summarize and retrieve relevant records. It may not alter source-of-truth requirements.
 
 ## Related docs
-- `docs/jack/rules/05-memory-policy.md`
-- `docs/jack/hook-contracts/context-budgeter/hook.json`
+- `docs/jacks/rules/05-memory-policy.md`
+- `docs/jacks/hook-contracts/context-budgeter/hook.json`
+
 

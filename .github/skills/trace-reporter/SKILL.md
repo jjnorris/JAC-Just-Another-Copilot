@@ -50,6 +50,7 @@ Emit durable structured events for meaningful decisions and actions.
 - May emit records and usage summaries. It may not disguise missing evidence with logging noise.
 
 ## Related docs
-- `docs/jack/event-contracts/agent-trace.schema.json`
-- `docs/jack/event-contracts/review-events.schema.json`
+- `docs/jacks/event-contracts/agent-trace.schema.json`
+- `docs/jacks/event-contracts/review-events.schema.json`
+
 

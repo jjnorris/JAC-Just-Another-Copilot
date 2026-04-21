@@ -51,6 +51,7 @@ Detect sensitive domain, security, and license implications and surface obligati
 - May surface obligations and suggest safer paths. It may not grant compliance approval.
 
 ## Related docs
-- `docs/jack/rules/09-compliance-security-license.md`
-- `docs/jack/workflows/compliance-triage.md`
+- `docs/jacks/rules/09-compliance-security-license.md`
+- `docs/jacks/workflows/compliance-triage.md`
+
 
