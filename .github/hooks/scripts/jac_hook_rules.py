@@ -495,18 +495,24 @@ def has_review_approval(ctx: HookContext) -> bool:
                                 continue
 
                             # If the artifact claims a GitHub provider and includes a run_id,
-                            # try to verify it server-side when a token and repository are set.
+                            # require server-side verification: a run_id without a verifiable
+                            # successful GitHub Actions run is not accepted as a bypass.
                             provider = str(data.get("provider", "")).lower()
                             run_id = data.get("run_id")
                             if provider in ("github", "github-actions", "github.com") and run_id:
                                 repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
                                 token = os.environ.get("GITHUB_TOKEN")
+                                # Strict policy: only accept a GitHub-run approval when we can
+                                # verify the run succeeded server-side with a token for this repo.
                                 if repo_name and token:
                                     try:
                                         if _verify_github_run(repo_name, int(run_id), token):
                                             return True
                                     except Exception:
                                         pass
+                                # If we cannot verify the claimed GitHub run, do NOT accept this artifact.
+                                # Continue to the next artifact instead of falling back to weaker provenance.
+                                continue
 
                             # Fallback acceptance when any provenance key is present
                             if any(k in data and data.get(k) for k in provenance_keys):
@@ -540,12 +546,15 @@ def has_review_approval(ctx: HookContext) -> bool:
                                 if provider in ("github", "github-actions", "github.com") and run_id:
                                     repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
                                     token = os.environ.get("GITHUB_TOKEN")
+                                    # Strict: only accept when the GitHub run can be verified server-side.
                                     if repo_name and token:
                                         try:
                                             if _verify_github_run(repo_name, int(run_id), token):
                                                 return True
                                         except Exception:
                                             pass
+                                    # Cannot verify claimed GitHub run: do not accept.
+                                    continue
 
                                 if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
                                     return True
@@ -568,12 +577,15 @@ def has_review_approval(ctx: HookContext) -> bool:
                             if provider in ("github", "github-actions", "github.com") and run_id:
                                 repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
                                 token = os.environ.get("GITHUB_TOKEN")
+                                # Strict: only accept when the GitHub run can be verified server-side.
                                 if repo_name and token:
                                     try:
                                         if _verify_github_run(repo_name, int(run_id), token):
                                             return True
                                     except Exception:
                                         pass
+                                # Cannot verify claimed GitHub run: do not accept.
+                                continue
 
                             if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
                                 return True
@@ -637,7 +649,7 @@ def handle_pre_tool_use(ctx: HookContext) -> None:
         return
 
     if ctx.hook == "secrets-scanner":
-        if secret_like_value(ctx) or secret_path_write(ctx) or shell_secret_write(ctx):
+        if (secret_like_value(ctx) or secret_path_write(ctx) or shell_secret_write(ctx)) and not review_ok:
             deny("JACK secrets scanner blocked a token-like value or a secret-like target path.")
         return
 

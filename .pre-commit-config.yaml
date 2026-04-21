@@ -19,4 +19,6 @@ repos:
     rev: v1.4.0
     hooks:
       - id: detect-secrets
+        # Baseline file can be tuned per-repo. In CI you can override the baseline path
+        # by setting JACK_SECRETS_BASELINE and running detect-secrets directly.
         args: ['--baseline', '.secrets.baseline']
