@@ -618,7 +618,7 @@ class HookRegressionTests(unittest.TestCase):
         payload = {"prompt": "Force push.", "toolName": "shell", "toolArgs": {"command": "git push origin main --force"}}
         ctx_without_flag = build_context(hook="tool-guardian", payload=payload, cwd=ROOT, git_dir=None, logger=RecordingLogger("tool-guardian"))
 
-        with temporary_env("JACK_REVIEW_OK", None), temporary_env("JAC_REVIEW_OK", None):
+        with temporary_env("JACK_REVIEW_OK", None):
             stdout_without = io.StringIO()
             stderr_without = io.StringIO()
             with contextlib.redirect_stdout(stdout_without), contextlib.redirect_stderr(stderr_without), self.assertRaises(SystemExit) as exc_without:
