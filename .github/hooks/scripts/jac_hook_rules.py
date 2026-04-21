@@ -611,7 +611,16 @@ def handle_session_start(ctx: HookContext) -> None:
 
 
 def handle_pre_tool_use(ctx: HookContext) -> None:
-    review_ok = os.environ.get("JACK_REVIEW_OK") == "1" or has_review_approval(ctx)
+    jack_review_env = os.environ.get("JACK_REVIEW_OK")
+    review_ok_env = jack_review_env == "1"
+    # Deprecation advisory: prefer server-verified review artifacts over env bypass.
+    if review_ok_env:
+        try:
+            ctx.logger.advisory("DEPRECATED: environment variable JACK_REVIEW_OK is set. This env var is deprecated and will be removed. Migrate to server-verified review artifacts (see docs/jacks/deprecate_jack_review_ok.md).")
+        except Exception:
+            pass
+    review_ok = review_ok_env or has_review_approval(ctx)
+
 
     if ctx.hook == "tool-guardian":
         if destructive_shell(ctx) or piped_install(ctx):
