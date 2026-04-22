@@ -5,3 +5,14 @@ title = "gitleaks baseline"
   description = "Ignore placeholder baseline rule"
   regex = '''^$'''
   tags = ["baseline"]
+
+[[allowlists]]
+description = "Ignore generated gitleaks artifacts and deliberate baseline entries"
+paths = [
+  '''gitleaks_report\.json''',
+  '''\.secrets\.baseline''',
+  '''\.secrets\.scan\.json''',
+  '''gitleaks_asset\.zip''',
+  '''gitleaks_tmp/.*''',
+  '''\.github/hooks/scripts/jac_hook_rules\.py$''',
+]
