@@ -26,4 +26,3 @@ Force explicit behavioral requirements and proof obligations before non-trivial 
 
 ## interplay
 Uses `docs/jack/templates/correctness-contract.json`, `docs/jack/templates/verification-report.json`, and `docs/jack/workflows/verify-before-claim.md`.
-

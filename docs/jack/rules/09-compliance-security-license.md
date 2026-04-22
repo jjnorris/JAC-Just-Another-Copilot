@@ -26,4 +26,3 @@ Raise early warnings for regulated domains, sensitive data, and license conflict
 
 ## interplay
 Uses `.github/skills/compliance-audit/SKILL.md`, `docs/jack/workflows/compliance-triage.md`, and `docs/jack/secret-handling-model.md`.
-

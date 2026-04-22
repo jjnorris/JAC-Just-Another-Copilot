@@ -54,4 +54,3 @@ Establish the key facts about a repository before any non-trivial work begins.
 ## Related docs
 - `docs/jack/rules/01-repo-truth.md`
 - `docs/jack/rules/10-correctness-contracts.md`
-

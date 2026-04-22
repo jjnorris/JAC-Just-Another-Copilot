@@ -26,4 +26,3 @@ Require explicit review handling before risky or broad execution.
 
 ## interplay
 Uses `docs/jack/workflows/plan-review.md`, `docs/jack/templates/plan-review-comment.json`, and `.github/hooks/review-gate.json`.
-

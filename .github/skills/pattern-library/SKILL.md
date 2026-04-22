@@ -47,4 +47,3 @@ Prefer canonical patterns and warn about duplicate abstractions or premature gen
 ## Related docs
 - `docs/jack/rules/00-core-role.md`
 - `docs/jack/rules/02-boundaries.md`
-

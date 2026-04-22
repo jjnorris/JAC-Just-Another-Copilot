@@ -11,4 +11,3 @@ Non-trivial work should still read like JACK:
 - keep significant decisions traceable and task-scoped
 
 If a review or verification rule changes in `docs/jack/`, update any repo-facing summary that depends on it.
-

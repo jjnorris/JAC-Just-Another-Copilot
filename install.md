@@ -74,4 +74,3 @@ If your environment does not load the repo-scoped files automatically:
 Repository instructions, skills, hooks, and custom agent profiles do not behave the same way everywhere.
 Treat user-scoped support, skill loading, hook execution, and agent profile support as environment-specific unless GitHub documents the behavior for the environment you care about.
 Use `compatibility.md` and `docs/jack/support-matrix.md` when you need the narrower support notes.
-

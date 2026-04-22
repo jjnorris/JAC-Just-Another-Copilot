@@ -135,4 +135,3 @@ Meeting the gate is a precondition for high-confidence claims; if any part fails
 ## Related docs
 - `docs/jack/rules/10-correctness-contracts.md`
 - `docs/jack/workflows/verify-before-claim.md`
-

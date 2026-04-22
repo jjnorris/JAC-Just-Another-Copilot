@@ -48,4 +48,3 @@ Keep the client surface limited to display, relay, and focused local interaction
 ## Related docs
 - `docs/jack/rules/02-boundaries.md`
 - `docs/jack/extension-boundaries.md`
-

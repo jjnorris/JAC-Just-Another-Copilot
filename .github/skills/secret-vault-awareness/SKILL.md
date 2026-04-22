@@ -50,4 +50,3 @@ Keep a hard line between secret material and ordinary configuration.
 ## Related docs
 - `docs/jack/workflows/secret-handling.md`
 - `docs/jack/secret-handling-model.md`
-

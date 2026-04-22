@@ -14,4 +14,3 @@ Describe where JACK_REVIEW_OK was used (workflows, CI settings, environment vari
 
 ## Notes
 Link any PRs or CI changes that are required and add testing notes.
-

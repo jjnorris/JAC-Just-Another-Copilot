@@ -26,4 +26,3 @@
   ],
   "fallback_behavior": "Use `docs/jack/templates/assumption-record.json` and `docs/jack/templates/clarification-request.json` directly."
 }
-

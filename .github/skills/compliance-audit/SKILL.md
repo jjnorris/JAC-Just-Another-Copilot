@@ -53,4 +53,3 @@ Detect sensitive domain, security, and license implications and surface obligati
 ## Related docs
 - `docs/jack/rules/09-compliance-security-license.md`
 - `docs/jack/workflows/compliance-triage.md`
-

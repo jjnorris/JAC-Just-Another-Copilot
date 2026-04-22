@@ -17,4 +17,3 @@ For meaningful changes, validate the things this repo actually ships:
 - reference-only files are clearly marked as such
 - hidden or bidirectional Unicode characters are absent and line endings stay LF
 - the donation note uses either a real link or the explicit placeholder token
-

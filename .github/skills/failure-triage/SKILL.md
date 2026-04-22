@@ -58,4 +58,3 @@ When a task hits an error, test failure, or unexpected behavior, apply a structu
 - `docs/jack/rules/01-repo-truth.md`
 - `docs/jack/rules/13-stop-conditions.md`
 - `docs/jack/workflows/bugfix-with-proof.md`
-

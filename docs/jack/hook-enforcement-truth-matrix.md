@@ -29,4 +29,3 @@ Notes
 - The matrix reflects the current runner code, not aspirational contract policy.
 - The main truthfulness repairs were to remove or narrow false `blocks_on` claims and to correct enforcement labels where the runner really denies behavior.
 - `telemetry-emitter` remains durability-sensitive: the runner is advisory-only, but durable local logging still depends on a Git-backed context or manual artifact support.
-

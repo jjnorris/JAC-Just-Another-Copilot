@@ -32,4 +32,3 @@ Pause when:
 - two docs disagree about scope or support boundaries
 - a destructive or approval-zone action appears without approval
 - a security, secret, or license concern becomes blocking
-

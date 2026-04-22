@@ -7,4 +7,3 @@ What to include in this PR:
 - Verification steps for reviewers (e.g., run a pipeline with JACK_REVIEW_OK unset and confirm hooks block until a review artifact is present).
 
 Reference: docs/jack/deprecate_jack_review_ok.md
-

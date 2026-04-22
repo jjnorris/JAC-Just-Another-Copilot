@@ -25,4 +25,3 @@ Separate blocking uncertainty from safe, explicit assumptions.
 
 ## interplay
 Uses `docs/jack/templates/assumption-record.json`, `docs/jack/templates/clarification-request.json`, and `docs/jack/workflows/intake-and-clarify.md`.
-

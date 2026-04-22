@@ -50,4 +50,3 @@ Gather and structure external facts when repo truth is not enough.
 ## Related docs
 - `docs/jack/rules/08-research-policy.md`
 - `docs/jack/workflows/research-with-citations.md`
-

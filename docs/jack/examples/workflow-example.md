@@ -8,4 +8,3 @@ Example session using JACK manually:
 4. Run `docs/jack/workflows/plan-review.md` and choose `always_proceed` or `request_review`.
 5. Implement one bounded slice with `docs/jack/workflows/bounded-implementation.md`.
 6. Finish with `docs/jack/workflows/verify-before-claim.md` and `docs/jack/templates/verification-report.json`.
-

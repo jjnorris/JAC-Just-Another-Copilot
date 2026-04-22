@@ -43,4 +43,3 @@ JACK does not claim:
 
 If a repo-scoped surface is unavailable in your environment, read the `.github/` files and `AGENTS.md` directly, then use `docs/jack/` for the longer reference material.
 Use `docs/jack/support-matrix.md` when you need a more conservative environment-by-environment summary.
-

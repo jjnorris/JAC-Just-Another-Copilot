@@ -29,4 +29,3 @@
   ],
   "fallback_behavior": "Use manual secret review via `docs/jack/workflows/secret-handling.md`."
 }
-

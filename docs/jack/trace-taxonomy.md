@@ -46,4 +46,3 @@ See `docs/jack/event-contracts/correctness-events.schema.json`.
 - memory_recorded
 
 If native telemetry is unavailable, emit these as local JSON artifacts or structured report sections.
-

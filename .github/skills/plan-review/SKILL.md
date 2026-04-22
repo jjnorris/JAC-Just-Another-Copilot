@@ -51,4 +51,3 @@ Build the review artifact and route tasks through proceed or review-comment path
 ## Related docs
 - `docs/jack/rules/11-review-policy.md`
 - `docs/jack/workflows/plan-review.md`
-

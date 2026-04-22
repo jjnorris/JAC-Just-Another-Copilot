@@ -84,4 +84,3 @@ See `docs/jack/install-scopes.md` for placement rules.
 
 - The reconciled hook schema families and the runner-vs-contract enforcement mapping are recorded in `docs/jack/hook-contract-schema-families.md` and `docs/jack/hook-enforcement-truth-matrix.md`.
 - For the detailed edits performed during the reconciliation batches, see the batch closeouts in `docs/jack/` (for example `docs/jack/reconciliation_batch4_closeout.md`).
-

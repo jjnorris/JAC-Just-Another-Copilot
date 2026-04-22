@@ -57,4 +57,3 @@ Classify schema, migration, infra, or config changes by risk level and require a
 - `docs/jack/rules/11-review-policy.md`
 - `docs/jack/templates/rollback-note.md`
 - `docs/jack/hook-payloads.md`
-

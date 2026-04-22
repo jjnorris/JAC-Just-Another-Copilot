@@ -11,4 +11,3 @@ Keep the security posture plain and strict.
 - keep tool permissions narrow and cwd-aware
 - treat `docs/jack/hook-contracts/` as canonical rationale and `.github/hooks/*.json` as the native executable layer
 - warn about compliance or license obligations without pretending to give legal sign-off
-

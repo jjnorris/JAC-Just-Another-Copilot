@@ -68,4 +68,3 @@ There is no application build or test suite. Use targeted checks:
 - Referenced paths exist after any move or rename
 - Repo-facing files still match the longer docs in `docs/jack/`
 - No hidden or bidirectional Unicode characters; LF line endings only
-

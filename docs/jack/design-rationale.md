@@ -23,4 +23,3 @@ JACK only makes support claims that GitHub documents for the environment in ques
 
 Each policy should have one clear home.
 Repo-scoped files can summarize or point to the longer docs, but they should not quietly grow into a second copy of the same policy.
-

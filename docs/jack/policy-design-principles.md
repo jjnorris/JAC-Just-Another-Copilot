@@ -67,4 +67,3 @@ Keep them brief and clearly distinct from the default behavior.
 - invented GitHub Copilot behavior
 - broad claims about non-GitHub products
 - model-tuning folklore presented as policy
-

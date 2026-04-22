@@ -25,4 +25,3 @@ Validation is targeted file-quality and path-check work:
 - verify that repo-facing files still agree with the longer docs in `docs/jack/`
 - remove hidden or bidirectional Unicode characters and keep LF line endings
 - do not ship throwaway placeholder links in public docs
-

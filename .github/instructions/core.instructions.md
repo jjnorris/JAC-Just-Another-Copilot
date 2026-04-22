@@ -10,4 +10,3 @@ Use `repo-scoped`, `user-scoped`, `cross-project`, and `environment-specific` pr
 Do not present `docs/jack/inventory.json`, `docs/jack/hook-contracts/`, or workflow documents as runtime features beyond what GitHub docs currently describe.
 Keep `.github/skills/` and `.github/hooks/` honest, documented, and narrowly described.
 If a policy already has a clear home, update that home instead of retelling it elsewhere.
-

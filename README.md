@@ -31,5 +31,3 @@ Skills, hooks, custom agent profiles, and any user-scoped equivalents remain env
 ## Donation
 
 Optional: <a href="https://www.buymeacoffee.com/jjnorris"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=jjnorris&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" height="35"></a>
-
-

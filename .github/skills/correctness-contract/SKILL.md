@@ -49,4 +49,3 @@ Create and enforce the pre-write behavioral contract for non-trivial work.
 ## Related docs
 - `docs/jack/rules/10-correctness-contracts.md`
 - `docs/jack/templates/correctness-contract.json`
-

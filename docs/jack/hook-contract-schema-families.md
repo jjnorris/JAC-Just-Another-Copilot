@@ -34,4 +34,3 @@ Based on repository evidence (presence of `event`/`emits`/`intent` in some contr
 Notes
 
 - The validator is updated to treat these families as distinct and only check consistency within each family. This allows the repository to maintain separate, purposeful contract shapes without producing noise when families legitimately use different top-level keys.
-

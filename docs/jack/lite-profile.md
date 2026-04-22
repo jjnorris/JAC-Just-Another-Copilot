@@ -34,4 +34,3 @@ Add the rest of the repo-scoped pack when you want the narrower surfaces to trav
 Add `docs/jack/` when you want the longer canon, support notes, maintenance inventory, and manual fallback material that support the repo-scoped files.
 
 See `install.md` for transplant steps and `compatibility.md` for support-boundary notes.
-

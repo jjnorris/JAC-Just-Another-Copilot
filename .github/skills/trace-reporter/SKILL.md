@@ -52,4 +52,3 @@ Emit durable structured events for meaningful decisions and actions.
 ## Related docs
 - `docs/jack/event-contracts/agent-trace.schema.json`
 - `docs/jack/event-contracts/review-events.schema.json`
-

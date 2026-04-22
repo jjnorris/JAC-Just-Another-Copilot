@@ -65,4 +65,3 @@ If a native surface is unavailable in your environment:
 3. keep support claims narrow and environment-specific
 
 See `docs/jack/support-matrix.md` for environment notes.
-

@@ -33,4 +33,3 @@ Use this checklist before calling a JACK change ready to ship.
 - referenced paths still exist
 - hidden or bidirectional Unicode characters are absent
 - line endings stay LF
-

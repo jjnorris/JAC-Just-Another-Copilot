@@ -16,4 +16,3 @@ for p in files:
     t = t.replace("\r\n", "\n")
     p.write_text(t, encoding="utf-8", newline="\n")
     print("rewrote", p)
-

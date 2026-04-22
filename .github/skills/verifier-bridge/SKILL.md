@@ -49,4 +49,3 @@ Translate raw tests, diffs, runtime checks, and file inspections into verificati
 ## Related docs
 - `docs/jack/workflows/verify-before-claim.md`
 - `docs/jack/templates/verification-report.json`
-

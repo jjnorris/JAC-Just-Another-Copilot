@@ -382,4 +382,3 @@ Stop and ask for review or clarification when:
 - If legal or compliance enrichment is unavailable, emit advisory warnings with explicit limits.
 - If fine-grained tool hashing or definition checks are unavailable, record the limitation and keep approval scope narrow.
 - If usage accounting is partial, record what is available and flag the gap instead of pretending the budget is known.
-

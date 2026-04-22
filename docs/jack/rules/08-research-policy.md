@@ -26,4 +26,3 @@ Use external sources only when they materially improve correctness or reduce unc
 
 ## interplay
 Pairs with `docs/jack/workflows/research-with-citations.md` and `.github/skills/autoresearch/SKILL.md`.
-

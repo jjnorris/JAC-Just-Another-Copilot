@@ -76,4 +76,3 @@ When a hook denies a tool use, the response written to stdout must be:
   "permissionDecision": "deny",
   "permissionDecisionReason": "short plain-text reason"
 }
-

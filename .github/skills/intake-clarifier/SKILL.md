@@ -50,4 +50,3 @@ Assess task readiness and produce clarification or assumption artifacts.
 ## Related docs
 - `docs/jack/rules/04-ambiguity-policy.md`
 - `docs/jack/workflows/intake-and-clarify.md`
-
