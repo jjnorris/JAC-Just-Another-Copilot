@@ -117,7 +117,9 @@ def parsed_tool_args(payload: Dict[str, Any]) -> Dict[str, Any]:
     return {}
 
 
-def shell_command(tool_name: str, tool_args: Dict[str, Any], payload: Dict[str, Any]) -> str:
+def shell_command(
+    tool_name: str, tool_args: Dict[str, Any], payload: Dict[str, Any]
+) -> str:
     if tool_name not in SHELL_TOOLS:
         return ""
     for key in COMMAND_KEYS:
@@ -155,7 +157,7 @@ def collect_strings(value: Any) -> Iterator[str]:
 def normalize_path(value: str) -> str:
     s = value.strip().strip("'\"")
     # Convert Windows backslashes to forward slashes for consistent matching
-    s = s.replace('\\\\', '/').replace('\\', '/')
+    s = s.replace("\\\\", "/").replace("\\", "/")
     # Collapse repeated slashes
     s = re.sub(r"/+", "/", s)
     # Remove trailing slash except for drive roots like 'C:/'
@@ -173,7 +175,9 @@ def regex_candidate_paths(text: str) -> Iterator[str]:
         yield normalize_path(match.group(1))
 
 
-def candidate_paths(tool_name: str, tool_args: Dict[str, Any], command: str) -> tuple[str, ...]:
+def candidate_paths(
+    tool_name: str, tool_args: Dict[str, Any], command: str
+) -> tuple[str, ...]:
     found: list[str] = []
     seen: set[str] = set()
 
@@ -258,7 +262,9 @@ def deny(reason: str) -> None:
 
 
 def matches_any(text_value: str, patterns: Iterable[str]) -> bool:
-    return any(re.search(pattern, text_value, flags=re.IGNORECASE) for pattern in patterns)
+    return any(
+        re.search(pattern, text_value, flags=re.IGNORECASE) for pattern in patterns
+    )
 
 
 def destructive_shell(ctx: HookContext) -> bool:
@@ -335,7 +341,9 @@ def broad_write_scope(ctx: HookContext) -> bool:
         )
     if len(ctx.candidate_paths) > 25:
         return True
-    if any(path in {"*", "**", ".", "./"} or "*" in path for path in ctx.candidate_paths):
+    if any(
+        path in {"*", "**", ".", "./"} or "*" in path for path in ctx.candidate_paths
+    ):
         return True
     return matches_any(
         stringify(ctx.tool_args),
@@ -394,7 +402,9 @@ def infra_or_migration_path(ctx: HookContext) -> bool:
     patterns = [
         r"(^|/)(migrations?|infra|terraform|helm|k8s|kubernetes|db|database|deployments?)(/|$)",
     ]
-    return any(matches_any(path, patterns) for path in ctx.candidate_paths) or matches_any(
+    return any(
+        matches_any(path, patterns) for path in ctx.candidate_paths
+    ) or matches_any(
         ctx.shell_command,
         patterns,
     )
@@ -440,7 +450,14 @@ def _verify_github_run(repo: str, run_id: int, token: str) -> bool:
         return False
     try:
         url = f"https://api.github.com/repos/{repo}/actions/runs/{int(run_id)}"
-        req = urllib.request.Request(url, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github+json", "User-Agent": "JACK-hook"})
+        req = urllib.request.Request(
+            url,
+            headers={
+                "Authorization": f"token {token}",
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "JACK-hook",
+            },
+        )
         with urllib.request.urlopen(req, timeout=10) as resp:
             payload = json.load(resp)
         conclusion = payload.get("conclusion")
@@ -479,7 +496,11 @@ def has_review_approval(ctx: HookContext) -> bool:
                 if not hooks_dir.exists():
                     continue
                 # Check common artifact names for approval markers
-                for name in ("review-approved.jsonl", "review-gate.jsonl", "review_ok.jsonl"):
+                for name in (
+                    "review-approved.jsonl",
+                    "review-gate.jsonl",
+                    "review_ok.jsonl",
+                ):
                     candidate = hooks_dir / name
                     if not candidate.exists():
                         continue
@@ -499,14 +520,21 @@ def has_review_approval(ctx: HookContext) -> bool:
                             # successful GitHub Actions run is not accepted as a bypass.
                             provider = str(data.get("provider", "")).lower()
                             run_id = data.get("run_id")
-                            if provider in ("github", "github-actions", "github.com") and run_id:
-                                repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
+                            if (
+                                provider in ("github", "github-actions", "github.com")
+                                and run_id
+                            ):
+                                repo_name = os.environ.get(
+                                    "GITHUB_REPOSITORY"
+                                ) or data.get("repo")
                                 token = os.environ.get("GITHUB_TOKEN")
                                 # Strict policy: only accept a GitHub-run approval when we can
                                 # verify the run succeeded server-side with a token for this repo.
                                 if repo_name and token:
                                     try:
-                                        if _verify_github_run(repo_name, int(run_id), token):
+                                        if _verify_github_run(
+                                            repo_name, int(run_id), token
+                                        ):
                                             return True
                                     except Exception:
                                         pass
@@ -520,7 +548,9 @@ def has_review_approval(ctx: HookContext) -> bool:
 
                             # Allow structured approved_by with a login as provenance
                             approved_by = data.get("approved_by")
-                            if isinstance(approved_by, dict) and approved_by.get("login"):
+                            if isinstance(approved_by, dict) and approved_by.get(
+                                "login"
+                            ):
                                 return True
                     except Exception:
                         continue
@@ -533,7 +563,9 @@ def has_review_approval(ctx: HookContext) -> bool:
                     approved = repo_level / "review-approved.jsonl"
                     if approved.exists():
                         try:
-                            for line in approved.read_text(encoding="utf-8").splitlines():
+                            for line in approved.read_text(
+                                encoding="utf-8"
+                            ).splitlines():
                                 try:
                                     data = json.loads(line)
                                 except Exception:
@@ -543,20 +575,30 @@ def has_review_approval(ctx: HookContext) -> bool:
 
                                 provider = str(data.get("provider", "")).lower()
                                 run_id = data.get("run_id")
-                                if provider in ("github", "github-actions", "github.com") and run_id:
-                                    repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
+                                if (
+                                    provider
+                                    in ("github", "github-actions", "github.com")
+                                    and run_id
+                                ):
+                                    repo_name = os.environ.get(
+                                        "GITHUB_REPOSITORY"
+                                    ) or data.get("repo")
                                     token = os.environ.get("GITHUB_TOKEN")
                                     # Strict: only accept when the GitHub run can be verified server-side.
                                     if repo_name and token:
                                         try:
-                                            if _verify_github_run(repo_name, int(run_id), token):
+                                            if _verify_github_run(
+                                                repo_name, int(run_id), token
+                                            ):
                                                 return True
                                         except Exception:
                                             pass
                                     # Cannot verify claimed GitHub run: do not accept.
                                     continue
 
-                                if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
+                                if data.get("approved") is True and any(
+                                    k in data and data.get(k) for k in provenance_keys
+                                ):
                                     return True
                         except Exception:
                             pass
@@ -574,20 +616,29 @@ def has_review_approval(ctx: HookContext) -> bool:
 
                             provider = str(data.get("provider", "")).lower()
                             run_id = data.get("run_id")
-                            if provider in ("github", "github-actions", "github.com") and run_id:
-                                repo_name = os.environ.get("GITHUB_REPOSITORY") or data.get("repo")
+                            if (
+                                provider in ("github", "github-actions", "github.com")
+                                and run_id
+                            ):
+                                repo_name = os.environ.get(
+                                    "GITHUB_REPOSITORY"
+                                ) or data.get("repo")
                                 token = os.environ.get("GITHUB_TOKEN")
                                 # Strict: only accept when the GitHub run can be verified server-side.
                                 if repo_name and token:
                                     try:
-                                        if _verify_github_run(repo_name, int(run_id), token):
+                                        if _verify_github_run(
+                                            repo_name, int(run_id), token
+                                        ):
                                             return True
                                     except Exception:
                                         pass
                                 # Cannot verify claimed GitHub run: do not accept.
                                 continue
 
-                            if data.get("approved") is True and any(k in data and data.get(k) for k in provenance_keys):
+                            if data.get("approved") is True and any(
+                                k in data and data.get(k) for k in provenance_keys
+                            ):
                                 return True
                     except Exception:
                         pass
@@ -595,9 +646,12 @@ def has_review_approval(ctx: HookContext) -> bool:
         pass
     return False
 
+
 def handle_session_start(ctx: HookContext) -> None:
     if secret_like_value(ctx):
-        ctx.logger.advisory("initial session prompt may contain a secret-like value; do not echo or log.")
+        ctx.logger.advisory(
+            "initial session prompt may contain a secret-like value; do not echo or log."
+        )
     ctx.logger.emit_json(
         {
             "event": "session_start",
@@ -612,23 +666,23 @@ def handle_session_start(ctx: HookContext) -> None:
 
 def handle_pre_tool_use(ctx: HookContext) -> None:
     # JACK_REVIEW_OK env-var removed: always require server-verified review artifacts.
-    try:
-        if os.environ.get("JACK_REVIEW_OK") is not None:
-            ctx.logger.advisory("JACK_REVIEW_OK is ignored; migrate to server-verified review artifacts (see docs/jacks/deprecate_jack_review_ok.md).")
-    except Exception:
-        pass
     review_ok = has_review_approval(ctx)
-
 
     if ctx.hook == "tool-guardian":
         if destructive_shell(ctx) or piped_install(ctx):
-            deny("JACK tool guardian blocked a destructive or permission-escalating shell command.")
+            deny(
+                "JACK tool guardian blocked a destructive or permission-escalating shell command."
+            )
         if destructive_git(ctx) and not review_ok:
-            deny("JACK tool guardian blocked a destructive git operation until a review artifact is in place.")
+            deny(
+                "JACK tool guardian blocked a destructive git operation until a review artifact is in place."
+            )
         if network_exfiltration(ctx):
             deny("JACK tool guardian blocked a suspected network exfiltration command.")
         if broad_write_scope(ctx):
-            ctx.logger.advisory("broad write scope detected; prefer narrowing to specific paths.")
+            ctx.logger.advisory(
+                "broad write scope detected; prefer narrowing to specific paths."
+            )
         return
 
     if ctx.hook == "dependency-risk":
@@ -641,23 +695,37 @@ def handle_pre_tool_use(ctx: HookContext) -> None:
                 r"yarn\s+global\s+add\b",
             ],
         ):
-            deny("JACK dependency risk blocked an install path that needs explicit review.")
+            deny(
+                "JACK dependency risk blocked an install path that needs explicit review."
+            )
         if piped_install(ctx):
-            deny("JACK dependency risk blocked a piped install path that needs explicit review.")
+            deny(
+                "JACK dependency risk blocked a piped install path that needs explicit review."
+            )
         return
 
     if ctx.hook == "review-gate":
         if destructive_shell(ctx) and not review_ok:
-            deny("JACK review gate blocked a destructive action until a review artifact is in place.")
+            deny(
+                "JACK review gate blocked a destructive action until a review artifact is in place."
+            )
         if (infra_or_migration_path(ctx) or broad_write_scope(ctx)) and not review_ok:
-            ctx.logger.advisory("migration, infra, or broad write scope detected; a review flag is recommended.")
+            ctx.logger.advisory(
+                "migration, infra, or broad write scope detected; a review flag is recommended."
+            )
         if (secret_path_write(ctx) or shell_secret_write(ctx)) and not review_ok:
-            deny("JACK review gate blocked a write to a secret-like or environment file.")
+            deny(
+                "JACK review gate blocked a write to a secret-like or environment file."
+            )
         return
 
     if ctx.hook == "secrets-scanner":
-        if (secret_like_value(ctx) or secret_path_write(ctx) or shell_secret_write(ctx)) and not review_ok:
-            deny("JACK secrets scanner blocked a token-like value or a secret-like target path.")
+        if (
+            secret_like_value(ctx) or secret_path_write(ctx) or shell_secret_write(ctx)
+        ) and not review_ok:
+            deny(
+                "JACK secrets scanner blocked a token-like value or a secret-like target path."
+            )
         return
 
     if ctx.hook == "extension-surface-guard":
@@ -667,7 +735,9 @@ def handle_pre_tool_use(ctx: HookContext) -> None:
 
     if ctx.hook == "context-budgeter":
         if len(ctx.prompt) > 12000:
-            ctx.logger.advisory("prompt is large; prefer narrowing context before continuing.")
+            ctx.logger.advisory(
+                "prompt is large; prefer narrowing context before continuing."
+            )
         return
 
     if ctx.hook == "assumption-recorder":
@@ -678,10 +748,14 @@ def handle_pre_tool_use(ctx: HookContext) -> None:
 def handle_post_tool_use(ctx: HookContext) -> None:
     if ctx.hook == "structured-output":
         if not parse_structured_output(ctx):
-            ctx.logger.advisory("emitted JSON-looking output that did not parse cleanly.")
+            ctx.logger.advisory(
+                "emitted JSON-looking output that did not parse cleanly."
+            )
         return
     if ctx.hook == "telemetry-emitter":
-        ctx.logger.advisory("recorded a trace event in .git/jack-hooks/ when a Git directory was available.")
+        ctx.logger.advisory(
+            "recorded a trace event in .git/jack-hooks/ when a Git directory was available."
+        )
 
 
 def handle_error_occurred(ctx: HookContext) -> None:
@@ -718,4 +792,3 @@ def run_hook(ctx: HookContext) -> None:
         handle_post_tool_use(ctx)
     elif ctx.hook == "error-occurred":
         handle_error_occurred(ctx)
-
