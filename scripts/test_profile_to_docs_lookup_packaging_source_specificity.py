@@ -17,9 +17,15 @@ class TestProfileToDocsLookupPackagingSourceSpecificity(unittest.TestCase):
             temp_dir = Path(temp_dir_str)
             (temp_dir / "scripts").mkdir()
             (temp_dir / "docs" / "jac").mkdir(parents=True)
-            (temp_dir / "scripts" / "run_repo_task_flow.py").write_text("# runner\n", encoding="utf-8")
-            (temp_dir / "scripts" / "profile_to_docs_lookup.py").write_text("# lookup\n", encoding="utf-8")
-            (temp_dir / "docs" / "jac" / "README.md").write_text("# JACK\n", encoding="utf-8")
+            (temp_dir / "scripts" / "run_repo_task_flow.py").write_text(
+                "# runner\n", encoding="utf-8"
+            )
+            (temp_dir / "scripts" / "profile_to_docs_lookup.py").write_text(
+                "# lookup\n", encoding="utf-8"
+            )
+            (temp_dir / "docs" / "jac" / "README.md").write_text(
+                "# JACK\n", encoding="utf-8"
+            )
 
             profile = {
                 "repo_shape": "python_tooling_repo",
@@ -30,7 +36,9 @@ class TestProfileToDocsLookupPackagingSourceSpecificity(unittest.TestCase):
                 "detected_runtime_targets": [],
             }
 
-            selected, _ambiguity, _rationale = mod.pick_queries(profile, repo_root=temp_dir)
+            selected, _ambiguity, _rationale = mod.pick_queries(
+                profile, repo_root=temp_dir
+            )
             selected_queries = [item["query"] for item in selected]
 
             self.assertIn(mod.PACKAGING_TOOLING_QUERY, selected_queries)

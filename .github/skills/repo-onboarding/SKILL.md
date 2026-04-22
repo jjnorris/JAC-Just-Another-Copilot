@@ -52,7 +52,6 @@ Establish the key facts about a repository before any non-trivial work begins.
 - Read-only discovery. No writes, no executions, no assumptions without file evidence.
 
 ## Related docs
-- `docs/jacks/rules/01-repo-truth.md`
-- `docs/jacks/rules/10-correctness-contracts.md`
-
+- `docs/jack/rules/01-repo-truth.md`
+- `docs/jack/rules/10-correctness-contracts.md`
 

@@ -63,7 +63,10 @@ class TestRepoTaskEditSketchPlanningAnchor(unittest.TestCase):
             (jack_dir / "repo-task-inspect.json").write_text(
                 json.dumps(
                     {
-                        "inspected_files": ["scripts/repo_task_plan.py", "scripts/repo_task_edit_sketch.py"],
+                        "inspected_files": [
+                            "scripts/repo_task_plan.py",
+                            "scripts/repo_task_edit_sketch.py",
+                        ],
                         "key_symbols_or_sections": [
                             "def rank_files",
                             "def load_json",
@@ -89,7 +92,9 @@ class TestRepoTaskEditSketchPlanningAnchor(unittest.TestCase):
             result = mod.main(["--repo-root", str(repo), "--task", task])
             self.assertEqual(result, 0)
 
-            sketch = json.loads((jack_dir / "repo-task-edit-sketch.json").read_text(encoding="utf-8"))
+            sketch = json.loads(
+                (jack_dir / "repo-task-edit-sketch.json").read_text(encoding="utf-8")
+            )
             change_shape = sketch.get("suggested_change_shape", "")
 
             self.assertEqual(sketch.get("target_file"), "scripts/repo_task_plan.py")

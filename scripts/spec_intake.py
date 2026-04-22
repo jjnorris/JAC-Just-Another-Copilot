@@ -33,7 +33,9 @@ def normalize_text(text: str) -> str:
 
 def infer_project_type(text: str) -> str:
     t = text.lower()
-    if any(k in t for k in ("web app", "webapp", "web application", "web site", "website")):
+    if any(
+        k in t for k in ("web app", "webapp", "web application", "web site", "website")
+    ):
         return "webapp"
     if any(k in t for k in ("api", "rest", "endpoint", "service")):
         return "api"
@@ -59,14 +61,107 @@ def detect_stack_hint(text: str, explicit_stack: str | None) -> str | None:
 
 def detect_omissions(text: str) -> Dict[str, Any]:
     t = text.lower()
-    has_auth = any(k in t for k in ("auth", "authentication", "oauth", "oauth2", "jwt", "login", "sso", "access control", "access-control"))
-    has_storage = any(k in t for k in ("database", "db", "postgres", "mysql", "s3", "bucket", "storage", "upload", "file"))
-    has_secrets = any(k in t for k in ("secret", "env", "vault", "kms", "key management", "key-management"))
-    has_deploy = any(k in t for k in ("aws", "gcp", "azure", "ecs", "kubernetes", "k8s", "lambda", "serverless", "deploy", "deployment", "host on"))
-    has_observability = any(k in t for k in ("logging", "metrics", "prometheus", "sentry", "monitor", "monitoring", "tracing", "alerts"))
-    has_privacy = any(k in t for k in ("pii", "personal data", "personal information", "health", "patient", "medical", "ssn", "social security", "hipaa", "phi", "pci"))
-    has_license = any(k in t for k in ("license", "mit", "gpl", "bsd", "commercial", "proprietary", "third-party"))
-    has_abuse = any(k in t for k in ("spam", "abuse", "malicious", "illegal", "fraud", "exfiltrate", "attack"))
+    has_auth = any(
+        k in t
+        for k in (
+            "auth",
+            "authentication",
+            "oauth",
+            "oauth2",
+            "jwt",
+            "login",
+            "sso",
+            "access control",
+            "access-control",
+        )
+    )
+    has_storage = any(
+        k in t
+        for k in (
+            "database",
+            "db",
+            "postgres",
+            "mysql",
+            "s3",
+            "bucket",
+            "storage",
+            "upload",
+            "file",
+        )
+    )
+    has_secrets = any(
+        k in t
+        for k in ("secret", "env", "vault", "kms", "key management", "key-management")
+    )
+    has_deploy = any(
+        k in t
+        for k in (
+            "aws",
+            "gcp",
+            "azure",
+            "ecs",
+            "kubernetes",
+            "k8s",
+            "lambda",
+            "serverless",
+            "deploy",
+            "deployment",
+            "host on",
+        )
+    )
+    has_observability = any(
+        k in t
+        for k in (
+            "logging",
+            "metrics",
+            "prometheus",
+            "sentry",
+            "monitor",
+            "monitoring",
+            "tracing",
+            "alerts",
+        )
+    )
+    has_privacy = any(
+        k in t
+        for k in (
+            "pii",
+            "personal data",
+            "personal information",
+            "health",
+            "patient",
+            "medical",
+            "ssn",
+            "social security",
+            "hipaa",
+            "phi",
+            "pci",
+        )
+    )
+    has_license = any(
+        k in t
+        for k in (
+            "license",
+            "mit",
+            "gpl",
+            "bsd",
+            "commercial",
+            "proprietary",
+            "third-party",
+        )
+    )
+    has_abuse = any(
+        k in t
+        for k in (
+            "spam",
+            "abuse",
+            "malicious",
+            "illegal",
+            "fraud",
+            "exfiltrate",
+            "attack",
+        )
+    )
 
     omissions = {
         "auth": not has_auth,
@@ -84,21 +179,33 @@ def detect_omissions(text: str) -> Dict[str, Any]:
 def recommended_questions(omissions: Dict[str, Any]) -> List[str]:
     q: List[str] = []
     if omissions.get("auth"):
-        q.append("What authentication or access control is required (OAuth2, API keys, SSO, none)?")
+        q.append(
+            "What authentication or access control is required (OAuth2, API keys, SSO, none)?"
+        )
     if omissions.get("storage"):
-        q.append("Where should data be stored (database type, cloud storage, local filesystem)?")
+        q.append(
+            "Where should data be stored (database type, cloud storage, local filesystem)?"
+        )
     if omissions.get("secrets_handling"):
         q.append("How should secrets/credentials be managed (env vars, KMS, Vault)?")
     if omissions.get("deployment_target"):
-        q.append("Where will this be deployed or hosted (AWS/GCP/Azure/Kubernetes/other)?")
+        q.append(
+            "Where will this be deployed or hosted (AWS/GCP/Azure/Kubernetes/other)?"
+        )
     if omissions.get("observability"):
         q.append("What logging/metrics/tracing/alerts are expected for observability?")
     if omissions.get("licensing"):
-        q.append("Are there licensing constraints or 3rd-party dependency policies to follow?")
+        q.append(
+            "Are there licensing constraints or 3rd-party dependency policies to follow?"
+        )
     if omissions.get("privacy_or_regulated_data"):
-        q.append("Does this process personal or regulated data (PII, health, payments)? If so, which jurisdiction/regulation applies?")
+        q.append(
+            "Does this process personal or regulated data (PII, health, payments)? If so, which jurisdiction/regulation applies?"
+        )
     if omissions.get("abuse_misuse"):
-        q.append("Are there abuse or misuse risks we should mitigate (spam, fraud, exfiltration)?")
+        q.append(
+            "Are there abuse or misuse risks we should mitigate (spam, fraud, exfiltration)?"
+        )
     return q
 
 
@@ -109,7 +216,9 @@ def security_considerations_from_omissions(omissions: Dict[str, Any]) -> List[st
     if omissions.get("secrets_handling"):
         s.append("Plan for encrypted secret storage and rotation (KMS/Vault).")
     if omissions.get("storage"):
-        s.append("Validate and sanitize uploads; enforce size/type limits; use encryption at rest.")
+        s.append(
+            "Validate and sanitize uploads; enforce size/type limits; use encryption at rest."
+        )
     if omissions.get("abuse_misuse"):
         s.append("Rate-limit and monitor endpoints to mitigate abuse and exfiltration.")
     return s
@@ -118,13 +227,17 @@ def security_considerations_from_omissions(omissions: Dict[str, Any]) -> List[st
 def privacy_considerations(omissions: Dict[str, Any]) -> List[str]:
     p: List[str] = []
     if omissions.get("privacy_or_regulated_data"):
-        p.append("Personal or health data detected; identify jurisdiction and apply appropriate controls (encryption, data minimization, access rules).")
+        p.append(
+            "Personal or health data detected; identify jurisdiction and apply appropriate controls (encryption, data minimization, access rules)."
+        )
     return p
 
 
 def main(argv: List[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--text", help="Freeform project description; if omitted read from stdin")
+    ap.add_argument(
+        "--text", help="Freeform project description; if omitted read from stdin"
+    )
     ap.add_argument("--stack", help="Optional stack hint")
     ap.add_argument("--jurisdiction", help="Optional jurisdiction or location text")
     ap.add_argument("--out", help="Output JSON file", default="spec_intake.json")
@@ -145,7 +258,11 @@ def main(argv: List[str] | None = None) -> int:
     if "open source" in norm or "oss" in norm:
         assumptions.append("open_source")
 
-    missing = [k for k, v in omissions.items() if (isinstance(v, bool) and v) or (k == "privacy_or_regulated_data" and v)]
+    missing = [
+        k
+        for k, v in omissions.items()
+        if (isinstance(v, bool) and v) or (k == "privacy_or_regulated_data" and v)
+    ]
 
     questions = recommended_questions(omissions)
     security = security_considerations_from_omissions(omissions)
@@ -168,8 +285,12 @@ def main(argv: List[str] | None = None) -> int:
         "recommended_clarifying_questions": questions,
         "security_considerations": security,
         "privacy_considerations": privacy,
-        "deployment_considerations": ["Specify deployment target"] if omissions.get("deployment_target") else [],
-        "observability_considerations": ["Add logging/metrics/tracing"] if omissions.get("observability") else [],
+        "deployment_considerations": (
+            ["Specify deployment target"] if omissions.get("deployment_target") else []
+        ),
+        "observability_considerations": (
+            ["Add logging/metrics/tracing"] if omissions.get("observability") else []
+        ),
         "compliance_or_policy_flags": compliance_flags,
     }
 

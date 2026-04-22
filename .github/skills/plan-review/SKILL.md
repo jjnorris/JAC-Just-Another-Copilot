@@ -49,7 +49,6 @@ Build the review artifact and route tasks through proceed or review-comment path
 - May request review or clear low-risk work to proceed. It may not approve blocked actions without policy basis.
 
 ## Related docs
-- `docs/jacks/rules/11-review-policy.md`
-- `docs/jacks/workflows/plan-review.md`
-
+- `docs/jack/rules/11-review-policy.md`
+- `docs/jack/workflows/plan-review.md`
 

@@ -32,7 +32,9 @@ import re
 PLANNER_FILENAME = "repo_task_plan.py"
 
 
-def rank_files(candidates: List[str], task: str, inspect_symbols: Optional[List[str]] = None) -> List[str]:
+def rank_files(
+    candidates: List[str], task: str, inspect_symbols: Optional[List[str]] = None
+) -> List[str]:
     """Rank candidate files with small, conservative heuristics.
 
     Improvements over the prior simple heuristic:
@@ -76,7 +78,11 @@ def rank_files(candidates: List[str], task: str, inspect_symbols: Optional[List[
 
     self_hosting_planning = False
     try:
-        if profile and is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(task):
+        if (
+            profile
+            and is_self_hosting_python_tooling_task(task, profile)
+            and is_planning_focus_task(task)
+        ):
             self_hosting_planning = True
     except Exception:
         self_hosting_planning = False
@@ -89,7 +95,16 @@ def rank_files(candidates: List[str], task: str, inspect_symbols: Optional[List[
 
     scored: List[tuple[int, int, str]] = []
     for f in candidates:
-        scored.append(_score_file(f, tokens, active_stages, self_hosting_planning, inspect_symbols, PLANNER_FILENAME))
+        scored.append(
+            _score_file(
+                f,
+                tokens,
+                active_stages,
+                self_hosting_planning,
+                inspect_symbols,
+                PLANNER_FILENAME,
+            )
+        )
 
     # Sort by score desc, prefer planner file for ties, then name
     scored.sort(key=lambda x: (-x[0], -x[1], x[2]))
@@ -144,7 +159,13 @@ def _normalize_inspect_symbols(inspect_symbols: Optional[List[str]]) -> set[str]
     return symbol_ids
 
 
-def _score_path_features(f: str, tokens: set[str], active_stages: List[str], self_hosting_planning: bool, planner_filename: str) -> tuple[int, int, Optional[Path], str]:
+def _score_path_features(
+    f: str,
+    tokens: set[str],
+    active_stages: List[str],
+    self_hosting_planning: bool,
+    planner_filename: str,
+) -> tuple[int, int, Optional[Path], str]:
     score = sum(1 for tok in tokens if tok in f.lower())
     if f.endswith((".yml", ".yaml", ".toml", ".txt", ".md")):
         score += 1
@@ -161,11 +182,17 @@ def _score_path_features(f: str, tokens: set[str], active_stages: List[str], sel
         p = None
         fname = os.path.basename(f)
 
-    if self_hosting_planning and (fname == planner_filename or planner_filename in fname):
+    if self_hosting_planning and (
+        fname == planner_filename or planner_filename in fname
+    ):
         score += 100
 
     try:
-        prefer = 1 if planner_filename in os.path.basename(f) or planner_filename in str(f) else 0
+        prefer = (
+            1
+            if planner_filename in os.path.basename(f) or planner_filename in str(f)
+            else 0
+        )
     except Exception:
         prefer = 0
 
@@ -187,7 +214,9 @@ def _score_code_tokens(text: str) -> int:
     return sum(1 for token in code_tokens if token in text)
 
 
-def _score_active_stage_matches(text: str, text_lower: str, active_stages: List[str]) -> int:
+def _score_active_stage_matches(
+    text: str, text_lower: str, active_stages: List[str]
+) -> int:
     score = 0
     stage_content_boost = 50
     for sk in active_stages:
@@ -195,7 +224,9 @@ def _score_active_stage_matches(text: str, text_lower: str, active_stages: List[
         pattern_def = rf"\bdef\s+\w*{sk_esc}\w*\s*\("
         pattern_class = rf"\bclass\s+\w*{sk_esc}\w*\b"
         pattern_call = rf"\b{sk_esc}\w*\s*\("
-        if re.search(pattern_def, text, flags=re.IGNORECASE) or re.search(pattern_class, text, flags=re.IGNORECASE):
+        if re.search(pattern_def, text, flags=re.IGNORECASE) or re.search(
+            pattern_class, text, flags=re.IGNORECASE
+        ):
             score += stage_content_boost
         elif re.search(pattern_call, text, flags=re.IGNORECASE):
             score += stage_content_boost // 2
@@ -204,7 +235,9 @@ def _score_active_stage_matches(text: str, text_lower: str, active_stages: List[
     return score
 
 
-def _score_inspect_symbol_matches(text: str, active_stages: List[str], inspect_symbols: Optional[List[str]]) -> int:
+def _score_inspect_symbol_matches(
+    text: str, active_stages: List[str], inspect_symbols: Optional[List[str]]
+) -> int:
     score = 0
     if not inspect_symbols:
         return score
@@ -223,13 +256,23 @@ def _score_inspect_symbol_matches(text: str, active_stages: List[str], inspect_s
     return score
 
 
-def _score_stage_matches(text: str, text_lower: str, active_stages: List[str], inspect_symbols: Optional[List[str]]) -> int:
+def _score_stage_matches(
+    text: str,
+    text_lower: str,
+    active_stages: List[str],
+    inspect_symbols: Optional[List[str]],
+) -> int:
     score = _score_active_stage_matches(text, text_lower, active_stages)
     score += _score_inspect_symbol_matches(text, active_stages, inspect_symbols)
     return score
 
 
-def _score_content_features(p: Optional[Path], f: str, active_stages: List[str], inspect_symbols: Optional[List[str]]) -> int:
+def _score_content_features(
+    p: Optional[Path],
+    f: str,
+    active_stages: List[str],
+    inspect_symbols: Optional[List[str]],
+) -> int:
     if p is None:
         return 0
 
@@ -239,19 +282,32 @@ def _score_content_features(p: Optional[Path], f: str, active_stages: List[str],
         if p.exists() and p.is_file():
             text = p.read_text(encoding="utf-8", errors="ignore")
             text_lower = text.lower()
-            return _score_code_tokens(text) + _score_stage_matches(text, text_lower, active_stages, inspect_symbols)
+            return _score_code_tokens(text) + _score_stage_matches(
+                text, text_lower, active_stages, inspect_symbols
+            )
     except Exception:
         return 0
     return 0
 
 
-def _score_file(f: str, tokens: set[str], active_stages: List[str], self_hosting_planning: bool, inspect_symbols: Optional[List[str]], planner_filename: str) -> tuple[int, int, str]:
-    score, prefer, p, _fname = _score_path_features(f, tokens, active_stages, self_hosting_planning, planner_filename)
+def _score_file(
+    f: str,
+    tokens: set[str],
+    active_stages: List[str],
+    self_hosting_planning: bool,
+    inspect_symbols: Optional[List[str]],
+    planner_filename: str,
+) -> tuple[int, int, str]:
+    score, prefer, p, _fname = _score_path_features(
+        f, tokens, active_stages, self_hosting_planning, planner_filename
+    )
     score += _score_content_features(p, f, active_stages, inspect_symbols)
     return (score, prefer, f)
 
 
-def _maybe_promote_planner(scored: List[tuple[int, int, str]], planner_filename: str) -> List[tuple[int, int, str]]:
+def _maybe_promote_planner(
+    scored: List[tuple[int, int, str]], planner_filename: str
+) -> List[tuple[int, int, str]]:
     try:
         planner_idx = None
         planner_score = None
@@ -264,26 +320,29 @@ def _maybe_promote_planner(scored: List[tuple[int, int, str]], planner_filename:
             except Exception:
                 continue
         if planner_idx is not None:
-            other_scores = [s for j, (s, _p, _f) in enumerate(scored) if j != planner_idx]
+            other_scores = [
+                s for j, (s, _p, _f) in enumerate(scored) if j != planner_idx
+            ]
             top_other = max(other_scores) if other_scores else None
             if planner_score is not None:
                 raw_planner_score = planner_score - 100
                 PROMOTION_THRESHOLD = 5
-                if top_other is None or raw_planner_score >= top_other - PROMOTION_THRESHOLD:
+                if (
+                    top_other is None
+                    or raw_planner_score >= top_other - PROMOTION_THRESHOLD
+                ):
                     chosen = scored.pop(planner_idx)
                     scored.insert(0, chosen)
     except Exception:
         pass
     return scored
 
+
 def load_json(path: Path) -> Optional[Dict[str, Any]]:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
-
-
-
 
 
 def read_jsonl(path: Path) -> List[Dict[str, Any]]:
@@ -313,7 +372,14 @@ def collect_candidate_files(repo_root: Path) -> List[str]:
     The list is deliberately bounded to avoid full repo crawl.
     """
     candidates: List[str] = []
-    common = ["pyproject.toml", "requirements.txt", "setup.cfg", "setup.py", "README.md", "LICENSE"]
+    common = [
+        "pyproject.toml",
+        "requirements.txt",
+        "setup.cfg",
+        "setup.py",
+        "README.md",
+        "LICENSE",
+    ]
     candidates.extend([name for name in common if (repo_root / name).exists()])
 
     scripts_dir = repo_root / "scripts"
@@ -329,15 +395,16 @@ def collect_candidate_files(repo_root: Path) -> List[str]:
 
     workflows = repo_root / ".github" / "workflows"
     if workflows.is_dir():
-        candidates.extend(str(p.relative_to(repo_root)) for p in workflows.rglob("*.yml"))
+        candidates.extend(
+            str(p.relative_to(repo_root)) for p in workflows.rglob("*.yml")
+        )
 
     return candidates
 
 
-
-
-
-def is_self_hosting_python_tooling_task(task: str, profile: Optional[Dict[str, Any]]) -> bool:
+def is_self_hosting_python_tooling_task(
+    task: str, profile: Optional[Dict[str, Any]]
+) -> bool:
     # Conservative detection: require profile signal for python tooling
     # repos, and recognize a variety of self-hosting synonyms. Previously
     # this required an explicit 'single-file' phrase which made the
@@ -345,7 +412,14 @@ def is_self_hosting_python_tooling_task(task: str, profile: Optional[Dict[str, A
     if not profile or profile.get("repo_shape") != "python_tooling_repo":
         return False
     task_lower = task.lower()
-    self_host_phrases = ("self-host", "self host", "self-hosting", "selfhost", "self-hosted", "self hosted")
+    self_host_phrases = (
+        "self-host",
+        "self host",
+        "self-hosting",
+        "selfhost",
+        "self-hosted",
+        "self hosted",
+    )
     return any(p in task_lower for p in self_host_phrases)
 
 
@@ -395,14 +469,20 @@ def extract_brief_themes(brief: Optional[Dict[str, Any]]) -> List[str]:
     return themes
 
 
-def choose_recommended_first_edit_area(task: str, profile: Optional[Dict[str, Any]], likely_targets: List[str]) -> Optional[str]:
-    if is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(task):
+def choose_recommended_first_edit_area(
+    task: str, profile: Optional[Dict[str, Any]], likely_targets: List[str]
+) -> Optional[str]:
+    if is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(
+        task
+    ):
         preferred = "scripts/repo_task_plan.py"
         return preferred
     return likely_targets[0] if likely_targets else None
 
 
-def prioritize_first_edit_area(likely_targets: List[str], first_edit_area: Optional[str]) -> List[str]:
+def prioritize_first_edit_area(
+    likely_targets: List[str], first_edit_area: Optional[str]
+) -> List[str]:
     if not first_edit_area:
         return likely_targets
     reordered: List[str] = []
@@ -416,7 +496,9 @@ def prioritize_first_edit_area(likely_targets: List[str], first_edit_area: Optio
     return reordered[:5]
 
 
-def build_planning_focus_steps(target: str, likely_targets: List[str], brief: Optional[Dict[str, Any]]) -> List[str]:
+def build_planning_focus_steps(
+    target: str, likely_targets: List[str], brief: Optional[Dict[str, Any]]
+) -> List[str]:
     themes = extract_brief_themes(brief)
     steps: List[str] = []
     # For the planner file, prefer an explicit symbol-level first-change
@@ -428,23 +510,31 @@ def build_planning_focus_steps(target: str, likely_targets: List[str], brief: Op
                 f"Modify or extend `def rank_files` in {target} to ensure the planning-focused candidate selection and prioritisation of inspector-reported symbols while keeping the brief anchored to {themes[0]} guidance and the argparse/subprocess/pathlib/json signals already present in the evidence."
             )
         else:
-            steps.append(f"Modify or extend `def rank_files` in {target} to ensure the planning-focused candidate selection and prioritisation of inspector-reported symbols.")
+            steps.append(
+                f"Modify or extend `def rank_files` in {target} to ensure the planning-focused candidate selection and prioritisation of inspector-reported symbols."
+            )
     if themes:
         steps.append(
             f"Inspect {target} and rewrite its implementation steps so they explicitly carry the brief's {themes[0]} guidance."
         )
     else:
-        steps.append(f"Inspect {target} and rewrite its implementation steps so they carry the brief's synthesized guidance.")
+        steps.append(
+            f"Inspect {target} and rewrite its implementation steps so they carry the brief's synthesized guidance."
+        )
 
     if len(themes) > 1:
         steps.append(
             f"Use the brief's {themes[1]} guidance to keep the first-edit note concrete instead of saying 'the target script'."
         )
     elif themes:
-        steps.append(f"Keep the first-edit note concrete by naming {target} and the brief's evidence themes.")
+        steps.append(
+            f"Keep the first-edit note concrete by naming {target} and the brief's evidence themes."
+        )
 
     if len(likely_targets) > 1:
-        steps.append(f"Review {likely_targets[1]} as a handoff check so the plan stays aligned with {target}.")
+        steps.append(
+            f"Review {likely_targets[1]} as a handoff check so the plan stays aligned with {target}."
+        )
 
     steps.append(
         f"Regenerate jack/repo-task-plan.json and jack/repo-task-first-edit.md, then confirm recommended_first_edit_area remains {target}."
@@ -455,12 +545,20 @@ def build_planning_focus_steps(target: str, likely_targets: List[str], brief: Op
 def build_generic_steps(likely_targets: List[str]) -> List[str]:
     steps: List[str] = []
     if likely_targets:
-        steps.append(f"Inspect the file `{likely_targets[0]}` to confirm current configuration.")
+        steps.append(
+            f"Inspect the file `{likely_targets[0]}` to confirm current configuration."
+        )
         if len(likely_targets) > 1:
-            steps.append(f"Review `{likely_targets[1]}` for related settings or entry points.")
-        steps.append("Based on the inspection, propose concrete code or config changes.")
+            steps.append(
+                f"Review `{likely_targets[1]}` for related settings or entry points."
+            )
+        steps.append(
+            "Based on the inspection, propose concrete code or config changes."
+        )
     else:
-        steps.append("Unable to identify concrete target files; resolve ambiguity first.")
+        steps.append(
+            "Unable to identify concrete target files; resolve ambiguity first."
+        )
     return steps
 
 
@@ -471,7 +569,9 @@ def synthesize_implementation_steps(
     likely_targets: List[str],
     first_edit_area: Optional[str],
 ) -> List[str]:
-    if is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(task):
+    if is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(
+        task
+    ):
         target = first_edit_area or (likely_targets[0] if likely_targets else None)
         if target:
             return build_planning_focus_steps(target, likely_targets, brief)
@@ -479,8 +579,15 @@ def synthesize_implementation_steps(
     return build_generic_steps(likely_targets)
 
 
-def synthesize_first_edit_reason(task: str, profile: Optional[Dict[str, Any]], brief: Optional[Dict[str, Any]], first_edit_area: Optional[str]) -> str:
-    if is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(task):
+def synthesize_first_edit_reason(
+    task: str,
+    profile: Optional[Dict[str, Any]],
+    brief: Optional[Dict[str, Any]],
+    first_edit_area: Optional[str],
+) -> str:
+    if is_self_hosting_python_tooling_task(task, profile) and is_planning_focus_task(
+        task
+    ):
         themes = extract_brief_themes(brief)
         if themes:
             return f"This file is the planning stage that should turn the brief's {themes[0]} guidance into concrete file-level steps."
@@ -515,13 +622,21 @@ def main(argv: List[str] | None = None) -> int:
     if isinstance(inspect_artifact, dict):
         inspect_symbols = inspect_artifact.get("key_symbols_or_sections", None)
     ranked = rank_files(candidates, args.task, inspect_symbols)
-    planning_focus_self_host = bool(profile) and is_self_hosting_python_tooling_task(args.task, profile) and is_planning_focus_task(args.task)
+    planning_focus_self_host = (
+        bool(profile)
+        and is_self_hosting_python_tooling_task(args.task, profile)
+        and is_planning_focus_task(args.task)
+    )
     # Keep the shortlist bounded. Planning-focused self-hosting tasks only
     # need the first-edit pair; broader tasks keep a slightly wider shortlist.
     likely_target_limit = 2 if planning_focus_self_host else 5
     likely_targets = ranked[:likely_target_limit]
-    recommended_first_edit_area = choose_recommended_first_edit_area(args.task, profile, likely_targets)
-    likely_targets = prioritize_first_edit_area(likely_targets, recommended_first_edit_area)
+    recommended_first_edit_area = choose_recommended_first_edit_area(
+        args.task, profile, likely_targets
+    )
+    likely_targets = prioritize_first_edit_area(
+        likely_targets, recommended_first_edit_area
+    )
 
     # Build implementation plan structure
     plan: Dict[str, Any] = {
@@ -537,11 +652,15 @@ def main(argv: List[str] | None = None) -> int:
         "do_not_auto_apply": True,
     }
 
-    plan["implementation_steps"] = synthesize_implementation_steps(args.task, profile, brief, likely_targets, recommended_first_edit_area)
+    plan["implementation_steps"] = synthesize_implementation_steps(
+        args.task, profile, brief, likely_targets, recommended_first_edit_area
+    )
 
     # Write JSON plan
     json_path = jack_dir / "repo-task-plan.json"
-    json_path.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+    json_path.write_text(
+        json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
     # Write markdown plan
     md_path = jack_dir / "repo-task-plan.md"
@@ -553,32 +672,47 @@ def main(argv: List[str] | None = None) -> int:
     ]
     for f in likely_targets:
         md_lines.append(f"- `{f}`")
-    md_lines.extend([
-        "",
-        "## First Files to Inspect",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "## First Files to Inspect",
+        ]
+    )
     for f in plan["files_to_inspect_first"]:
         md_lines.append(f"- `{f}`")
-    md_lines.extend([
-        "",
-        "## Implementation Steps",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "## Implementation Steps",
+        ]
+    )
     for i, s in enumerate(plan["implementation_steps"], 1):
         md_lines.append(f"{i}. {s}")
-    md_lines.extend([
-        "",
-        "## Risks & Ambiguities",
-        "- " + (plan["risks_and_ambiguities"][0] if plan["risks_and_ambiguities"] else "None identified"),
-        "",
-           "**do-not-auto-apply: true**",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "## Risks & Ambiguities",
+            "- "
+            + (
+                plan["risks_and_ambiguities"][0]
+                if plan["risks_and_ambiguities"]
+                else "None identified"
+            ),
+            "",
+            "**do-not-auto-apply: true**",
+        ]
+    )
     md_path.write_text("\n".join(md_lines), encoding="utf-8")
 
     # Write first-edit concise artifact
     first_edit_path = jack_dir / "repo-task-first-edit.md"
     first_edit_lines = [
         "# First Edit Recommendation",
-        f"**File**: `{plan['recommended_first_edit_area']}`" if plan["recommended_first_edit_area"] else "*No concrete file identified*",
+        (
+            f"**File**: `{plan['recommended_first_edit_area']}`"
+            if plan["recommended_first_edit_area"]
+            else "*No concrete file identified*"
+        ),
         "",
         f"**Why**: {synthesize_first_edit_reason(args.task, profile, brief, plan['recommended_first_edit_area'])}",
         "",

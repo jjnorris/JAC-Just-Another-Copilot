@@ -17,10 +17,12 @@ class VerifyValidationReportTaskAlignmentTests(unittest.TestCase):
             jack_dir = temp_dir / "jack"
             jack_dir.mkdir()
             (jack_dir / "repo-task-plan.json").write_text(
-                json.dumps({
-                    "task": "different task",
-                    "recommended_first_edit_area": "scripts/repo_task_plan.py",
-                }),
+                json.dumps(
+                    {
+                        "task": "different task",
+                        "recommended_first_edit_area": "scripts/repo_task_plan.py",
+                    }
+                ),
                 encoding="utf-8",
             )
             report: dict[str, object] = {
@@ -36,7 +38,10 @@ class VerifyValidationReportTaskAlignmentTests(unittest.TestCase):
             )
 
             result = subprocess.run(
-                [sys.executable, str(Path(__file__).with_name("verify_validation_report.py"))],
+                [
+                    sys.executable,
+                    str(Path(__file__).with_name("verify_validation_report.py")),
+                ],
                 cwd=temp_dir,
                 capture_output=True,
                 text=True,

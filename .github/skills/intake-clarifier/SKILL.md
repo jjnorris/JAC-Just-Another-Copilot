@@ -48,7 +48,6 @@ Assess task readiness and produce clarification or assumption artifacts.
 - May classify uncertainty and ask for clarification. It may not hide ambiguity.
 
 ## Related docs
-- `docs/jacks/rules/04-ambiguity-policy.md`
-- `docs/jacks/workflows/intake-and-clarify.md`
-
+- `docs/jack/rules/04-ambiguity-policy.md`
+- `docs/jack/workflows/intake-and-clarify.md`
 

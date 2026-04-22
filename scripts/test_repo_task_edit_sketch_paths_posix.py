@@ -15,12 +15,16 @@ class TestEditSketchPathsPosix(unittest.TestCase):
 
             # provide a plan with a Windows-style path to simulate input
             plan = {"recommended_first_edit_area": "scripts\\profile_to_docs_lookup.py"}
-            (jack / "repo-task-plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            (jack / "repo-task-plan.json").write_text(
+                json.dumps(plan), encoding="utf-8"
+            )
 
             rc = rtes.main(["--repo-root", str(repo_root), "--task", "posix-check"])
             self.assertEqual(rc, 0)
 
-            out = json.loads((jack / "repo-task-edit-sketch.json").read_text(encoding="utf-8"))
+            out = json.loads(
+                (jack / "repo-task-edit-sketch.json").read_text(encoding="utf-8")
+            )
             tf = out.get("target_file")
             self.assertIsNotNone(tf)
             self.assertNotIn("\\\\", tf)

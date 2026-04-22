@@ -56,7 +56,9 @@ def first_matching_symbol(symbols: List[str], terms: List[str]) -> Optional[str]
     return None
 
 
-def choose_primary_symbol(symbols: List[str], task: str, rel_path: str) -> Optional[str]:
+def choose_primary_symbol(
+    symbols: List[str], task: str, rel_path: str
+) -> Optional[str]:
     if not symbols:
         return None
 
@@ -85,7 +87,13 @@ def choose_primary_symbol(symbols: List[str], task: str, rel_path: str) -> Optio
     if planning_focus and rel_lower.endswith("repo_task_plan.py"):
         preferred = first_matching_symbol(
             symbols,
-            ["rank_files", "choose_recommended_first_edit_area", "main", "collect_candidate_files", "load_json"],
+            [
+                "rank_files",
+                "choose_recommended_first_edit_area",
+                "main",
+                "collect_candidate_files",
+                "load_json",
+            ],
         )
         if preferred:
             return preferred
@@ -134,7 +142,9 @@ def select_inspected_files(repo_root: Path, plan: Dict[str, Any]) -> List[str]:
     return inspected_files_list
 
 
-def collect_inspection_details(repo_root: Path, task: str, inspected_files_list: List[str]) -> tuple[List[str], List[str], List[str]]:
+def collect_inspection_details(
+    repo_root: Path, task: str, inspected_files_list: List[str]
+) -> tuple[List[str], List[str], List[str]]:
     relevance_reasons: List[str] = []
     key_symbols: List[str] = []
     likely_changes: List[str] = []
@@ -152,7 +162,9 @@ def collect_inspection_details(repo_root: Path, task: str, inspected_files_list:
             if symbol != primary_symbol:
                 ordered_symbols.append(symbol)
 
-        relevance_reasons.append("File name matches task keywords or common config patterns.")
+        relevance_reasons.append(
+            "File name matches task keywords or common config patterns."
+        )
         append_unique(key_symbols, ordered_symbols)
 
         if primary_symbol:
@@ -165,7 +177,15 @@ def collect_inspection_details(repo_root: Path, task: str, inspected_files_list:
     return relevance_reasons, key_symbols, likely_changes
 
 
-def write_inspection_artifacts(jack_dir: Path, task: str, inspected_files_list: List[str], relevance_reasons: List[str], key_symbols: List[str], likely_changes: List[str], brief: Optional[Dict[str, Any]]) -> None:
+def write_inspection_artifacts(
+    jack_dir: Path,
+    task: str,
+    inspected_files_list: List[str],
+    relevance_reasons: List[str],
+    key_symbols: List[str],
+    likely_changes: List[str],
+    brief: Optional[Dict[str, Any]],
+) -> None:
     inspection: Dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "task": task,
@@ -174,12 +194,16 @@ def write_inspection_artifacts(jack_dir: Path, task: str, inspected_files_list: 
         "key_symbols_or_sections": key_symbols,
         "likely_change_areas": likely_changes,
         "change_risks": brief.get("ambiguities") if brief else [],
-        "recommended_first_code_edit_area": inspected_files_list[0] if inspected_files_list else None,
+        "recommended_first_code_edit_area": (
+            inspected_files_list[0] if inspected_files_list else None
+        ),
         "do_not_auto_apply": True,
     }
 
     json_path = jack_dir / "repo-task-inspect.json"
-    json_path.write_text(json.dumps(inspection, indent=2, ensure_ascii=False), encoding="utf-8")
+    json_path.write_text(
+        json.dumps(inspection, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
     md_path = jack_dir / "repo-task-inspect.md"
     md_lines = [
@@ -205,7 +229,11 @@ def write_inspection_artifacts(jack_dir: Path, task: str, inspected_files_list: 
     edit_path = jack_dir / "repo-task-edit-brief.md"
     edit_lines = [
         "# First Edit Recommendation",
-        f"**File**: `{inspection['recommended_first_code_edit_area']}`" if inspection['recommended_first_code_edit_area'] else "*No concrete file identified*",
+        (
+            f"**File**: `{inspection['recommended_first_code_edit_area']}`"
+            if inspection["recommended_first_code_edit_area"]
+            else "*No concrete file identified*"
+        ),
         "",
         "**Why**: This file was top-ranked by the plan and contains symbols relevant to the task.",
         "",
@@ -213,7 +241,11 @@ def write_inspection_artifacts(jack_dir: Path, task: str, inspected_files_list: 
         f"- {key_symbols[0]}" if key_symbols else "- (no obvious symbols)",
         "",
         "**Key risk**:",
-        f"- {inspection['change_risks'][0]}" if inspection['change_risks'] else "- None identified",
+        (
+            f"- {inspection['change_risks'][0]}"
+            if inspection["change_risks"]
+            else "- None identified"
+        ),
     ]
     edit_path.write_text("\n".join(edit_lines), encoding="utf-8")
 
@@ -236,8 +268,18 @@ def main(argv: List[str] | None = None) -> int:
         return 1
 
     inspected_files_list = select_inspected_files(repo_root, plan)
-    relevance_reasons, key_symbols, likely_changes = collect_inspection_details(repo_root, args.task, inspected_files_list)
-    write_inspection_artifacts(jack_dir, args.task, inspected_files_list, relevance_reasons, key_symbols, likely_changes, brief)
+    relevance_reasons, key_symbols, likely_changes = collect_inspection_details(
+        repo_root, args.task, inspected_files_list
+    )
+    write_inspection_artifacts(
+        jack_dir,
+        args.task,
+        inspected_files_list,
+        relevance_reasons,
+        key_symbols,
+        likely_changes,
+        brief,
+    )
 
     print(f"Wrote inspection JSON: {jack_dir / 'repo-task-inspect.json'}")
     print(f"Wrote inspection markdown: {jack_dir / 'repo-task-inspect.md'}")

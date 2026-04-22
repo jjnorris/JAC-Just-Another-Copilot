@@ -23,11 +23,24 @@ class TestProfileRepoStackConfidence(unittest.TestCase):
                 (td / f"script_{i}.py").write_text("print('hi')\n", encoding="utf-8")
 
             # run profile on the temporary repo (writes to td/jack/...)
-            ret = prs.main(["--repo-root", str(td), "--out-json", "jack/repo-stack-profile.json", "--out-md", "jack/repo-stack-profile.md", "--brief-md", "jack/repo-research-brief.md"])
+            ret = prs.main(
+                [
+                    "--repo-root",
+                    str(td),
+                    "--out-json",
+                    "jack/repo-stack-profile.json",
+                    "--out-md",
+                    "jack/repo-stack-profile.md",
+                    "--brief-md",
+                    "jack/repo-research-brief.md",
+                ]
+            )
             self.assertEqual(ret, 0)
 
             out_path = td / "jack" / "repo-stack-profile.json"
-            self.assertTrue(out_path.exists(), msg=f"profile json not written: {out_path}")
+            self.assertTrue(
+                out_path.exists(), msg=f"profile json not written: {out_path}"
+            )
             pj = json.loads(out_path.read_text(encoding="utf-8"))
 
             # assertions per the narrow regression expectation
@@ -39,5 +52,5 @@ class TestProfileRepoStackConfidence(unittest.TestCase):
             shutil.rmtree(td)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

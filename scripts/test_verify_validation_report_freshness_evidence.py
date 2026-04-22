@@ -19,14 +19,30 @@ class TestFreshnessEvidenceVerifier(unittest.TestCase):
             now = datetime.now(timezone.utc).isoformat()
 
             # Create required artifact files (stubs) and minimal required fields
-            (jack / "repo-stack-profile.json").write_text(json.dumps({"task": task}), encoding="utf-8")
-            (jack / "repo-docs-lookup-plan.json").write_text(json.dumps({}), encoding="utf-8")
+            (jack / "repo-stack-profile.json").write_text(
+                json.dumps({"task": task}), encoding="utf-8"
+            )
+            (jack / "repo-docs-lookup-plan.json").write_text(
+                json.dumps({}), encoding="utf-8"
+            )
             (jack / "repo-docs-evidence.jsonl").write_text("", encoding="utf-8")
-            (jack / "repo-task-brief.json").write_text(json.dumps({"task": task}), encoding="utf-8")
-            (jack / "repo-task-plan.json").write_text(json.dumps({"task": task, "recommended_first_edit_area": "area"}), encoding="utf-8")
-            (jack / "repo-task-inspect.json").write_text(json.dumps({"task": task, "recommended_first_code_edit_area": "area"}), encoding="utf-8")
-            (jack / "repo-task-edit-sketch.json").write_text(json.dumps({"task": task, "target_file": "foo.py"}), encoding="utf-8")
-            (jack / "repo-task-change-outline.json").write_text(json.dumps({"task": task, "target_file": "foo.py"}), encoding="utf-8")
+            (jack / "repo-task-brief.json").write_text(
+                json.dumps({"task": task}), encoding="utf-8"
+            )
+            (jack / "repo-task-plan.json").write_text(
+                json.dumps({"task": task, "recommended_first_edit_area": "area"}),
+                encoding="utf-8",
+            )
+            (jack / "repo-task-inspect.json").write_text(
+                json.dumps({"task": task, "recommended_first_code_edit_area": "area"}),
+                encoding="utf-8",
+            )
+            (jack / "repo-task-edit-sketch.json").write_text(
+                json.dumps({"task": task, "target_file": "foo.py"}), encoding="utf-8"
+            )
+            (jack / "repo-task-change-outline.json").write_text(
+                json.dumps({"task": task, "target_file": "foo.py"}), encoding="utf-8"
+            )
 
             # Transition ledger
             stages = []
@@ -49,29 +65,43 @@ class TestFreshnessEvidenceVerifier(unittest.TestCase):
                 "jack/repo-task-change-outline.json",
             ]
             for name, path in zip(required_stage_names, artifact_paths):
-                stages.append({
-                    "stage_name": name,
-                    "status": "completed",
-                    "artifact_paths": [path],
-                    "reason": "test-run",
-                })
+                stages.append(
+                    {
+                        "stage_name": name,
+                        "status": "completed",
+                        "artifact_paths": [path],
+                        "reason": "test-run",
+                    }
+                )
 
             ledger = {
                 "task": task,
                 "started_at": now,
                 "finished_at": now,
-                "stages": stages + [{"stage_name": "repo_task_patch_sketch.py", "status": "skipped", "artifact_paths": [], "reason": "optional stage script not present"}],
+                "stages": stages
+                + [
+                    {
+                        "stage_name": "repo_task_patch_sketch.py",
+                        "status": "skipped",
+                        "artifact_paths": [],
+                        "reason": "optional stage script not present",
+                    }
+                ],
                 "optional_stages_encountered": [],
                 "final_status": "completed",
             }
-            (jack / "repo-task-transition-ledger.json").write_text(json.dumps(ledger, indent=2), encoding="utf-8")
+            (jack / "repo-task-transition-ledger.json").write_text(
+                json.dumps(ledger, indent=2), encoding="utf-8"
+            )
 
             # Validation report
             validation_report = {
                 "generated_at": now,
                 "task": task,
                 "validated": required_stage_names,
-                "methods": [f"ran: {sys.executable} scripts/run_repo_task_flow.py --repo-root {repo_root} --task \"{task}\""],
+                "methods": [
+                    f'ran: {sys.executable} scripts/run_repo_task_flow.py --repo-root {repo_root} --task "{task}"'
+                ],
                 "not_validated": [],
                 "evidence_links": [
                     "jack/repo-task-plan.json",
@@ -85,33 +115,39 @@ class TestFreshnessEvidenceVerifier(unittest.TestCase):
                 ],
                 "verifier_version": "doublecheck v1",
             }
-            (jack / "repo-task-validation-report.json").write_text(json.dumps(validation_report, indent=2), encoding="utf-8")
+            (jack / "repo-task-validation-report.json").write_text(
+                json.dumps(validation_report, indent=2), encoding="utf-8"
+            )
 
             # Artifact family manifest (include freshness entry)
             entries = []
             for stage_name, artifact_path in zip(required_stage_names, artifact_paths):
-                entries.append({
-                    "stage_name": stage_name,
-                    "artifact_role": f"{stage_name}_primary",
-                    "artifact_path": artifact_path,
-                    "required_or_optional": "required",
-                    "producer": f"scripts/{stage_name}",
+                entries.append(
+                    {
+                        "stage_name": stage_name,
+                        "artifact_role": f"{stage_name}_primary",
+                        "artifact_path": artifact_path,
+                        "required_or_optional": "required",
+                        "producer": f"scripts/{stage_name}",
+                        "consumers": ["human review"],
+                        "output_type": "json",
+                        "expected_in_current_live_flow": True,
+                    }
+                )
+
+            # Add freshness evidence entry
+            entries.append(
+                {
+                    "stage_name": "post_validation",
+                    "artifact_role": "freshness_evidence",
+                    "artifact_path": "jack/repo-task-freshness-evidence.json",
+                    "required_or_optional": "optional",
+                    "producer": "scripts/run_repo_task_flow.py",
                     "consumers": ["human review"],
                     "output_type": "json",
                     "expected_in_current_live_flow": True,
-                })
-
-            # Add freshness evidence entry
-            entries.append({
-                "stage_name": "post_validation",
-                "artifact_role": "freshness_evidence",
-                "artifact_path": "jack/repo-task-freshness-evidence.json",
-                "required_or_optional": "optional",
-                "producer": "scripts/run_repo_task_flow.py",
-                "consumers": ["human review"],
-                "output_type": "json",
-                "expected_in_current_live_flow": True,
-            })
+                }
+            )
 
             manifest = {
                 "task": task,
@@ -120,35 +156,53 @@ class TestFreshnessEvidenceVerifier(unittest.TestCase):
                 "validation_report_ref": "jack/repo-task-validation-report.json",
                 "artifact_family_entries": entries,
             }
-            (jack / "repo-task-artifact-family-manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+            (jack / "repo-task-artifact-family-manifest.json").write_text(
+                json.dumps(manifest, indent=2), encoding="utf-8"
+            )
 
             # Freshness evidence artifact (POSIX-normalized paths)
             freshness = {
                 "generated_at": now,
                 "task": task,
                 "source_inputs": [
-                    (jack / "repo-docs-lookup-plan.json").relative_to(repo_root).as_posix(),
+                    (jack / "repo-docs-lookup-plan.json")
+                    .relative_to(repo_root)
+                    .as_posix(),
                 ],
                 "evidence_sources": [
-                    (jack / "repo-docs-evidence.jsonl").relative_to(repo_root).as_posix(),
+                    (jack / "repo-docs-evidence.jsonl")
+                    .relative_to(repo_root)
+                    .as_posix(),
                 ],
                 "consumed_by_stages": [
                     "profile_to_docs_lookup.py",
                 ],
             }
-            (jack / "repo-task-freshness-evidence.json").write_text(json.dumps(freshness, indent=2), encoding="utf-8")
+            (jack / "repo-task-freshness-evidence.json").write_text(
+                json.dumps(freshness, indent=2), encoding="utf-8"
+            )
 
             # Run verifier with freshness gate enabled
-            verifier_script = Path(__file__).resolve().parent / "verify_validation_report.py"
+            verifier_script = (
+                Path(__file__).resolve().parent / "verify_validation_report.py"
+            )
             env = os.environ.copy()
             env["JACK_REQUIRE_TRANSITION_LEDGER"] = "1"
             env["JACK_REQUIRE_ARTIFACT_FAMILY_MANIFEST"] = "1"
             env["JACK_REQUIRE_FRESHNESS_EVIDENCE"] = "1"
 
-            result = subprocess.run([sys.executable, str(verifier_script)], cwd=str(repo_root), env=env, capture_output=True, text=True)
+            result = subprocess.run(
+                [sys.executable, str(verifier_script)],
+                cwd=str(repo_root),
+                env=env,
+                capture_output=True,
+                text=True,
+            )
             print(result.stdout)
             print(result.stderr, file=sys.stderr)
-            self.assertEqual(result.returncode, 0, msg=f"Verifier failed: {result.stderr}")
+            self.assertEqual(
+                result.returncode, 0, msg=f"Verifier failed: {result.stderr}"
+            )
 
 
 if __name__ == "__main__":

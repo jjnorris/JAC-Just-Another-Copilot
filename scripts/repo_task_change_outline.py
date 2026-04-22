@@ -35,9 +35,16 @@ def normalize_repo_path(path_text: str) -> str:
     return path_text.replace("\\", "/").strip()
 
 
-def synthesize_change_intent(edit_sketch: Dict[str, Any], plan: Dict[str, Any], target_file: Optional[str], target_symbol: Optional[str]) -> str:
+def synthesize_change_intent(
+    edit_sketch: Dict[str, Any],
+    plan: Dict[str, Any],
+    target_file: Optional[str],
+    target_symbol: Optional[str],
+) -> str:
     if target_symbol and "rank_files" in target_symbol.lower():
-        first_edit_area = plan.get("recommended_first_edit_area") or target_file or PLAN_TARGET_FILE
+        first_edit_area = (
+            plan.get("recommended_first_edit_area") or target_file or PLAN_TARGET_FILE
+        )
         return (
             f"Tighten `{target_symbol}` in `{target_file}` so `{first_edit_area}` stays first "
             "for the planning-focused self-hosting path."
@@ -57,9 +64,16 @@ def synthesize_constraints(edit_sketch: Dict[str, Any]) -> List[str]:
     return ["preserve existing bounded behavior"]
 
 
-def synthesize_change_breakdown(edit_sketch: Dict[str, Any], plan: Dict[str, Any], target_file: Optional[str], target_symbol: Optional[str]) -> List[str]:
+def synthesize_change_breakdown(
+    edit_sketch: Dict[str, Any],
+    plan: Dict[str, Any],
+    target_file: Optional[str],
+    target_symbol: Optional[str],
+) -> List[str]:
     if target_symbol and "rank_files" in target_symbol.lower():
-        first_edit_area = plan.get("recommended_first_edit_area") or target_file or PLAN_TARGET_FILE
+        first_edit_area = (
+            plan.get("recommended_first_edit_area") or target_file or PLAN_TARGET_FILE
+        )
         return [
             f"Keep `{first_edit_area}` first in the planning-focused candidate order.",
             "Weight `inspect_symbols` and stage-matching signals above generic helper names.",
@@ -78,12 +92,20 @@ def synthesize_change_breakdown(edit_sketch: Dict[str, Any], plan: Dict[str, Any
     return ["Refine the existing logic in a conservative way."]
 
 
-def append_touch_points_from_source(source_list: List[Any], touch_points: List[str], seen: set[str], normalized_target: str) -> None:
+def append_touch_points_from_source(
+    source_list: List[Any],
+    touch_points: List[str],
+    seen: set[str],
+    normalized_target: str,
+) -> None:
     for item in source_list:
         normalized = normalize_repo_path(str(item))
         if not normalized:
             continue
-        if normalized.endswith("repo_task_change_outline.py") and normalized != normalized_target:
+        if (
+            normalized.endswith("repo_task_change_outline.py")
+            and normalized != normalized_target
+        ):
             continue
         if normalized in seen:
             continue
@@ -91,14 +113,22 @@ def append_touch_points_from_source(source_list: List[Any], touch_points: List[s
         seen.add(normalized)
 
 
-def synthesize_ordered_steps(edit_sketch: Dict[str, Any], plan: Dict[str, Any], target_file: Optional[str], target_symbol: Optional[str], acceptance_checks: List[str]) -> List[str]:
+def synthesize_ordered_steps(
+    edit_sketch: Dict[str, Any],
+    plan: Dict[str, Any],
+    target_file: Optional[str],
+    target_symbol: Optional[str],
+    acceptance_checks: List[str],
+) -> List[str]:
     """Produce a short ordered list of concrete steps for the first edit.
 
     Prefer extracting numbered items from the edit sketch if present; otherwise
     synthesize a small, actionable sequence (pre-check, implement, verify).
     """
     if target_symbol and "rank_files" in target_symbol.lower():
-        first_edit_area = plan.get("recommended_first_edit_area") or target_file or PLAN_TARGET_FILE
+        first_edit_area = (
+            plan.get("recommended_first_edit_area") or target_file or PLAN_TARGET_FILE
+        )
         return [
             f"Preflight: confirm `{target_file}` still exposes `{target_symbol}` and that `{first_edit_area}` is the first-edit target.",
             f"Implement: apply the change breakdown so `{first_edit_area}` stays first, `inspect_symbols` and stage-matching signals are weighted higher, and the candidate list stays bounded.",
@@ -115,10 +145,16 @@ def synthesize_ordered_steps(edit_sketch: Dict[str, Any], plan: Dict[str, Any], 
     steps: List[str] = []
     if target_file:
         sym = target_symbol or "<no symbol listed>"
-        steps.append(f"Open `{target_file}` and confirm the target symbol/signature: {sym}.")
+        steps.append(
+            f"Open `{target_file}` and confirm the target symbol/signature: {sym}."
+        )
 
     # First implementation step: perform the described change intent (concise).
-    first_line = shape.splitlines()[0].strip() if shape.splitlines() else "Implement the described change."
+    first_line = (
+        shape.splitlines()[0].strip()
+        if shape.splitlines()
+        else "Implement the described change."
+    )
     steps.append(f"Implement change: {first_line}")
 
     # Verification step: run checks and update artifacts
@@ -132,7 +168,9 @@ def synthesize_ordered_steps(edit_sketch: Dict[str, Any], plan: Dict[str, Any], 
     return steps
 
 
-def synthesize_likely_touch_points(inspect: Dict[str, Any], plan: Dict[str, Any], target_file: Optional[str]) -> List[str]:
+def synthesize_likely_touch_points(
+    inspect: Dict[str, Any], plan: Dict[str, Any], target_file: Optional[str]
+) -> List[str]:
     normalized_target = normalize_repo_path(target_file) if target_file else ""
     touch_points: List[str] = []
     seen = set()
@@ -147,11 +185,15 @@ def synthesize_likely_touch_points(inspect: Dict[str, Any], plan: Dict[str, Any]
         source_lists.append(planned_files)
 
     for source_list in source_lists:
-        append_touch_points_from_source(source_list, touch_points, seen, normalized_target)
+        append_touch_points_from_source(
+            source_list, touch_points, seen, normalized_target
+        )
     return touch_points
 
 
-def select_primary_target(edit_sketch: Dict[str, Any], inspect: Dict[str, Any]) -> tuple[Optional[str], Optional[str], List[str]]:
+def select_primary_target(
+    edit_sketch: Dict[str, Any], inspect: Dict[str, Any]
+) -> tuple[Optional[str], Optional[str], List[str]]:
     target_file: Optional[str] = edit_sketch.get("target_file")
     target_symbol: Optional[str] = edit_sketch.get("target_symbol_or_section")
     ambiguities: List[str] = []
@@ -199,8 +241,16 @@ def build_markdown_outline(outline: Dict[str, Any]) -> List[str]:
         f"**Task**: {outline.get('task', '')}",
         "",
         "## Primary Target",
-        f"- **File**: `{target_file}`" if target_file else "- *No concrete file identified*",
-        f"- **Symbol/Section**: `{target_symbol}`" if target_symbol else "- *No explicit symbol/section*",
+        (
+            f"- **File**: `{target_file}`"
+            if target_file
+            else "- *No concrete file identified*"
+        ),
+        (
+            f"- **Symbol/Section**: `{target_symbol}`"
+            if target_symbol
+            else "- *No explicit symbol/section*"
+        ),
         f"- **Why first**: {outline.get('why_this_change_first', '')}",
         "",
         "## Change Intent",
@@ -246,12 +296,18 @@ def main(argv: List[str] | None = None) -> int:
     inspect = load_json(jack_dir / "repo-task-inspect.json") or {}
     plan = load_json(jack_dir / "repo-task-plan.json") or {}
 
-    target_file, target_symbol, ambiguities = select_primary_target(edit_sketch, inspect)
+    target_file, target_symbol, ambiguities = select_primary_target(
+        edit_sketch, inspect
+    )
 
     # Change intent synthesis
-    change_intent = synthesize_change_intent(edit_sketch, plan, target_file, target_symbol)
+    change_intent = synthesize_change_intent(
+        edit_sketch, plan, target_file, target_symbol
+    )
 
-    change_breakdown = synthesize_change_breakdown(edit_sketch, plan, target_file, target_symbol)
+    change_breakdown = synthesize_change_breakdown(
+        edit_sketch, plan, target_file, target_symbol
+    )
 
     # Constraints synthesis
     constraints = synthesize_constraints(edit_sketch)
@@ -266,7 +322,9 @@ def main(argv: List[str] | None = None) -> int:
 
     # Ordered steps synthesized from the edit sketch to give a concrete
     # short sequence the human can follow (pre-check, implement, verify).
-    ordered_steps = synthesize_ordered_steps(edit_sketch, plan, target_file, target_symbol, acceptance_checks)
+    ordered_steps = synthesize_ordered_steps(
+        edit_sketch, plan, target_file, target_symbol, acceptance_checks
+    )
 
     outline: Dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -285,7 +343,9 @@ def main(argv: List[str] | None = None) -> int:
     }
 
     json_path = jack_dir / "repo-task-change-outline.json"
-    json_path.write_text(json.dumps(outline, indent=2, ensure_ascii=False), encoding="utf-8")
+    json_path.write_text(
+        json.dumps(outline, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
     # Markdown version
     md_path = jack_dir / "repo-task-change-outline.md"

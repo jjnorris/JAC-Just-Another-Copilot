@@ -13,8 +13,18 @@ class TestPlanningIntentDetection(unittest.TestCase):
     def setUp(self):
         self.jack_dir = Path("jack")
         self.jack_dir.mkdir(exist_ok=True)
-        (self.jack_dir / "repo-stack-profile.json").write_text(json.dumps({"repo_shape": "python_tooling_repo"}))
-        (self.jack_dir / "repo-task-brief.json").write_text(json.dumps({"actionable_suggestions": [], "ambiguities": [], "relevant_evidence_snippets": []}))
+        (self.jack_dir / "repo-stack-profile.json").write_text(
+            json.dumps({"repo_shape": "python_tooling_repo"})
+        )
+        (self.jack_dir / "repo-task-brief.json").write_text(
+            json.dumps(
+                {
+                    "actionable_suggestions": [],
+                    "ambiguities": [],
+                    "relevant_evidence_snippets": [],
+                }
+            )
+        )
 
     def tearDown(self):
         p1 = self.jack_dir / "repo-stack-profile.json"
@@ -36,9 +46,14 @@ class TestPlanningIntentDetection(unittest.TestCase):
         # Expect the planning-specific recommended first edit area
         self.assertEqual(recommended, "scripts/repo_task_plan.py")
 
-        steps = synthesize_implementation_steps(task, profile, brief, likely_targets, recommended)
+        steps = synthesize_implementation_steps(
+            task, profile, brief, likely_targets, recommended
+        )
         # Planning-focused synth should reference the planner target explicitly
-        self.assertTrue(any("repo_task_plan.py" in s for s in steps), "Implementation steps should be planning-focused and mention the planner file")
+        self.assertTrue(
+            any("repo_task_plan.py" in s for s in steps),
+            "Implementation steps should be planning-focused and mention the planner file",
+        )
 
 
 if __name__ == "__main__":

@@ -34,7 +34,9 @@ def normalize_repo_path(path_text: str) -> str:
     return path_text.replace("\\", "/").strip()
 
 
-def build_patch_steps(plan: Dict[str, Any], edit_sketch: Dict[str, Any], change_outline: Dict[str, Any]) -> List[str]:
+def build_patch_steps(
+    plan: Dict[str, Any], edit_sketch: Dict[str, Any], change_outline: Dict[str, Any]
+) -> List[str]:
     target_file = (
         change_outline.get("target_file")
         or edit_sketch.get("target_file")
@@ -50,7 +52,11 @@ def build_patch_steps(plan: Dict[str, Any], edit_sketch: Dict[str, Any], change_
     focus_files: List[str] = []
     first_edit_files = plan.get("files_to_inspect_first")
     if isinstance(first_edit_files, list):
-        focus_files = [normalize_repo_path(str(item)) for item in first_edit_files if str(item).strip()]
+        focus_files = [
+            normalize_repo_path(str(item))
+            for item in first_edit_files
+            if str(item).strip()
+        ]
 
     if not focus_files and target_file:
         focus_files = [normalize_repo_path(str(target_file))]
@@ -59,8 +65,12 @@ def build_patch_steps(plan: Dict[str, Any], edit_sketch: Dict[str, Any], change_
         f"Edit {target_file}::{target_symbol} using the planning-first change outline.",
     ]
     if focus_files:
-        steps.append(f"Keep the immediate patch scoped to {', '.join(focus_files[:2])}.")
-    steps.append("Re-run the focused planner and edit-sketch regressions, then rerun the JACK flow once.")
+        steps.append(
+            f"Keep the immediate patch scoped to {', '.join(focus_files[:2])}."
+        )
+    steps.append(
+        "Re-run the focused planner and edit-sketch regressions, then rerun the JACK flow once."
+    )
     return steps
 
 
@@ -89,9 +99,8 @@ def main(argv: List[str] | None = None) -> int:
         or edit_sketch.get("target_file")
         or plan.get("recommended_first_edit_area")
     )
-    target_symbol = (
-        change_outline.get("target_symbol_or_section")
-        or edit_sketch.get("target_symbol_or_section")
+    target_symbol = change_outline.get("target_symbol_or_section") or edit_sketch.get(
+        "target_symbol_or_section"
     )
 
     report: Dict[str, Any] = {
@@ -100,7 +109,11 @@ def main(argv: List[str] | None = None) -> int:
         "status": "ready" if not missing_artifacts else "blocked",
         "target_file": target_file,
         "target_symbol_or_section": target_symbol,
-        "patch_steps": build_patch_steps(plan, edit_sketch, change_outline) if not missing_artifacts else [],
+        "patch_steps": (
+            build_patch_steps(plan, edit_sketch, change_outline)
+            if not missing_artifacts
+            else []
+        ),
         "missing_artifacts": missing_artifacts,
         "do_not_auto_apply": True,
     }

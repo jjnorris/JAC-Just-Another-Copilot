@@ -29,7 +29,9 @@ class TestRepoTaskResearchPlanningSpecificity(unittest.TestCase):
             }
             plan = {
                 "repo_shape": "python_tooling_repo",
-                "selected_queries": ["Python argparse, subprocess, pathlib, and JSON for tooling scripts"],
+                "selected_queries": [
+                    "Python argparse, subprocess, pathlib, and JSON for tooling scripts"
+                ],
                 "selected_sources": {
                     "Python argparse, subprocess, pathlib, and JSON for tooling scripts": [
                         "https://docs.python.org/3/library/argparse.html",
@@ -63,15 +65,29 @@ class TestRepoTaskResearchPlanningSpecificity(unittest.TestCase):
                 },
             ]
 
-            brief = mod.make_brief(repo, task, profile, selected_snippets, selected_snippets, [], plan=plan)
+            brief = mod.make_brief(
+                repo, task, profile, selected_snippets, selected_snippets, [], plan=plan
+            )
             suggestions = brief["actionable_suggestions"]
 
-            self.assertTrue(any("scripts/repo_task_plan.py" in suggestion for suggestion in suggestions), suggestions)
             self.assertTrue(
-                any("argument parsing and subprocess invocation" in suggestion for suggestion in suggestions),
+                any(
+                    "scripts/repo_task_plan.py" in suggestion
+                    for suggestion in suggestions
+                ),
                 suggestions,
             )
-            self.assertFalse(any("the target script" in suggestion for suggestion in suggestions), suggestions)
+            self.assertTrue(
+                any(
+                    "argument parsing and subprocess invocation" in suggestion
+                    for suggestion in suggestions
+                ),
+                suggestions,
+            )
+            self.assertFalse(
+                any("the target script" in suggestion for suggestion in suggestions),
+                suggestions,
+            )
 
 
 if __name__ == "__main__":

@@ -21,6 +21,7 @@ from html import unescape
 from html.parser import HTMLParser
 from typing import Dict, List, Any, cast
 from urllib.request import Request, urlopen
+
 # urllib errors are not explicitly handled; imports removed to avoid unused warnings
 
 
@@ -106,7 +107,7 @@ def chunk_text(text: str, chunk_size: int = 800) -> List[str]:  # noqa: C901
     chunks: List[str] = []
     # Process words in fixed-size steps to avoid nested loops.
     for i in range(0, len(words), chunk_size):
-        chunk = " ".join(words[i:i + chunk_size])
+        chunk = " ".join(words[i : i + chunk_size])
         if len(chunk) >= 30 and chunk not in chunks:
             chunks.append(chunk)
     return chunks
@@ -123,15 +124,20 @@ def load_registry(path: str | None) -> Dict[str, List[str]]:
                     if isinstance(v, str):
                         out[k] = [v]
                     elif isinstance(v, list):
-                            # Convert entries to strings; ignore type checker warnings about unknown element types.
-                            out[k] = [str(x) for x in v]  # type: ignore[arg-type]
+                        # Convert entries to strings; ignore type checker warnings about unknown element types.
+                        out[k] = [str(x) for x in v]  # type: ignore[arg-type]
                 return out
         except Exception:
-            print("Warning: failed to load registry file, using default registry", file=sys.stderr)
+            print(
+                "Warning: failed to load registry file, using default registry",
+                file=sys.stderr,
+            )
     return DEFAULT_REGISTRY.copy()
 
 
-def make_record(query: str, stack: str, source_url: str, title: str, chunk_text: str, idx: int) -> Dict[str, Any]:
+def make_record(
+    query: str, stack: str, source_url: str, title: str, chunk_text: str, idx: int
+) -> Dict[str, Any]:
     return {
         "query": query,
         "stack": stack,
@@ -145,7 +151,9 @@ def make_record(query: str, stack: str, source_url: str, title: str, chunk_text:
     }
 
 
-def _process_stack(stack: str, urls: List[str], query: str, chunk_size: int) -> List[Dict[str, Any]]:
+def _process_stack(
+    stack: str, urls: List[str], query: str, chunk_size: int
+) -> List[Dict[str, Any]]:
     """Fetch each URL for a stack, extract text, chunk it and return records."""
     records_by_url: List[List[Dict[str, Any]]] = []
     for url in urls:
@@ -171,6 +179,7 @@ def _process_stack(stack: str, urls: List[str], query: str, chunk_size: int) -> 
                 stack_records.append(records[idx])
     return stack_records
 
+
 def _find_matches(records: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]]:
     """Return top matching records for the query, sorted by score descending."""
     q = query.strip().lower()
@@ -181,21 +190,26 @@ def _find_matches(records: List[Dict[str, Any]], query: str) -> List[Dict[str, A
         chunk = cast(str, rec.get("chunk_text", ""))
         score = chunk.lower().count(q)
         if score:
-            matches.append({
-                "score": score,
-                "stack": rec.get("stack"),
-                "source_url": rec.get("source_url"),
-                "chunk_index": rec.get("chunk_index"),
-                "excerpt": chunk[:200],
-            })
+            matches.append(
+                {
+                    "score": score,
+                    "stack": rec.get("stack"),
+                    "source_url": rec.get("source_url"),
+                    "chunk_index": rec.get("chunk_index"),
+                    "excerpt": chunk[:200],
+                }
+            )
     matches.sort(key=lambda x: x["score"], reverse=True)
     return matches
+
 
 def main(argv: List[str] | None = None) -> int:  # noqa: C901
     ap = argparse.ArgumentParser()
     ap.add_argument("--query", required=True)
     ap.add_argument("--stack", help="Optional stack name to limit search")
-    ap.add_argument("--registry-file", help="Optional JSON file mapping stacks to doc URLs")
+    ap.add_argument(
+        "--registry-file", help="Optional JSON file mapping stacks to doc URLs"
+    )
     ap.add_argument("--out", help="Output JSONL file", default="docs_lookup.jsonl")
     ap.add_argument("--chunk-size", type=int, default=800)
     ap.add_argument("--overlap", type=int, default=100)
@@ -225,7 +239,9 @@ def main(argv: List[str] | None = None) -> int:  # noqa: C901
     if matches:
         print("Top matches:")
         for m in matches[:5]:
-            print(f"- [{m['stack']}] {m['source_url']} (chunk {m['chunk_index']}) score={m['score']}")
+            print(
+                f"- [{m['stack']}] {m['source_url']} (chunk {m['chunk_index']}) score={m['score']}"
+            )
             print(f"  excerpt: {m['excerpt']}")
     else:
         print("No matches found for query in fetched docs.")
@@ -235,4 +251,3 @@ def main(argv: List[str] | None = None) -> int:  # noqa: C901
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

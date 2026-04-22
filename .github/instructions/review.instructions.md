@@ -1,5 +1,5 @@
 ---
-applyTo: "AGENTS.md,docs/jacks/rules/10-correctness-contracts.md,docs/jacks/rules/11-review-policy.md,docs/jacks/rules/12-reporting-and-traces.md,docs/jacks/rules/13-stop-conditions.md,docs/jacks/workflows/plan-review.md,docs/jacks/workflows/bugfix-with-proof.md,docs/jacks/workflows/verify-before-claim.md,docs/jacks/templates/correctness-contract.json,docs/jacks/templates/plan-review-comment.json,docs/jacks/templates/verification-report.json"
+applyTo: "AGENTS.md,docs/jack/rules/10-correctness-contracts.md,docs/jack/rules/11-review-policy.md,docs/jack/rules/12-reporting-and-traces.md,docs/jack/rules/13-stop-conditions.md,docs/jack/workflows/plan-review.md,docs/jack/workflows/bugfix-with-proof.md,docs/jack/workflows/verify-before-claim.md,docs/jack/templates/correctness-contract.json,docs/jack/templates/plan-review-comment.json,docs/jack/templates/verification-report.json"
 ---
 
 Non-trivial work should still read like JACK:
@@ -10,7 +10,5 @@ Non-trivial work should still read like JACK:
 - prefer narrowing a claim over pretending verification happened
 - keep significant decisions traceable and task-scoped
 
-If a review or verification rule changes in `docs/jacks/`, update any repo-facing summary that depends on it.
-
-
+If a review or verification rule changes in `docs/jack/`, update any repo-facing summary that depends on it.
 

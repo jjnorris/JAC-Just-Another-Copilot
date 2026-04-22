@@ -60,7 +60,14 @@ class TestRepoTaskPatchSketch(unittest.TestCase):
 
             stdout = io.StringIO()
             with contextlib.redirect_stdout(stdout):
-                result = mod.main(["--repo-root", str(repo), "--task", "Self-host JACK: patch sketch smoke test"])
+                result = mod.main(
+                    [
+                        "--repo-root",
+                        str(repo),
+                        "--task",
+                        "Self-host JACK: patch sketch smoke test",
+                    ]
+                )
 
             self.assertEqual(result, 0)
             report = json.loads(stdout.getvalue())
@@ -69,8 +76,12 @@ class TestRepoTaskPatchSketch(unittest.TestCase):
             self.assertEqual(report["target_symbol_or_section"], "def rank_files")
             self.assertTrue(report["do_not_auto_apply"])
             self.assertGreaterEqual(len(report["patch_steps"]), 2)
-            self.assertTrue(any("repo_task_plan.py" in step for step in report["patch_steps"]))
-            self.assertTrue(any("focused planner" in step.lower() for step in report["patch_steps"]))
+            self.assertTrue(
+                any("repo_task_plan.py" in step for step in report["patch_steps"])
+            )
+            self.assertTrue(
+                any("focused planner" in step.lower() for step in report["patch_steps"])
+            )
 
 
 if __name__ == "__main__":

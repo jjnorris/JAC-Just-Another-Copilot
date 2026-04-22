@@ -63,11 +63,16 @@ class TestRepoTaskInspectSymbolRanking(unittest.TestCase):
             result = mod.main(["--repo-root", str(repo), "--task", task])
             self.assertEqual(result, 0)
 
-            inspection = json.loads((jack_dir / "repo-task-inspect.json").read_text(encoding="utf-8"))
+            inspection = json.loads(
+                (jack_dir / "repo-task-inspect.json").read_text(encoding="utf-8")
+            )
             symbols = inspection.get("key_symbols_or_sections", [])
             changes = inspection.get("likely_change_areas", [])
 
-            self.assertEqual(inspection.get("recommended_first_code_edit_area"), "scripts/repo_task_plan.py")
+            self.assertEqual(
+                inspection.get("recommended_first_code_edit_area"),
+                "scripts/repo_task_plan.py",
+            )
             self.assertGreater(len(symbols), 0)
             self.assertEqual(symbols[0], "def rank_files")
             self.assertEqual(len(symbols), len(set(symbols)))

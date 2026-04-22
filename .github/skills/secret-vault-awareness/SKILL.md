@@ -48,7 +48,6 @@ Keep a hard line between secret material and ordinary configuration.
 - May warn and block unsafe secret handling. It may not expose secrets for convenience.
 
 ## Related docs
-- `docs/jacks/workflows/secret-handling.md`
-- `docs/jacks/secret-handling-model.md`
-
+- `docs/jack/workflows/secret-handling.md`
+- `docs/jack/secret-handling-model.md`
 

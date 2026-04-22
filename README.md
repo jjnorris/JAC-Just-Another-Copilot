@@ -1,10 +1,15 @@
 # Just Another Copilot Kit
 
+## Requirements
+- Python 3.12+ recommended (CI uses 3.12).
+- Use a virtual environment (venv) for local work.
+- Install pre-commit and detect-secrets for local checks.
+
 JACK is a small set of instructions, skills, hooks, and reference docs for GitHub Copilot.
 It is meant to make Copilot a little more cautious, explicit, and reviewable inside a repository.
 
 This repository keeps the repo-scoped native layer in `.github/` and `AGENTS.md`.
-The longer canon and support material live in `docs/jacks/`.
+The longer canon and support material live in `docs/jack/`.
 
 Migration note: The JACK_REVIEW_OK environment variable override has been removed. If your workflows or environments used JACK_REVIEW_OK to bypass review checks, migrate to server-verified review artifacts. See .github/ISSUE_TEMPLATE/migrate-jack-review-ok.md for guidance.
 
@@ -12,11 +17,11 @@ Migration note: The JACK_REVIEW_OK environment variable override has been remove
 
 - `install.md` for repo-scoped placement, cross-project copying, and user-scoped equivalents that some environments document
 - `compatibility.md` for conservative support-boundary notes
-- `docs/jacks/README.md` for the longer reference map
-- `docs/jacks/lite-profile.md` for the smallest repo-scoped subset worth copying first
+- `docs/jack/README.md` for the longer reference map
+- `docs/jack/lite-profile.md` for the smallest repo-scoped subset worth copying first
 
 Keep the repo-scoped files together when you use this repository directly or transplant it into another repository.
-Use `docs/jacks/` as the longer reference set, not as a claimed runtime surface.
+Use `docs/jack/` as the longer reference set, not as a claimed runtime surface.
 
 ## Support boundary
 
@@ -26,6 +31,5 @@ Skills, hooks, custom agent profiles, and any user-scoped equivalents remain env
 ## Donation
 
 Optional: <a href="https://www.buymeacoffee.com/jjnorris"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=jjnorris&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" height="35"></a>
-
 
 

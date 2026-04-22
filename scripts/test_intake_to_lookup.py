@@ -12,7 +12,9 @@ from scripts.intake_to_lookup import load_spec, main
 
 class LoadSpecTests(unittest.TestCase):
     def _write_temp(self, content: str) -> Path:
-        tf = tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".json", encoding="utf-8")
+        tf = tempfile.NamedTemporaryFile(
+            mode="w", delete=False, suffix=".json", encoding="utf-8"
+        )
         try:
             tf.write(content)
         finally:
@@ -83,14 +85,19 @@ class PlanRequestsTests(unittest.TestCase):
             output = json.loads(out_path.read_text(encoding="utf-8"))
             self.assertEqual(output["candidate_stack"], "Python")
             self.assertEqual(output["execution_mode"], "plan_only")
-            self.assertEqual(output["priority_topics"][:2], ["authentication", "deployment"])
+            self.assertEqual(
+                output["priority_topics"][:2], ["authentication", "deployment"]
+            )
             self.assertTrue(output["recommended_lookup_requests"])
             self.assertEqual(
                 output["recommended_lookup_requests"][0]["query"],
                 "getting started Python docs",
             )
             self.assertTrue(
-                any(req["query"].startswith("authentication Python docs") for req in output["recommended_lookup_requests"])
+                any(
+                    req["query"].startswith("authentication Python docs")
+                    for req in output["recommended_lookup_requests"]
+                )
             )
 
 

@@ -50,7 +50,7 @@ class VerifyValidationReportAssumptionsTests(unittest.TestCase):
                     "repo_task_change_outline.py",
                 ],
                 "methods": [
-                    f"ran: {sys.executable} scripts/run_repo_task_flow.py --repo-root {temp_dir} --task \"{current_task}\""
+                    f'ran: {sys.executable} scripts/run_repo_task_flow.py --repo-root {temp_dir} --task "{current_task}"'
                 ],
                 "evidence_links": [
                     "jack/repo-task-plan.json",
@@ -68,7 +68,10 @@ class VerifyValidationReportAssumptionsTests(unittest.TestCase):
             )
 
             result = subprocess.run(
-                [sys.executable, str(Path(__file__).with_name("verify_validation_report.py"))],
+                [
+                    sys.executable,
+                    str(Path(__file__).with_name("verify_validation_report.py")),
+                ],
                 cwd=temp_dir,
                 capture_output=True,
                 text=True,

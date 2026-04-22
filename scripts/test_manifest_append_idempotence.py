@@ -32,8 +32,12 @@ class TestManifestAppendIdempotence(unittest.TestCase):
             fres_path.write_text(json.dumps({"task": "t"}), encoding="utf-8")
 
             # Call appenders twice
-            rtf.append_adversarial_manifest_entry(repo_root, "t", manifest_path, adv_path)
-            rtf.append_adversarial_manifest_entry(repo_root, "t", manifest_path, adv_path)
+            rtf.append_adversarial_manifest_entry(
+                repo_root, "t", manifest_path, adv_path
+            )
+            rtf.append_adversarial_manifest_entry(
+                repo_root, "t", manifest_path, adv_path
+            )
 
             rtf.append_freshness_manifest_entry(repo_root, manifest_path, fres_path)
             rtf.append_freshness_manifest_entry(repo_root, manifest_path, fres_path)
@@ -41,11 +45,35 @@ class TestManifestAppendIdempotence(unittest.TestCase):
             data = json.loads(manifest_path.read_text(encoding="utf-8"))
             entries = data.get("artifact_family_entries", [])
 
-            adv_count = sum(1 for e in entries if isinstance(e, dict) and (e.get("artifact_role") == "adversarial_review" or e.get("artifact_path", "").endswith("repo-task-adversarial-review.json")))
-            fres_count = sum(1 for e in entries if isinstance(e, dict) and (e.get("artifact_role") == "freshness_evidence" or e.get("artifact_path", "").endswith("repo-task-freshness-evidence.json")))
+            adv_count = sum(
+                1
+                for e in entries
+                if isinstance(e, dict)
+                and (
+                    e.get("artifact_role") == "adversarial_review"
+                    or e.get("artifact_path", "").endswith(
+                        "repo-task-adversarial-review.json"
+                    )
+                )
+            )
+            fres_count = sum(
+                1
+                for e in entries
+                if isinstance(e, dict)
+                and (
+                    e.get("artifact_role") == "freshness_evidence"
+                    or e.get("artifact_path", "").endswith(
+                        "repo-task-freshness-evidence.json"
+                    )
+                )
+            )
 
-            self.assertEqual(adv_count, 1, msg=f"adversarial entries duplicated: {adv_count}")
-            self.assertEqual(fres_count, 1, msg=f"freshness entries duplicated: {fres_count}")
+            self.assertEqual(
+                adv_count, 1, msg=f"adversarial entries duplicated: {adv_count}"
+            )
+            self.assertEqual(
+                fres_count, 1, msg=f"freshness entries duplicated: {fres_count}"
+            )
 
 
 if __name__ == "__main__":

@@ -32,7 +32,9 @@ PYTHON_TOOLING_QUESTION = (
     "Any preferred packaging or runtime/version to assume?"
 )
 GENERIC_PYTHON_QUESTION = "Is this repository using Django, FastAPI, Flask, or another Python framework? Please confirm."
-PYTHON_VERSION_QUESTION = "Which runtime/version should we target (e.g., Python 3.10, Node 18)?"
+PYTHON_VERSION_QUESTION = (
+    "Which runtime/version should we target (e.g., Python 3.10, Node 18)?"
+)
 PACKAGE_CONFIG_QUESTION = "Are we allowed to modify build/runtime configuration files (package.json, pyproject.toml)?"
 
 
@@ -71,7 +73,9 @@ def tokenize(text: str) -> List[str]:
     return [token for token in re.findall(r"\w+", text.lower()) if token]
 
 
-def normalize_profile_sequence(profile: Optional[Dict[str, Any]], key: str) -> List[str]:
+def normalize_profile_sequence(
+    profile: Optional[Dict[str, Any]], key: str
+) -> List[str]:
     return as_str_list(as_dict(profile).get(key))
 
 
@@ -140,11 +144,16 @@ def score_snippet(
     query = snippet_query(snippet)
     text = snippet_text(snippet)
 
-    if source and any(source == prefix or source.startswith(prefix) or prefix.startswith(source) for prefix in plan_sources):
+    if source and any(
+        source == prefix or source.startswith(prefix) or prefix.startswith(source)
+        for prefix in plan_sources
+    ):
         score += 100
     if query in plan_queries:
         score += 80
-    if profile_shape == "python_tooling_repo" and any(token in text for token in ("argparse", "subprocess", "pathlib", "json")):
+    if profile_shape == "python_tooling_repo" and any(
+        token in text for token in ("argparse", "subprocess", "pathlib", "json")
+    ):
         score += 10
     score += sum(1 for token in task_tokens if token in text)
     return score
@@ -277,26 +286,45 @@ def summarize_profile(profile: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-def supplement_profile_with_local_scan(repo: Path, profile: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+def supplement_profile_with_local_scan(
+    repo: Path, profile: Optional[Dict[str, Any]]
+) -> Dict[str, Any]:
     base_profile: Dict[str, Any] = dict(profile or {})
-    detected_frameworks = normalize_profile_sequence(base_profile, "detected_frameworks")
+    detected_frameworks = normalize_profile_sequence(
+        base_profile, "detected_frameworks"
+    )
     detected_languages = normalize_profile_sequence(base_profile, "detected_languages")
-    detected_runtime_targets = normalize_profile_sequence(base_profile, "detected_runtime_targets")
+    detected_runtime_targets = normalize_profile_sequence(
+        base_profile, "detected_runtime_targets"
+    )
 
     package_json = repo / "package.json"
-    package_text = package_json.read_text(encoding="utf-8", errors="ignore").lower() if package_json.exists() else ""
+    package_text = (
+        package_json.read_text(encoding="utf-8", errors="ignore").lower()
+        if package_json.exists()
+        else ""
+    )
 
     if (repo / "manage.py").exists():
         extend_unique_strings(detected_frameworks, ["Django"])
         extend_unique_strings(detected_runtime_targets, ["Python"])
 
-    if any((repo / name).exists() for name in ("next.config.js", "next.config.mjs", "next.config.ts")) or NEXT_JS_NAME.lower() in package_text:
+    if (
+        any(
+            (repo / name).exists()
+            for name in ("next.config.js", "next.config.mjs", "next.config.ts")
+        )
+        or NEXT_JS_NAME.lower() in package_text
+    ):
         extend_unique_strings(detected_frameworks, [NEXT_JS_NAME])
 
     if "react" in package_text:
         extend_unique_strings(detected_frameworks, ["React"])
 
-    if any((repo / name).exists() for name in ("pyproject.toml", "requirements.txt", "setup.py")):
+    if any(
+        (repo / name).exists()
+        for name in ("pyproject.toml", "requirements.txt", "setup.py")
+    ):
         extend_unique_strings(detected_languages, ["py"])
 
     if detected_frameworks:
@@ -317,7 +345,10 @@ def supplement_profile_with_local_scan(repo: Path, profile: Optional[Dict[str, A
 
 def is_self_hosting_single_file_task(task: str) -> bool:
     lowered = task.lower()
-    return any(phrase in lowered for phrase in ("single-file", "single file", "singlefile", "single script"))
+    return any(
+        phrase in lowered
+        for phrase in ("single-file", "single file", "singlefile", "single script")
+    )
 
 
 def is_planning_focused_self_hosting_task(
@@ -335,7 +366,17 @@ def is_planning_focused_self_hosting_task(
     if plan and plan.get("recommended_first_edit_area") == PLANNER_FIRST_EDIT_AREA:
         return True
 
-    return any(token in lowered for token in ("planning", "planner", "rank_files", "rank files", "verify rank_files", "canonical implementation"))
+    return any(
+        token in lowered
+        for token in (
+            "planning",
+            "planner",
+            "rank_files",
+            "rank files",
+            "verify rank_files",
+            "canonical implementation",
+        )
+    )
 
 
 def target_label_for_task(
@@ -347,29 +388,44 @@ def target_label_for_task(
         return str(plan.get("recommended_first_edit_area"))
     if profile and is_planning_focused_self_hosting_task(task, profile, plan=plan):
         return PLANNER_FIRST_EDIT_AREA
-    if profile and profile.get("repo_shape") == "python_tooling_repo" and is_self_hosting_single_file_task(task):
+    if (
+        profile
+        and profile.get("repo_shape") == "python_tooling_repo"
+        and is_self_hosting_single_file_task(task)
+    ):
         return "scripts/repo_task_research.py"
     return "scripts/profile_to_docs_lookup.py"
 
 
-def collect_brief_sources(selected_snippets: List[Dict[str, Any]], plan: Optional[Dict[str, Any]]) -> List[str]:
+def collect_brief_sources(
+    selected_snippets: List[Dict[str, Any]], plan: Optional[Dict[str, Any]]
+) -> List[str]:
     sources: List[str] = []
-    extend_unique_strings(sources, [snippet_source(snippet) for snippet in selected_snippets])
+    extend_unique_strings(
+        sources, [snippet_source(snippet) for snippet in selected_snippets]
+    )
     extend_unique_strings(sources, plan_selected_sources(plan))
     return sources
 
 
-def should_upgrade_profile_confidence(profile: Dict[str, Any], confidence: Optional[str]) -> bool:
+def should_upgrade_profile_confidence(
+    profile: Dict[str, Any], confidence: Optional[str]
+) -> bool:
     if confidence != "low":
         return False
 
     if str(profile.get("repo_shape") or "") != "python_app_repo":
         return False
 
-    if str(profile.get("repo_shape_confidence") or "").lower() not in ("medium", "high"):
+    if str(profile.get("repo_shape_confidence") or "").lower() not in (
+        "medium",
+        "high",
+    ):
         return False
 
-    return first_matching_item(normalize_profile_sequence(profile, "detected_languages"), ("py",)) or first_matching_item(
+    return first_matching_item(
+        normalize_profile_sequence(profile, "detected_languages"), ("py",)
+    ) or first_matching_item(
         normalize_profile_sequence(profile, "detected_runtime_targets"),
         ("python",),
     )
@@ -401,14 +457,18 @@ def determine_effective_confidence(
         profile["confidence_notes"] = notes
 
     if confidence == "low":
-        ambiguities["stack"].append("Low profile confidence: few or no authoritative manifests detected.")
+        ambiguities["stack"].append(
+            "Low profile confidence: few or no authoritative manifests detected."
+        )
 
     ambiguities["stack"].extend(confidence_ambiguity_notes(profile))
 
     return confidence
 
 
-def build_profile_implementation_considerations(profile: Optional[Dict[str, Any]]) -> List[str]:
+def build_profile_implementation_considerations(
+    profile: Optional[Dict[str, Any]]
+) -> List[str]:
     if not profile:
         return []
 
@@ -417,18 +477,30 @@ def build_profile_implementation_considerations(profile: Optional[Dict[str, Any]
     frameworks = normalize_profile_sequence(profile, "detected_frameworks")
 
     considerations: List[str] = []
-    if first_matching_item(languages, ("py",)) or first_matching_item(runtimes, ("python",)):
-        considerations.append("Repository appears Pythonic: prefer virtualenv/venv, pin dependencies, and run unit tests locally before changes.")
+    if first_matching_item(languages, ("py",)) or first_matching_item(
+        runtimes, ("python",)
+    ):
+        considerations.append(
+            "Repository appears Pythonic: prefer virtualenv/venv, pin dependencies, and run unit tests locally before changes."
+        )
     if first_matching_item(frameworks, ("next", "react")):
-        considerations.append("Frontend framework detected: review bundler and SSR/SSG config; keep client/server boundaries explicit.")
+        considerations.append(
+            "Frontend framework detected: review bundler and SSR/SSG config; keep client/server boundaries explicit."
+        )
     return considerations
 
 
-def build_evidence_implementation_considerations(selected_snippets: List[Dict[str, Any]]) -> List[str]:
+def build_evidence_implementation_considerations(
+    selected_snippets: List[Dict[str, Any]]
+) -> List[str]:
     for snippet in selected_snippets:
         text = snippet_text(snippet)
-        if any(token in text for token in ("argparse", "subprocess", "pathlib", "json")):
-            return ["Evidence discusses argparse/subprocess/pathlib/json tooling concerns; keep the first edit grounded in those signals."]
+        if any(
+            token in text for token in ("argparse", "subprocess", "pathlib", "json")
+        ):
+            return [
+                "Evidence discusses argparse/subprocess/pathlib/json tooling concerns; keep the first edit grounded in those signals."
+            ]
     return []
 
 
@@ -444,15 +516,25 @@ def synthesize_implementation_considerations(
         considerations.append(
             f"Planning-focused self-hosting path: keep the brief anchored to {target} and the argparse/subprocess/pathlib/json signals already present in the evidence."
         )
-    elif profile and profile.get("repo_shape") == "python_tooling_repo" and is_self_hosting_single_file_task(task):
+    elif (
+        profile
+        and profile.get("repo_shape") == "python_tooling_repo"
+        and is_self_hosting_single_file_task(task)
+    ):
         target = target_label_for_task(task, profile, plan)
-        considerations.append(f"Single-file self-hosting path: keep the brief anchored to {target} and the JACK artifacts before editing.")
+        considerations.append(
+            f"Single-file self-hosting path: keep the brief anchored to {target} and the JACK artifacts before editing."
+        )
     else:
         considerations.extend(build_profile_implementation_considerations(profile))
 
-    considerations.extend(build_evidence_implementation_considerations(selected_snippets))
+    considerations.extend(
+        build_evidence_implementation_considerations(selected_snippets)
+    )
     if not considerations:
-        considerations.append("No strong implementation-specific signals found; start by reading README, build files, and top docs sources.")
+        considerations.append(
+            "No strong implementation-specific signals found; start by reading README, build files, and top docs sources."
+        )
     return considerations
 
 
@@ -468,7 +550,11 @@ def synthesize_actionable_suggestions(
             f"Inspect {target} for argument parsing and subprocess invocation before editing.",
             f"Check {target} for path handling and JSON/file I/O paths for the single-file change.",
         ]
-    if profile and profile.get("repo_shape") == "python_tooling_repo" and is_self_hosting_single_file_task(task):
+    if (
+        profile
+        and profile.get("repo_shape") == "python_tooling_repo"
+        and is_self_hosting_single_file_task(task)
+    ):
         return [
             f"Inspect {target} for argument parsing and subprocess invocation before editing.",
             f"Check {target} for path handling and JSON/file I/O paths for the single-file change.",
@@ -499,14 +585,22 @@ def pick_top_snippets(
         for snippet in evidence
         if snippet_query(snippet) in plan_queries
         or any(
-            snippet_source(snippet) == prefix or snippet_source(snippet).startswith(prefix) or prefix.startswith(snippet_source(snippet))
+            snippet_source(snippet) == prefix
+            or snippet_source(snippet).startswith(prefix)
+            or prefix.startswith(snippet_source(snippet))
             for prefix in plan_sources
         )
     ]
     candidates = plan_aligned or evidence
 
     ranked: List[Tuple[int, int, Dict[str, Any]]] = [
-        (score_snippet(snippet, task_tokens, plan_queries, plan_sources, profile_shape), index, snippet)
+        (
+            score_snippet(
+                snippet, task_tokens, plan_queries, plan_sources, profile_shape
+            ),
+            index,
+            snippet,
+        )
         for index, snippet in enumerate(candidates)
     ]
     ranked.sort(key=lambda item: (-item[0], item[1]))
@@ -518,8 +612,13 @@ def build_recommended_questions(
     profile: Optional[Dict[str, Any]],
     plan: Optional[Dict[str, Any]] = None,
 ) -> List[str]:
-    if profile and profile.get("repo_shape") == "python_tooling_repo" and (
-        is_planning_focused_self_hosting_task(task, profile, plan=plan) or is_self_hosting_single_file_task(task)
+    if (
+        profile
+        and profile.get("repo_shape") == "python_tooling_repo"
+        and (
+            is_planning_focused_self_hosting_task(task, profile, plan=plan)
+            or is_self_hosting_single_file_task(task)
+        )
     ):
         return []
 
@@ -527,10 +626,18 @@ def build_recommended_questions(
         return [PYTHON_APP_QUESTION]
 
     if not profile:
-        return [GENERIC_PYTHON_QUESTION, PYTHON_VERSION_QUESTION, PACKAGE_CONFIG_QUESTION]
+        return [
+            GENERIC_PYTHON_QUESTION,
+            PYTHON_VERSION_QUESTION,
+            PACKAGE_CONFIG_QUESTION,
+        ]
 
     if profile.get("repo_shape") == "python_tooling_repo":
-        return [PYTHON_TOOLING_QUESTION, PYTHON_VERSION_QUESTION, PACKAGE_CONFIG_QUESTION]
+        return [
+            PYTHON_TOOLING_QUESTION,
+            PYTHON_VERSION_QUESTION,
+            PACKAGE_CONFIG_QUESTION,
+        ]
 
     return [GENERIC_PYTHON_QUESTION, PYTHON_VERSION_QUESTION, PACKAGE_CONFIG_QUESTION]
 
@@ -562,8 +669,12 @@ def make_brief(
     if ambiguity_list:
         ambiguities["task"].extend(ambiguity_list)
 
-    impl_considerations = synthesize_implementation_considerations(task, profile, selected_snippets, task_plan)
-    actionable_suggestions = synthesize_actionable_suggestions(task, profile, selected_snippets, task_plan)
+    impl_considerations = synthesize_implementation_considerations(
+        task, profile, selected_snippets, task_plan
+    )
+    actionable_suggestions = synthesize_actionable_suggestions(
+        task, profile, selected_snippets, task_plan
+    )
     recommended_questions = build_recommended_questions(task, profile, task_plan)
 
     if effective_confidence is not None:
@@ -587,7 +698,9 @@ def make_brief(
             {
                 "title": snippet.get("title"),
                 "source_url": snippet.get("source_url"),
-                "excerpt": (snippet.get("chunk_text") or snippet.get("excerpt") or "")[:800],
+                "excerpt": (snippet.get("chunk_text") or snippet.get("excerpt") or "")[
+                    :800
+                ],
             }
             for snippet in selected_snippets
         ],
@@ -603,19 +716,50 @@ def make_brief(
 
 def build_brief_markdown_lines(brief: Dict[str, Any]) -> List[str]:
     repo_stack_summary = as_dict(brief.get("repo_stack_summary"))
-    lines: List[str] = ["# Repo Task Brief", "", f"**Task**: {brief.get('task', '(none)')}", "", "## Repo Stack Summary"]
+    lines: List[str] = [
+        "# Repo Task Brief",
+        "",
+        f"**Task**: {brief.get('task', '(none)')}",
+        "",
+        "## Repo Stack Summary",
+    ]
     lines.append(str(repo_stack_summary.get("summary", "(none)")))
-    lines.extend(["", f"**Profile confidence**: {repo_stack_summary.get('confidence_level', 'unknown')}", ""])
+    lines.extend(
+        [
+            "",
+            f"**Profile confidence**: {repo_stack_summary.get('confidence_level', 'unknown')}",
+            "",
+        ]
+    )
     lines.extend(render_confidence_notes(repo_stack_summary.get("confidence_notes")))
-    lines.extend(render_mapping_section("## Relevant Stack Signals", as_dict(brief.get("relevant_stack_signals"))))
-    lines.extend(render_bullet_section("## Selected Docs Sources", brief.get("relevant_docs_sources")))
+    lines.extend(
+        render_mapping_section(
+            "## Relevant Stack Signals", as_dict(brief.get("relevant_stack_signals"))
+        )
+    )
+    lines.extend(
+        render_bullet_section(
+            "## Selected Docs Sources", brief.get("relevant_docs_sources")
+        )
+    )
     lines.append("## Top Evidence Snippets (prioritized)")
     for snippet in brief.get("relevant_evidence_snippets", []):
         lines.extend(render_snippet_block(cast(Dict[str, Any], snippet)))
-    lines.extend(render_bullet_section("## Implementation Considerations", brief.get("implementation_considerations")))
-    lines.extend(render_bullet_section("## Ambiguities (summary)", brief.get("ambiguities")))
+    lines.extend(
+        render_bullet_section(
+            "## Implementation Considerations",
+            brief.get("implementation_considerations"),
+        )
+    )
+    lines.extend(
+        render_bullet_section("## Ambiguities (summary)", brief.get("ambiguities"))
+    )
     lines.extend(render_ambiguity_details(as_dict(brief.get("ambiguity_details"))))
-    lines.extend(render_bullet_section("## Recommended Next Questions", brief.get("recommended_next_questions")))
+    lines.extend(
+        render_bullet_section(
+            "## Recommended Next Questions", brief.get("recommended_next_questions")
+        )
+    )
     lines.extend(["", "**do_not_auto_apply: true**"])
     return lines
 
@@ -643,7 +787,11 @@ def determine_first_step(repo_root: Path, brief: Dict[str, Any]) -> str:
 
 
 def build_next_steps_lines(repo_root: Path, brief: Dict[str, Any]) -> List[str]:
-    lines: List[str] = ["# Next Steps", "", f"1. {determine_first_step(repo_root, brief)}"]
+    lines: List[str] = [
+        "# Next Steps",
+        "",
+        f"1. {determine_first_step(repo_root, brief)}",
+    ]
     sources = brief.get("relevant_docs_sources", [])[:2]
     if sources:
         lines.extend(["", "Recommended docs to read first:"])
@@ -655,15 +803,27 @@ def build_next_steps_lines(repo_root: Path, brief: Dict[str, Any]) -> List[str]:
     return lines
 
 
-def write_outputs(repo_root: Path, brief: Dict[str, Any], md_path: Path, json_path: Path, next_steps_path: Path) -> None:
+def write_outputs(
+    repo_root: Path,
+    brief: Dict[str, Any],
+    md_path: Path,
+    json_path: Path,
+    next_steps_path: Path,
+) -> None:
     json_path.parent.mkdir(parents=True, exist_ok=True)
-    json_path.write_text(json.dumps(brief, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    json_path.write_text(
+        json.dumps(brief, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
 
     md_path.parent.mkdir(parents=True, exist_ok=True)
-    md_path.write_text("\n".join(build_brief_markdown_lines(brief)) + "\n", encoding="utf-8")
+    md_path.write_text(
+        "\n".join(build_brief_markdown_lines(brief)) + "\n", encoding="utf-8"
+    )
 
     next_steps_path.parent.mkdir(parents=True, exist_ok=True)
-    next_steps_path.write_text("\n".join(build_next_steps_lines(repo_root, brief)) + "\n", encoding="utf-8")
+    next_steps_path.write_text(
+        "\n".join(build_next_steps_lines(repo_root, brief)) + "\n", encoding="utf-8"
+    )
 
 
 def run_profile_if_missing(repo: Path) -> bool:
@@ -675,7 +835,11 @@ def run_profile_if_missing(repo: Path) -> bool:
     if not script.exists():
         return False
 
-    proc = subprocess.run([sys.executable, str(script), "--repo-root", str(repo)], capture_output=True, text=True)
+    proc = subprocess.run(
+        [sys.executable, str(script), "--repo-root", str(repo)],
+        capture_output=True,
+        text=True,
+    )
     return proc.returncode == 0 and profile_path.exists()
 
 
@@ -763,7 +927,9 @@ def refresh_evidence_with_fallback(
         if run_docs_lookup(repo, query, stack, out_path):
             main_evidence = repo / "jack" / REPO_DOCS_EVIDENCE_FILENAME
             main_evidence.parent.mkdir(parents=True, exist_ok=True)
-            with main_evidence.open("a", encoding="utf-8") as dst, out_path.open("r", encoding="utf-8") as src:
+            with main_evidence.open("a", encoding="utf-8") as dst, out_path.open(
+                "r", encoding="utf-8"
+            ) as src:
                 for line in src:
                     dst.write(line)
             try:
@@ -780,7 +946,9 @@ def refresh_evidence_with_fallback(
 def collect_task_change_inputs(
     repo: Path,
     task: str,
-) -> Tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]], List[Dict[str, Any]], List[str]]:
+) -> Tuple[
+    Optional[Dict[str, Any]], Optional[Dict[str, Any]], List[Dict[str, Any]], List[str]
+]:
     profile_path = repo / "jack" / PROFILE_FILENAME
     if not profile_path.exists() and not run_profile_if_missing(repo):
         return None, None, [], ["repo profile missing and profiler failed to run"]
@@ -789,7 +957,9 @@ def collect_task_change_inputs(
     profile = supplement_profile_with_local_scan(repo, profile)
     docs_plan = load_docs_plan(repo)
     evidence = collect_evidence(repo)
-    evidence, ambiguity = refresh_evidence_with_fallback(repo, task, profile, docs_plan, evidence)
+    evidence, ambiguity = refresh_evidence_with_fallback(
+        repo, task, profile, docs_plan, evidence
+    )
     return profile, docs_plan, evidence, ambiguity
 
 
@@ -804,7 +974,9 @@ def main(argv: List[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     repo = Path(args.repo_root).resolve()
-    profile, docs_plan, evidence, ambiguity = collect_task_change_inputs(repo, args.task)
+    profile, docs_plan, evidence, ambiguity = collect_task_change_inputs(
+        repo, args.task
+    )
 
     if profile is None and not evidence and ambiguity:
         brief = make_brief(repo, args.task, None, [], [], ambiguity)
@@ -815,11 +987,25 @@ def main(argv: List[str] | None = None) -> int:
         print(f"Wrote ambiguous brief: {out_json}")
         return 2
 
-    selected = pick_top_snippets(evidence, args.task, args.max_snippets, plan=docs_plan, profile=profile) if evidence else []
+    selected = (
+        pick_top_snippets(
+            evidence, args.task, args.max_snippets, plan=docs_plan, profile=profile
+        )
+        if evidence
+        else []
+    )
     if not selected:
         ambiguity.append("No high-relevance evidence snippets found for the task")
 
-    brief = make_brief(repo, args.task, profile, evidence, selected, ambiguity, plan=load_task_plan(repo))
+    brief = make_brief(
+        repo,
+        args.task,
+        profile,
+        evidence,
+        selected,
+        ambiguity,
+        plan=load_task_plan(repo),
+    )
 
     out_json = (repo / args.out_json).resolve()
     out_md = (repo / args.out_md).resolve()

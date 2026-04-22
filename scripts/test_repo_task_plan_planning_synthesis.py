@@ -32,15 +32,21 @@ class TestRepoTaskPlanPlanningSynthesis(unittest.TestCase):
             "scripts/repo_task_plan.py",
         ]
 
-        first_edit_area = choose_recommended_first_edit_area(task, profile, likely_targets)
+        first_edit_area = choose_recommended_first_edit_area(
+            task, profile, likely_targets
+        )
         ordered_targets = prioritize_first_edit_area(likely_targets, first_edit_area)
-        steps = synthesize_implementation_steps(task, profile, brief, ordered_targets, first_edit_area)
+        steps = synthesize_implementation_steps(
+            task, profile, brief, ordered_targets, first_edit_area
+        )
 
         self.assertEqual(first_edit_area, "scripts/repo_task_plan.py")
         self.assertEqual(ordered_targets[0], "scripts/repo_task_plan.py")
         self.assertIn("scripts/repo_task_plan.py", steps[0])
         self.assertIn("argument parsing and subprocess invocation", steps[0])
-        self.assertTrue(any("path handling and JSON/file I/O" in step for step in steps))
+        self.assertTrue(
+            any("path handling and JSON/file I/O" in step for step in steps)
+        )
         self.assertIn(
             "Regenerate jack/repo-task-plan.json and jack/repo-task-first-edit.md, then confirm recommended_first_edit_area remains scripts/repo_task_plan.py.",
             steps,

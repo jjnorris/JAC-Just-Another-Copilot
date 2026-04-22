@@ -15,7 +15,10 @@ class TestRankFilesSymbol(unittest.TestCase):
         m_impl = re.search(r"^\s*def\s+_rank_files_impl\b", txt, flags=re.M)
 
         self.assertIsNotNone(m_public, "def rank_files not found in repo_task_plan.py")
-        self.assertIsNone(m_impl, "def _rank_files_impl should have been removed; found in repo_task_plan.py")
+        self.assertIsNone(
+            m_impl,
+            "def _rank_files_impl should have been removed; found in repo_task_plan.py",
+        )
 
 
 if __name__ == "__main__":

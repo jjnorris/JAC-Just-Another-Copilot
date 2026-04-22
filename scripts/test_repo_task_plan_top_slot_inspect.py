@@ -13,7 +13,9 @@ class TestTopSlotInspect(unittest.TestCase):
 
         # Simulate a planner-like file that only references the inspect artifact
         plan_file = scripts_dir / "repo_task_plan.py"
-        plan_file.write_text("INSPECT_ARTIFACT = 'jack/repo-task-inspect.json'\n# reference only\n")
+        plan_file.write_text(
+            "INSPECT_ARTIFACT = 'jack/repo-task-inspect.json'\n# reference only\n"
+        )
 
         # Actual inspect implementation file with a real inspect function
         inspect_file = scripts_dir / "repo_task_inspect.py"

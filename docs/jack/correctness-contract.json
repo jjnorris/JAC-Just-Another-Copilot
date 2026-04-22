@@ -1,0 +1,26 @@
+{
+  "given": "Repository content originally referenced 'JAC' and docs/jac; working copy edits made; tests and validator exist.",
+  "must": [
+    "Rename docs/jac to docs/jacks and update references",
+    "Remove JAC_REVIEW_OK env fallback from hook rules (only JACK_REVIEW_OK or approval artifacts accepted)",
+    "Add gitleaks secret scan to CI and run pre-commit checks",
+    "Add .venv to .gitignore",
+    "Validator and hook regression tests must pass"
+  ],
+  "must_not": [
+    "Break existing hook regression tests",
+    "Introduce new secrets into the repository",
+    "Leave hidden or non-LF characters in tracked files"
+  ],
+  "wiring_claim": "jac_hook_rules.py only checks JACK_REVIEW_OK or repository approval artifacts; .github/workflows/validate-jac.yml runs pre-commit, gitleaks, and tests; .gitignore now ignores .venv; docs moved to docs/jacks",
+  "verified": true,
+  "verification_commands": [
+    "python scripts/validate_repo.py",
+    "python -m unittest -v scripts.hook_regression_tests"
+  ],
+  "review": {
+    "mode": "request_review",
+    "approved_by_user": true,
+    "approval_notes": "Approve."
+  }
+}

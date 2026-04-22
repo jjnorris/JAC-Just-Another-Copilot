@@ -40,7 +40,8 @@ class TestRepoTaskPlanRefactorRegression(unittest.TestCase):
             # Provide a profile that signals a python tooling repo so the
             # planner-boost path may trigger when task shape matches.
             (jack_dir / "repo-stack-profile.json").write_text(
-                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2), encoding="utf-8"
+                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2),
+                encoding="utf-8",
             )
 
             # Build candidate list with a duplicate entry to verify dedupe.
@@ -50,7 +51,9 @@ class TestRepoTaskPlanRefactorRegression(unittest.TestCase):
             cwd = Path.cwd()
             try:
                 os.chdir(repo)
-                ranked = mod.rank_files(candidates, task, inspect_symbols=["def load_spec"])
+                ranked = mod.rank_files(
+                    candidates, task, inspect_symbols=["def load_spec"]
+                )
             finally:
                 os.chdir(cwd)
 
@@ -63,7 +66,9 @@ class TestRepoTaskPlanRefactorRegression(unittest.TestCase):
 
             # Recommendation selection should still prefer the planner file
             recommended = mod.choose_recommended_first_edit_area(
-                task, {"repo_shape": "python_tooling_repo"}, ["scripts/repo_task_plan.py"]
+                task,
+                {"repo_shape": "python_tooling_repo"},
+                ["scripts/repo_task_plan.py"],
             )
             self.assertEqual(recommended, "scripts/repo_task_plan.py")
 

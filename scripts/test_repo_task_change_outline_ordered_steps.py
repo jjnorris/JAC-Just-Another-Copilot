@@ -24,13 +24,17 @@ class TestChangeOutlineOrderedSteps(unittest.TestCase):
                 "target_file": "scripts/repo_task_change_outline.py",
                 "target_symbol_or_section": "def load_json",
             }
-            (jack / "repo-task-edit-sketch.json").write_text(json.dumps(sketch), encoding="utf-8")
+            (jack / "repo-task-edit-sketch.json").write_text(
+                json.dumps(sketch), encoding="utf-8"
+            )
 
             # invoke the module to generate the outline
             ret = mod.main(["--repo-root", str(td), "--task", "test task"])
             self.assertEqual(ret, 0)
 
-            out = json.loads((jack / "repo-task-change-outline.json").read_text(encoding="utf-8"))
+            out = json.loads(
+                (jack / "repo-task-change-outline.json").read_text(encoding="utf-8")
+            )
             self.assertIn("ordered_steps", out)
             self.assertIsInstance(out["ordered_steps"], list)
             self.assertGreaterEqual(len(out["ordered_steps"]), 3)
@@ -67,14 +71,22 @@ class TestChangeOutlineOrderedSteps(unittest.TestCase):
                 "target_symbol_or_section": "def rank_files",
                 "why_this_target_first": "Selected because the inspector reported symbol(s) and the first symbol was found inside this inspected file.",
             }
-            (jack / "repo-task-plan.json").write_text(json.dumps(plan), encoding="utf-8")
-            (jack / "repo-task-inspect.json").write_text(json.dumps(inspect), encoding="utf-8")
-            (jack / "repo-task-edit-sketch.json").write_text(json.dumps(sketch), encoding="utf-8")
+            (jack / "repo-task-plan.json").write_text(
+                json.dumps(plan), encoding="utf-8"
+            )
+            (jack / "repo-task-inspect.json").write_text(
+                json.dumps(inspect), encoding="utf-8"
+            )
+            (jack / "repo-task-edit-sketch.json").write_text(
+                json.dumps(sketch), encoding="utf-8"
+            )
 
             ret = mod.main(["--repo-root", str(td), "--task", "test task"])
             self.assertEqual(ret, 0)
 
-            out = json.loads((jack / "repo-task-change-outline.json").read_text(encoding="utf-8"))
+            out = json.loads(
+                (jack / "repo-task-change-outline.json").read_text(encoding="utf-8")
+            )
             self.assertEqual(out["target_file"], "scripts/repo_task_plan.py")
             self.assertTrue(out["change_intent"].startswith("Tighten `def rank_files`"))
             self.assertEqual(
@@ -95,5 +107,5 @@ class TestChangeOutlineOrderedSteps(unittest.TestCase):
             shutil.rmtree(td)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

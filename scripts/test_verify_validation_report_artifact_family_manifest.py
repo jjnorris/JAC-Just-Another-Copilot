@@ -60,7 +60,7 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
                     "repo_task_change_outline.py",
                 ],
                 "methods": [
-                    f"ran: {sys.executable} scripts/run_repo_task_flow.py --repo-root {temp_dir} --task \"{current_task}\""
+                    f'ran: {sys.executable} scripts/run_repo_task_flow.py --repo-root {temp_dir} --task "{current_task}"'
                 ],
                 "evidence_links": [
                     "jack/repo-task-plan.json",
@@ -154,7 +154,10 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
                         "artifact_path": "jack/repo-stack-profile.json",
                         "required_or_optional": "required",
                         "producer": "scripts/profile_repo_stack.py",
-                        "consumers": ["scripts/profile_to_docs_lookup.py", "scripts/repo_task_inspect.py"],
+                        "consumers": [
+                            "scripts/profile_to_docs_lookup.py",
+                            "scripts/repo_task_inspect.py",
+                        ],
                         "output_type": "json",
                         "expected_in_current_live_flow": True,
                     },
@@ -184,7 +187,10 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
                         "artifact_path": "jack/repo-task-brief.json",
                         "required_or_optional": "required",
                         "producer": "scripts/repo_task_research.py",
-                        "consumers": ["scripts/repo_task_plan.py", "scripts/repo_task_inspect.py"],
+                        "consumers": [
+                            "scripts/repo_task_plan.py",
+                            "scripts/repo_task_inspect.py",
+                        ],
                         "output_type": "json",
                         "expected_in_current_live_flow": True,
                     },
@@ -194,7 +200,10 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
                         "artifact_path": "jack/repo-task-plan.json",
                         "required_or_optional": "required",
                         "producer": "scripts/repo_task_plan.py",
-                        "consumers": ["scripts/repo_task_inspect.py", "scripts/repo_task_edit_sketch.py"],
+                        "consumers": [
+                            "scripts/repo_task_inspect.py",
+                            "scripts/repo_task_edit_sketch.py",
+                        ],
                         "output_type": "json",
                         "expected_in_current_live_flow": True,
                     },
@@ -204,7 +213,10 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
                         "artifact_path": "jack/repo-task-inspect.json",
                         "required_or_optional": "required",
                         "producer": "scripts/repo_task_inspect.py",
-                        "consumers": ["scripts/repo_task_edit_sketch.py", "scripts/repo_task_change_outline.py"],
+                        "consumers": [
+                            "scripts/repo_task_edit_sketch.py",
+                            "scripts/repo_task_change_outline.py",
+                        ],
                         "output_type": "json",
                         "expected_in_current_live_flow": True,
                     },
@@ -239,7 +251,10 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
             env["JACK_REQUIRE_TRANSITION_LEDGER"] = "1"
             env["JACK_REQUIRE_ARTIFACT_FAMILY_MANIFEST"] = "1"
             result = subprocess.run(
-                [sys.executable, str(Path(__file__).with_name("verify_validation_report.py"))],
+                [
+                    sys.executable,
+                    str(Path(__file__).with_name("verify_validation_report.py")),
+                ],
                 cwd=temp_dir,
                 capture_output=True,
                 text=True,
@@ -248,7 +263,9 @@ class VerifyValidationReportArtifactFamilyManifestTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
             self.assertIn("OK: transition ledger present and consistent", result.stdout)
-            self.assertIn("OK: artifact family manifest present and consistent", result.stdout)
+            self.assertIn(
+                "OK: artifact family manifest present and consistent", result.stdout
+            )
         finally:
             shutil.rmtree(temp_dir)
 

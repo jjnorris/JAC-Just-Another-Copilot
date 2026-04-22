@@ -21,7 +21,13 @@ class TestRepoTaskResearchActionableSynthesis(unittest.TestCase):
             jack_dir = repo / "jack"
             jack_dir.mkdir(parents=True)
             (jack_dir / "repo-task-plan.json").write_text(
-                json.dumps({"recommended_first_edit_area": "scripts/profile_to_docs_lookup.py"}, indent=2) + "\n",
+                json.dumps(
+                    {
+                        "recommended_first_edit_area": "scripts/profile_to_docs_lookup.py"
+                    },
+                    indent=2,
+                )
+                + "\n",
                 encoding="utf-8",
             )
 
@@ -57,7 +63,9 @@ class TestRepoTaskResearchActionableSynthesis(unittest.TestCase):
                 },
             ]
 
-            brief = mod.make_brief(repo, task, profile, selected_snippets, selected_snippets, [])
+            brief = mod.make_brief(
+                repo, task, profile, selected_snippets, selected_snippets, []
+            )
             suggestions = brief["actionable_suggestions"]
             doc_titles = {snippet["title"] for snippet in selected_snippets}
 

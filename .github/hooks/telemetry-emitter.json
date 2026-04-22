@@ -4,7 +4,7 @@
     "sessionStart": [
       {
         "type": "command",
-        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jacks/hook-contracts/telemetry-emitter/hook.json.",
+        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jack/hook-contracts/telemetry-emitter/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "powershell": "python .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "cwd": ".",
@@ -14,7 +14,7 @@
     "sessionEnd": [
       {
         "type": "command",
-        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jacks/hook-contracts/telemetry-emitter/hook.json.",
+        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jack/hook-contracts/telemetry-emitter/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "powershell": "python .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "cwd": ".",
@@ -24,7 +24,7 @@
     "userPromptSubmitted": [
       {
         "type": "command",
-        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jacks/hook-contracts/telemetry-emitter/hook.json.",
+        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jack/hook-contracts/telemetry-emitter/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "powershell": "python .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "cwd": ".",
@@ -34,7 +34,7 @@
     "preToolUse": [
       {
         "type": "command",
-        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jacks/hook-contracts/telemetry-emitter/hook.json.",
+        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jack/hook-contracts/telemetry-emitter/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "powershell": "python .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "cwd": ".",
@@ -44,7 +44,7 @@
     "postToolUse": [
       {
         "type": "command",
-        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jacks/hook-contracts/telemetry-emitter/hook.json.",
+        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jack/hook-contracts/telemetry-emitter/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "powershell": "python .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "cwd": ".",
@@ -54,7 +54,7 @@
     "errorOccurred": [
       {
         "type": "command",
-        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jacks/hook-contracts/telemetry-emitter/hook.json.",
+        "comment": "JACK native hook for telemetry-emitter. Canonical rationale stays in docs/jack/hook-contracts/telemetry-emitter/hook.json.",
         "bash": "python3 .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "powershell": "python .github/hooks/scripts/jac_hook.py telemetry-emitter",
         "cwd": ".",
@@ -63,6 +63,4 @@
     ]
   }
 }
-
-
 

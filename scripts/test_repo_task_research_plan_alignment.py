@@ -10,7 +10,9 @@ class TestRepoTaskResearchPlanAlignment(unittest.TestCase):
                 "Python packaging with pip/poetry",
             ],
             "selected_sources": {
-                "Python virtualenv and environment management": ["https://docs.python.org/3/"],
+                "Python virtualenv and environment management": [
+                    "https://docs.python.org/3/"
+                ],
                 "Python packaging with pip/poetry": ["https://docs.python.org/3/"],
             },
         }
@@ -46,14 +48,17 @@ class TestRepoTaskResearchPlanAlignment(unittest.TestCase):
             },
         ]
 
-        selected = pick_top_snippets(evidence, "Self-host JACK: single-file edit", 3, plan=plan, profile=None)
+        selected = pick_top_snippets(
+            evidence, "Self-host JACK: single-file edit", 3, plan=plan, profile=None
+        )
 
         # All selected snippets must align with the plan (source prefix or query)
         for s in selected:
             src = s.get("source_url", "")
             q = s.get("query", "")
             self.assertTrue(
-                src.startswith("https://docs.python.org/3/") or q in plan["selected_queries"]
+                src.startswith("https://docs.python.org/3/")
+                or q in plan["selected_queries"]
             )
 
         # Ensure stale framework docs are not promoted

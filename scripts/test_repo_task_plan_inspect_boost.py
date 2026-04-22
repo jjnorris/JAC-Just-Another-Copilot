@@ -15,7 +15,9 @@ class InspectSymbolBoostTest(unittest.TestCase):
             b.write_text("def other():\n    pass\n")
 
             # Provide inspect symbols that should prefer file `a.py`.
-            ranked = rank_files([str(b), str(a)], task="example task", inspect_symbols=["def load_json"])
+            ranked = rank_files(
+                [str(b), str(a)], task="example task", inspect_symbols=["def load_json"]
+            )
             self.assertEqual(ranked[0], str(a))
 
 

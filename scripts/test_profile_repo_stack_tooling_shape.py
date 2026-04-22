@@ -22,14 +22,28 @@ class TestProfileRepoStackToolingShape(unittest.TestCase):
             # ensure no packaging manifests present
             # run the profiler main to write outputs into repo/jack/
             out_json = "jack/repo-stack-profile.json"
-            rc = prs.main(["--repo-root", str(repo), "--out-json", out_json, "--out-md", "jack/repo-stack-profile.md", "--brief-md", "jack/repo-research-brief.md"])
+            rc = prs.main(
+                [
+                    "--repo-root",
+                    str(repo),
+                    "--out-json",
+                    out_json,
+                    "--out-md",
+                    "jack/repo-stack-profile.md",
+                    "--brief-md",
+                    "jack/repo-research-brief.md",
+                ]
+            )
             self.assertEqual(rc, 0)
 
             data_path = repo / out_json
             self.assertTrue(data_path.exists(), f"Expected profile JSON at {data_path}")
             data = json.loads(data_path.read_text(encoding="utf-8"))
             self.assertEqual(data.get("repo_shape"), "python_tooling_repo")
-            self.assertIn("Large number of standalone scripts", " ".join(data.get("repo_shape_notes", [])))
+            self.assertIn(
+                "Large number of standalone scripts",
+                " ".join(data.get("repo_shape_notes", [])),
+            )
 
 
 if __name__ == "__main__":

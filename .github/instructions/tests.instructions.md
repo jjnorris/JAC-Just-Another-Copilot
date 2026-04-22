@@ -1,5 +1,5 @@
 ---
-applyTo: "README.md,install.md,compatibility.md,AGENTS.md,.github/copilot-instructions.md,.github/instructions/**/*.instructions.md,.github/hooks/**/*.json,docs/jacks/inventory.json,docs/jacks/release-readiness.md,docs/jacks/event-contracts/**/*.json,docs/jacks/templates/**/*.json,docs/jacks/examples/**/*.json"
+applyTo: "README.md,install.md,compatibility.md,AGENTS.md,.github/copilot-instructions.md,.github/instructions/**/*.instructions.md,.github/hooks/**/*.json,docs/jack/inventory.json,docs/jack/release-readiness.md,docs/jack/event-contracts/**/*.json,docs/jack/templates/**/*.json,docs/jack/examples/**/*.json"
 ---
 
 This repository does not have an application test suite.
@@ -17,5 +17,4 @@ For meaningful changes, validate the things this repo actually ships:
 - reference-only files are clearly marked as such
 - hidden or bidirectional Unicode characters are absent and line endings stay LF
 - the donation note uses either a real link or the explicit placeholder token
-
 

@@ -10,7 +10,9 @@ class TestRankFilesCollapsed(unittest.TestCase):
         txt = target.read_text(encoding="utf-8")
 
         # `_rank_files_impl` should no longer exist in the source.
-        self.assertNotIn("def _rank_files_impl", txt, "_rank_files_impl should be removed")
+        self.assertNotIn(
+            "def _rank_files_impl", txt, "_rank_files_impl should be removed"
+        )
 
         # `def rank_files` must exist as the canonical implementation.
         self.assertIn("def rank_files", txt, "def rank_files must be present")
@@ -22,7 +24,9 @@ class TestRankFilesCollapsed(unittest.TestCase):
 
         profile = {"repo_shape": "python_tooling_repo"}
         task = "Self-host JACK: verify rank_files planner-first guarantee"
-        recommended = mod.choose_recommended_first_edit_area(task, profile, ["scripts/repo_task_plan.py"])
+        recommended = mod.choose_recommended_first_edit_area(
+            task, profile, ["scripts/repo_task_plan.py"]
+        )
         self.assertEqual(recommended, "scripts/repo_task_plan.py")
 
 

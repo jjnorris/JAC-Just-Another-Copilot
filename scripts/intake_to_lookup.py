@@ -61,17 +61,23 @@ def load_spec(spec_file: Path) -> Dict[str, Any]:
         raise ValueError(
             f"Spec file {spec_path} is not valid JSON: {exc}.\n"
             "Accepted format: JSON (object). If your spec is YAML, convert it to JSON "
-            "or add YAML parsing support in a separate change.") from exc
+            "or add YAML parsing support in a separate change."
+        ) from exc
 
     if not isinstance(parsed, dict):
         raise TypeError(
-            f"Spec file {spec_path} parsed to {type(parsed).__name__}; expected a JSON object/dict.")
+            f"Spec file {spec_path} parsed to {type(parsed).__name__}; expected a JSON object/dict."
+        )
 
     return parsed
 
 
 def run_spec_intake(text: str, out_file: Path) -> Dict[str, Any]:
-    proc = subprocess.run([sys.executable, str(SPEC_INTAKE), "--text", text, "--out", str(out_file)], capture_output=True, text=True)
+    proc = subprocess.run(
+        [sys.executable, str(SPEC_INTAKE), "--text", text, "--out", str(out_file)],
+        capture_output=True,
+        text=True,
+    )
     if proc.returncode != 0:
         raise RuntimeError(f"spec_intake failed: {proc.stderr}")
     return load_spec(out_file)
@@ -101,7 +107,9 @@ def collect_priority_topics(normalized_goal: str, missing: List[str]) -> List[st
         if item in mapping:
             priority_topics.append(mapping[item])
 
-    words = [word for word in re.findall(r"\w+", normalized_goal.lower()) if len(word) > 4]
+    words = [
+        word for word in re.findall(r"\w+", normalized_goal.lower()) if len(word) > 4
+    ]
     seen = set(priority_topics)
     for word in words:
         if word in seen:
@@ -114,7 +122,9 @@ def collect_priority_topics(normalized_goal: str, missing: List[str]) -> List[st
     return priority_topics
 
 
-def build_recommended_lookup_requests(candidate_stack: str | None, priority_topics: List[str]) -> List[Dict[str, Any]]:
+def build_recommended_lookup_requests(
+    candidate_stack: str | None, priority_topics: List[str]
+) -> List[Dict[str, Any]]:
     recommended_lookup_requests: List[Dict[str, Any]] = []
     if not candidate_stack:
         return recommended_lookup_requests
@@ -138,7 +148,9 @@ def build_recommended_lookup_requests(candidate_stack: str | None, priority_topi
     return recommended_lookup_requests
 
 
-def plan_requests_from_spec(spec: Dict[str, Any], stack_override: str | None) -> Dict[str, Any]:
+def plan_requests_from_spec(
+    spec: Dict[str, Any], stack_override: str | None
+) -> Dict[str, Any]:
     normalized_goal = spec.get("normalized_goal", "").strip()
     candidate_stack = stack_override or spec.get("candidate_stack")
     if candidate_stack == "unspecified":
@@ -146,37 +158,59 @@ def plan_requests_from_spec(spec: Dict[str, Any], stack_override: str | None) ->
 
     missing = spec.get("missing_required_details", []) or []
     priority_topics = collect_priority_topics(normalized_goal, missing)
-    recommended_lookup_requests = build_recommended_lookup_requests(candidate_stack, priority_topics)
+    recommended_lookup_requests = build_recommended_lookup_requests(
+        candidate_stack, priority_topics
+    )
 
     planner: Dict[str, Any] = {
         "normalized_goal": normalized_goal,
         "candidate_stack": candidate_stack or "unspecified",
         "priority_topics": priority_topics,
         "recommended_lookup_requests": recommended_lookup_requests,
-        "missing_info_that_limits_research": [] if candidate_stack else ["candidate_stack"],
+        "missing_info_that_limits_research": (
+            [] if candidate_stack else ["candidate_stack"]
+        ),
     }
     return planner
 
 
-def execute_requests(requests: List[Dict[str, Any]], registry_file: Path | None, out_dir: Path) -> List[str]:
+def execute_requests(
+    requests: List[Dict[str, Any]], registry_file: Path | None, out_dir: Path
+) -> List[str]:
     generated: List[str] = []
     out_dir.mkdir(parents=True, exist_ok=True)
     for req in requests:
-        out_path = out_dir / req.get("out", sanitize_filename(req.get("query", "req")) + ".jsonl")
-        cmd = [sys.executable, str(DOCS_LOOKUP), "--query", req["query"], "--stack", req["stack"], "--out", str(out_path)]
+        out_path = out_dir / req.get(
+            "out", sanitize_filename(req.get("query", "req")) + ".jsonl"
+        )
+        cmd = [
+            sys.executable,
+            str(DOCS_LOOKUP),
+            "--query",
+            req["query"],
+            "--stack",
+            req["stack"],
+            "--out",
+            str(out_path),
+        ]
         if registry_file:
             cmd.extend(["--registry-file", str(registry_file)])
         proc = subprocess.run(cmd, capture_output=True, text=True)
         if proc.returncode != 0:
             # surface warning but continue
-            print(f"Warning: docs_lookup failed for {req['query']}: {proc.stderr}", file=sys.stderr)
+            print(
+                f"Warning: docs_lookup failed for {req['query']}: {proc.stderr}",
+                file=sys.stderr,
+            )
             continue
         if out_path.exists() and out_path.stat().st_size > 0:
             generated.append(str(out_path))
     return generated
 
 
-def load_spec_from_args(args: argparse.Namespace) -> tuple[Dict[str, Any] | None, Path | None, int | None]:
+def load_spec_from_args(
+    args: argparse.Namespace,
+) -> tuple[Dict[str, Any] | None, Path | None, int | None]:
     if args.spec_file:
         return load_spec(Path(args.spec_file)), None, None
 
@@ -190,7 +224,9 @@ def load_spec_from_args(args: argparse.Namespace) -> tuple[Dict[str, Any] | None
     return run_spec_intake(args.text, tmp_spec), tmp_spec, None
 
 
-def maybe_execute_requests(args: argparse.Namespace, planner: Dict[str, Any]) -> tuple[str, List[str]]:
+def maybe_execute_requests(
+    args: argparse.Namespace, planner: Dict[str, Any]
+) -> tuple[str, List[str]]:
     execution_mode = "plan_only"
     generated_files: List[str] = []
 
@@ -201,20 +237,37 @@ def maybe_execute_requests(args: argparse.Namespace, planner: Dict[str, Any]) ->
         planner["missing_info_that_limits_research"].append("candidate_stack")
         return execution_mode, generated_files
 
-    evidence_dir = Path(args.evidence_dir) if args.evidence_dir else Path(tempfile.mkdtemp(prefix="evidence_"))
+    evidence_dir = (
+        Path(args.evidence_dir)
+        if args.evidence_dir
+        else Path(tempfile.mkdtemp(prefix="evidence_"))
+    )
     registry = Path(args.registry_file) if args.registry_file else None
-    generated_files = execute_requests(planner.get("recommended_lookup_requests", []), registry, evidence_dir)
+    generated_files = execute_requests(
+        planner.get("recommended_lookup_requests", []), registry, evidence_dir
+    )
     return "executed", generated_files
 
 
 def main(argv: List[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--spec-file", help="Existing spec intake JSON file")
-    ap.add_argument("--text", help="Freeform project description text (if spec-file omitted)")
+    ap.add_argument(
+        "--text", help="Freeform project description text (if spec-file omitted)"
+    )
     ap.add_argument("--stack", help="Optional explicit stack override")
-    ap.add_argument("--execute", action="store_true", help="Execute docs lookup requests instead of only planning")
-    ap.add_argument("--registry-file", help="Optional registry JSON for docs_lookup (used when executing)")
-    ap.add_argument("--evidence-dir", help="Directory to write evidence files when executing")
+    ap.add_argument(
+        "--execute",
+        action="store_true",
+        help="Execute docs lookup requests instead of only planning",
+    )
+    ap.add_argument(
+        "--registry-file",
+        help="Optional registry JSON for docs_lookup (used when executing)",
+    )
+    ap.add_argument(
+        "--evidence-dir", help="Directory to write evidence files when executing"
+    )
     ap.add_argument("--out", help="Output JSON plan file", default="intake_plan.json")
     args = ap.parse_args(argv)
 
@@ -234,7 +287,9 @@ def main(argv: List[str] | None = None) -> int:
             "candidate_stack": planner.get("candidate_stack"),
             "priority_topics": planner.get("priority_topics"),
             "recommended_lookup_requests": planner.get("recommended_lookup_requests"),
-            "missing_info_that_limits_research": planner.get("missing_info_that_limits_research"),
+            "missing_info_that_limits_research": planner.get(
+                "missing_info_that_limits_research"
+            ),
             "execution_mode": execution_mode,
             "generated_evidence_files": generated_files,
         }
@@ -247,9 +302,9 @@ def main(argv: List[str] | None = None) -> int:
         print(f"Plan for: {output['normalized_goal']}")
         print(f"Stack: {output['candidate_stack']}")
         print(f"Mode: {output['execution_mode']}")
-        if output['generated_evidence_files']:
+        if output["generated_evidence_files"]:
             print("Generated evidence:")
-            for f in output['generated_evidence_files']:
+            for f in output["generated_evidence_files"]:
                 print("-", f)
 
         return 0

@@ -21,13 +21,21 @@ class TestInspectFocus(unittest.TestCase):
             scripts = td / "scripts"
             scripts.mkdir()
             # primary recommended file
-            (scripts / "target_module.py").write_text("def load_json(path):\n    pass\n", encoding="utf-8")
+            (scripts / "target_module.py").write_text(
+                "def load_json(path):\n    pass\n", encoding="utf-8"
+            )
             # importer that references target_module
-            (scripts / "importer.py").write_text("import target_module\n\n", encoding="utf-8")
+            (scripts / "importer.py").write_text(
+                "import target_module\n\n", encoding="utf-8"
+            )
             # unrelated file
-            (scripts / "unrelated.py").write_text("def foo():\n    pass\n", encoding="utf-8")
+            (scripts / "unrelated.py").write_text(
+                "def foo():\n    pass\n", encoding="utf-8"
+            )
             # hook_regression_tests (should be excluded)
-            (scripts / "hook_regression_tests.py").write_text("def test_stub():\n    pass\n", encoding="utf-8")
+            (scripts / "hook_regression_tests.py").write_text(
+                "def test_stub():\n    pass\n", encoding="utf-8"
+            )
 
             jack = td / "jack"
             jack.mkdir()
@@ -40,7 +48,9 @@ class TestInspectFocus(unittest.TestCase):
                 ],
                 "recommended_first_edit_area": "scripts/target_module.py",
             }
-            (jack / "repo-task-plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            (jack / "repo-task-plan.json").write_text(
+                json.dumps(plan), encoding="utf-8"
+            )
 
             # run inspect
             ret = mod.main(["--repo-root", str(td), "--task", "test inspect"])
@@ -61,5 +71,5 @@ class TestInspectFocus(unittest.TestCase):
             shutil.rmtree(td)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

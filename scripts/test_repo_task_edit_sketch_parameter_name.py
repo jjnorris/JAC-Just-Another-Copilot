@@ -28,7 +28,7 @@ class TestRepoTaskEditSketchParameterName(unittest.TestCase):
                 "from typing import Any, Dict, Optional\n\n"
                 "def load_json(path: Path) -> Optional[Dict[str, Any]]:\n"
                 "    try:\n"
-                "        return json.loads(path.read_text(encoding=\"utf-8\"))\n"
+                '        return json.loads(path.read_text(encoding="utf-8"))\n'
                 "    except Exception:\n"
                 "        return None\n",
                 encoding="utf-8",
@@ -72,12 +72,16 @@ class TestRepoTaskEditSketchParameterName(unittest.TestCase):
             result = mod.main(["--repo-root", str(repo), "--task", task])
             self.assertEqual(result, 0)
 
-            sketch = json.loads((jack_dir / "repo-task-edit-sketch.json").read_text(encoding="utf-8"))
+            sketch = json.loads(
+                (jack_dir / "repo-task-edit-sketch.json").read_text(encoding="utf-8")
+            )
             suggested = sketch.get("suggested_change_shape", "")
 
             self.assertIn("validates that `path` exists and is readable", suggested)
             self.assertNotIn("spec_file", suggested)
-            self.assertEqual(sketch.get("primary_edit_target"), "scripts/repo_task_plan.py")
+            self.assertEqual(
+                sketch.get("primary_edit_target"), "scripts/repo_task_plan.py"
+            )
 
 
 if __name__ == "__main__":

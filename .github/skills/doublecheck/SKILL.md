@@ -133,7 +133,6 @@ A task may be reported as completed only when all of these conditions hold:
 Meeting the gate is a precondition for high-confidence claims; if any part fails, the agent must narrow the claim and emit the corresponding `coverage_miss` and `assumption` records.
 
 ## Related docs
-- `docs/jacks/rules/10-correctness-contracts.md`
-- `docs/jacks/workflows/verify-before-claim.md`
-
+- `docs/jack/rules/10-correctness-contracts.md`
+- `docs/jack/workflows/verify-before-claim.md`
 

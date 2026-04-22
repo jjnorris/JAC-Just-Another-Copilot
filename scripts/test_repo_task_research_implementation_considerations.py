@@ -14,7 +14,9 @@ spec.loader.exec_module(mod)
 
 
 class TestRepoTaskResearchImplementationConsiderations(unittest.TestCase):
-    def test_planning_focused_self_hosting_brief_synthesizes_task_relevant_consideration(self):
+    def test_planning_focused_self_hosting_brief_synthesizes_task_relevant_consideration(
+        self,
+    ):
         with tempfile.TemporaryDirectory() as temp_dir_str:
             repo = Path(temp_dir_str)
             (repo / "jack").mkdir(parents=True)
@@ -30,7 +32,9 @@ class TestRepoTaskResearchImplementationConsiderations(unittest.TestCase):
             plan = {
                 "repo_shape": "python_tooling_repo",
                 "recommended_first_edit_area": "scripts/repo_task_plan.py",
-                "selected_queries": ["Python argparse, subprocess, pathlib, and JSON for tooling scripts"],
+                "selected_queries": [
+                    "Python argparse, subprocess, pathlib, and JSON for tooling scripts"
+                ],
                 "selected_sources": {
                     "Python argparse, subprocess, pathlib, and JSON for tooling scripts": [
                         "https://docs.python.org/3/library/argparse.html",
@@ -64,17 +68,23 @@ class TestRepoTaskResearchImplementationConsiderations(unittest.TestCase):
                 },
             ]
 
-            brief = mod.make_brief(repo, task, profile, selected_snippets, selected_snippets, [], plan=plan)
-            considerations = brief["implementation_considerations"]
-            generic = (
-                "Repository appears Pythonic: prefer virtualenv/venv, pin dependencies, and run unit tests locally before changes."
+            brief = mod.make_brief(
+                repo, task, profile, selected_snippets, selected_snippets, [], plan=plan
             )
+            considerations = brief["implementation_considerations"]
+            generic = "Repository appears Pythonic: prefer virtualenv/venv, pin dependencies, and run unit tests locally before changes."
 
             self.assertTrue(considerations, considerations)
-            self.assertTrue(any("scripts/repo_task_plan.py" in item for item in considerations), considerations)
+            self.assertTrue(
+                any("scripts/repo_task_plan.py" in item for item in considerations),
+                considerations,
+            )
             self.assertTrue(
                 any(
-                    "argparse" in item and "subprocess" in item and "pathlib" in item and "json" in item
+                    "argparse" in item
+                    and "subprocess" in item
+                    and "pathlib" in item
+                    and "json" in item
                     for item in considerations
                 ),
                 considerations,

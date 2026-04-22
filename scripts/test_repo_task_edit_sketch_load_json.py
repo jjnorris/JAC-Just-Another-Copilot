@@ -36,5 +36,5 @@ class TestLoadJson(unittest.TestCase):
             shutil.rmtree(td)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

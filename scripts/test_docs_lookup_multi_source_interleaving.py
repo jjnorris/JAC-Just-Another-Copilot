@@ -6,7 +6,9 @@ from pathlib import Path
 from unittest import mock
 
 
-spec = importlib.util.spec_from_file_location("docs_lookup", Path(__file__).with_name("docs_lookup.py"))
+spec = importlib.util.spec_from_file_location(
+    "docs_lookup", Path(__file__).with_name("docs_lookup.py")
+)
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
@@ -56,7 +58,11 @@ class TestDocsLookupMultiSourceInterleaving(unittest.TestCase):
 
             self.assertEqual(exit_code, 0)
 
-            output_records = [json.loads(line) for line in out_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            output_records = [
+                json.loads(line)
+                for line in out_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
             leading_sources = [record["source_url"] for record in output_records[:4]]
 
             self.assertIn(first_url, leading_sources)

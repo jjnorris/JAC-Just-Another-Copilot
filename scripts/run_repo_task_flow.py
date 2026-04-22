@@ -36,9 +36,19 @@ PROFILE_JSON_CONSUMERS = [
 PROFILE_MD_CONSUMERS = [HUMAN_REVIEW_CONSUMER]
 DOCS_LOOKUP_JSON_CONSUMERS = [REPO_TASK_RESEARCH_SCRIPT]
 TASK_BRIEF_JSON_CONSUMERS = [REPO_TASK_INSPECT_SCRIPT, REPO_TASK_PLAN_SCRIPT]
-TASK_PLAN_JSON_CONSUMERS = [REPO_TASK_CHANGE_OUTLINE_SCRIPT, REPO_TASK_EDIT_SKETCH_SCRIPT, REPO_TASK_INSPECT_SCRIPT]
-TASK_INSPECT_JSON_CONSUMERS = [REPO_TASK_CHANGE_OUTLINE_SCRIPT, REPO_TASK_EDIT_SKETCH_SCRIPT]
-EDIT_SKETCH_JSON_CONSUMERS = [REPO_TASK_CHANGE_OUTLINE_SCRIPT, REPO_TASK_PATCH_SKETCH_SCRIPT]
+TASK_PLAN_JSON_CONSUMERS = [
+    REPO_TASK_CHANGE_OUTLINE_SCRIPT,
+    REPO_TASK_EDIT_SKETCH_SCRIPT,
+    REPO_TASK_INSPECT_SCRIPT,
+]
+TASK_INSPECT_JSON_CONSUMERS = [
+    REPO_TASK_CHANGE_OUTLINE_SCRIPT,
+    REPO_TASK_EDIT_SKETCH_SCRIPT,
+]
+EDIT_SKETCH_JSON_CONSUMERS = [
+    REPO_TASK_CHANGE_OUTLINE_SCRIPT,
+    REPO_TASK_PATCH_SKETCH_SCRIPT,
+]
 CHANGE_OUTLINE_JSON_CONSUMERS = [REPO_TASK_PATCH_SKETCH_SCRIPT, HUMAN_REVIEW_CONSUMER]
 
 
@@ -87,10 +97,15 @@ STAGE_PRIMARY_ARTIFACTS = {
 
 def stage_artifact_paths(repo_root: Path, stage_name: str) -> list[str]:
     artifact_names = STAGE_PRIMARY_ARTIFACTS.get(stage_name, ())
-    return [((repo_root / artifact_name).relative_to(repo_root)).as_posix() for artifact_name in artifact_names]
+    return [
+        ((repo_root / artifact_name).relative_to(repo_root)).as_posix()
+        for artifact_name in artifact_names
+    ]
 
 
-def build_stage_record(repo_root: Path, stage_name: str, status: str, reason: str) -> dict[str, object]:
+def build_stage_record(
+    repo_root: Path, stage_name: str, status: str, reason: str
+) -> dict[str, object]:
     return {
         "stage_name": stage_name,
         "status": status,
@@ -314,6 +329,7 @@ def report_removed_artifacts(removed_artifacts: list[Path], repo_root: Path) -> 
     for artifact_path in removed_artifacts:
         print(f"- {artifact_path.relative_to(repo_root).as_posix()}")
 
+
 def run_stage(script_path: Path, repo_root: Path, extra_args: list[str]):
     if not script_path.is_file():
         print(f"Stage script not found: {script_path.as_posix()}", file=sys.stderr)
@@ -322,7 +338,10 @@ def run_stage(script_path: Path, repo_root: Path, extra_args: list[str]):
     result = subprocess.run(cmd, capture_output=True, text=True)
     print(result.stdout)
     if result.returncode != 0:
-        print(f"Stage {script_path.name} failed with exit code {result.returncode}", file=sys.stderr)
+        print(
+            f"Stage {script_path.name} failed with exit code {result.returncode}",
+            file=sys.stderr,
+        )
         print(result.stderr, file=sys.stderr)
         return False
     return True
@@ -345,7 +364,10 @@ def run_validation_report_check(repo_root: Path) -> bool:
     )
     print(result.stdout)
     if result.returncode != 0:
-        print(f"Validation report check failed with exit code {result.returncode}", file=sys.stderr)
+        print(
+            f"Validation report check failed with exit code {result.returncode}",
+            file=sys.stderr,
+        )
         print(result.stderr, file=sys.stderr)
         return False
     return True
@@ -360,7 +382,9 @@ def run_required_stages(
     completed_stages: list[str] = []
     for script_name in stage_names:
         script_path = scripts_dir / script_name
-        extra = ["--task", placeholder_task] if script_name.startswith("repo_task") else []
+        extra = (
+            ["--task", placeholder_task] if script_name.startswith("repo_task") else []
+        )
         if not run_stage(script_path, repo_root, extra):
             sys.exit(1)
         completed_stages.append(script_name)
@@ -379,32 +403,64 @@ def run_optional_stages(
         script_path = scripts_dir / script_name
         if not script_path.is_file():
             print(f"Optional stage not present, skipping: {script_name}")
-            stage_records.append(build_stage_record(repo_root, script_name, "skipped", "optional stage script not present"))
+            stage_records.append(
+                build_stage_record(
+                    repo_root,
+                    script_name,
+                    "skipped",
+                    "optional stage script not present",
+                )
+            )
             continue
-        extra = ["--task", placeholder_task] if script_name.startswith("repo_task") else []
+        extra = (
+            ["--task", placeholder_task] if script_name.startswith("repo_task") else []
+        )
         if not run_stage(script_path, repo_root, extra):
             print(f"Optional stage {script_name} failed, continuing.")
-            stage_records.append(build_stage_record(repo_root, script_name, "failed", "optional stage returned a non-zero exit code"))
+            stage_records.append(
+                build_stage_record(
+                    repo_root,
+                    script_name,
+                    "failed",
+                    "optional stage returned a non-zero exit code",
+                )
+            )
         else:
             completed_stages.append(script_name)
-            stage_records.append(build_stage_record(repo_root, script_name, "completed", "optional stage completed"))
+            stage_records.append(
+                build_stage_record(
+                    repo_root, script_name, "completed", "optional stage completed"
+                )
+            )
     return stage_records
 
 
-def build_required_stage_records(repo_root: Path, stage_names: list[str]) -> list[dict[str, object]]:
-    return [build_stage_record(repo_root, stage_name, "completed", "required stage completed") for stage_name in stage_names]
+def build_required_stage_records(
+    repo_root: Path, stage_names: list[str]
+) -> list[dict[str, object]]:
+    return [
+        build_stage_record(
+            repo_root, stage_name, "completed", "required stage completed"
+        )
+        for stage_name in stage_names
+    ]
 
 
-def write_flow_summary(repo_root: Path, mvp_stages: list[str], optional_stages: list[str]) -> Path:
+def write_flow_summary(
+    repo_root: Path, mvp_stages: list[str], optional_stages: list[str]
+) -> Path:
     summary_path = repo_root / "jack" / "repo-task-flow-summary.md"
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_lines = [
         "# JACK Repo Task Flow Summary",
-        "", "## MVP stages completed",
+        "",
+        "## MVP stages completed",
         "- " + "\n- ".join(mvp_stages),
-        "", "## Optional stages",
+        "",
+        "## Optional stages",
         "- " + "\n- ".join(optional_stages),
-        "", "## Primary MVP artifacts (open these first)",
+        "",
+        "## Primary MVP artifacts (open these first)",
         "- jack/repo-task-brief.json",
         "- jack/repo-task-plan.json",
         "- jack/repo-task-inspect.json",
@@ -414,14 +470,16 @@ def write_flow_summary(repo_root: Path, mvp_stages: list[str], optional_stages: 
     return summary_path
 
 
-def write_validation_report(repo_root: Path, placeholder_task: str, completed_stages: list[str]) -> Path:
+def write_validation_report(
+    repo_root: Path, placeholder_task: str, completed_stages: list[str]
+) -> Path:
     jack_dir = repo_root / "jack"
     validation_report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "task": placeholder_task,
         "validated": completed_stages,
         "methods": [
-            f"ran: {Path(sys.executable).as_posix()} {Path(__file__).resolve().as_posix()} --repo-root {repo_root.as_posix()} --task \"{placeholder_task}\""
+            f'ran: {Path(sys.executable).as_posix()} {Path(__file__).resolve().as_posix()} --repo-root {repo_root.as_posix()} --task "{placeholder_task}"'
         ],
         "not_validated": [],
         "evidence_links": [],
@@ -432,13 +490,22 @@ def write_validation_report(repo_root: Path, placeholder_task: str, completed_st
         "verifier_version": "doublecheck v1",
     }
 
-    for fname in ("repo-task-plan.json", "repo-task-inspect.json", "repo-task-edit-sketch.json", "repo-task-change-outline.json"):
+    for fname in (
+        "repo-task-plan.json",
+        "repo-task-inspect.json",
+        "repo-task-edit-sketch.json",
+        "repo-task-change-outline.json",
+    ):
         p = jack_dir / fname
         if p.is_file():
-            validation_report["evidence_links"].append(p.relative_to(repo_root).as_posix())
+            validation_report["evidence_links"].append(
+                p.relative_to(repo_root).as_posix()
+            )
 
     vr_path = jack_dir / "repo-task-validation-report.json"
-    vr_path.write_text(json.dumps(validation_report, indent=2, ensure_ascii=False), encoding="utf-8")
+    vr_path.write_text(
+        json.dumps(validation_report, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     return vr_path
 
 
@@ -456,11 +523,17 @@ def write_transition_ledger(
         "finished_at": finished_at,
         "stages": stage_records,
         "optional_stages_encountered": optional_stages_encountered,
-        "final_status": "failed" if any(record.get("status") == "failed" for record in stage_records) else "completed",
+        "final_status": (
+            "failed"
+            if any(record.get("status") == "failed" for record in stage_records)
+            else "completed"
+        ),
     }
 
     ledger_path = repo_root / "jack" / "repo-task-transition-ledger.json"
-    ledger_path.write_text(json.dumps(ledger, indent=2, ensure_ascii=False), encoding="utf-8")
+    ledger_path.write_text(
+        json.dumps(ledger, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     return ledger_path
 
 
@@ -473,13 +546,19 @@ def write_artifact_family_manifest(
     manifest = {
         "task": placeholder_task,
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "transition_ledger_ref": transition_ledger_path.relative_to(repo_root).as_posix(),
-        "validation_report_ref": validation_report_path.relative_to(repo_root).as_posix(),
+        "transition_ledger_ref": transition_ledger_path.relative_to(
+            repo_root
+        ).as_posix(),
+        "validation_report_ref": validation_report_path.relative_to(
+            repo_root
+        ).as_posix(),
         "artifact_family_entries": build_artifact_family_entries(),
     }
 
     manifest_path = repo_root / "jack" / "repo-task-artifact-family-manifest.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     return manifest_path
 
 
@@ -508,7 +587,9 @@ def write_adversarial_review_artifact(
     }
 
     adv_path = jack_dir / "repo-task-adversarial-review.json"
-    adv_path.write_text(json.dumps(adversarial, indent=2, ensure_ascii=False), encoding="utf-8")
+    adv_path.write_text(
+        json.dumps(adversarial, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     return adv_path
 
 
@@ -536,7 +617,10 @@ def append_adversarial_manifest_entry(
     replaced = False
     for i, e in enumerate(entries):
         try:
-            if isinstance(e, dict) and (e.get("artifact_path") == artifact_rel or e.get("artifact_role") == "adversarial_review"):
+            if isinstance(e, dict) and (
+                e.get("artifact_path") == artifact_rel
+                or e.get("artifact_role") == "adversarial_review"
+            ):
                 entries[i] = new_entry
                 replaced = True
                 break
@@ -547,7 +631,9 @@ def append_adversarial_manifest_entry(
         entries.append(new_entry)
 
     manifest["artifact_family_entries"] = entries
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
 
 def run_adversarial_review_check(repo_root: Path) -> bool:
@@ -568,7 +654,10 @@ def run_adversarial_review_check(repo_root: Path) -> bool:
     )
     print(result.stdout)
     if result.returncode != 0:
-        print(f"Adversarial review check failed with exit code {result.returncode}", file=sys.stderr)
+        print(
+            f"Adversarial review check failed with exit code {result.returncode}",
+            file=sys.stderr,
+        )
         print(result.stderr, file=sys.stderr)
         return False
     return True
@@ -602,22 +691,35 @@ def write_freshness_evidence_artifact(repo_root: Path, placeholder_task: str) ->
         "source_inputs": source_inputs,
         "evidence_sources": ["external_docs" if docs_evidence.is_file() else "none"],
         "preferred_source_tier": "official",
-        "current_status": "verified" if not freshness_required else "partially_verified",
-        "consumed_by_stages": [PROFILE_TO_DOCS_LOOKUP_SCRIPT, REPO_TASK_RESEARCH_SCRIPT],
+        "current_status": (
+            "verified" if not freshness_required else "partially_verified"
+        ),
+        "consumed_by_stages": [
+            PROFILE_TO_DOCS_LOOKUP_SCRIPT,
+            REPO_TASK_RESEARCH_SCRIPT,
+        ],
         "unresolved_freshness_gaps": [],
         "rationale": "Seeded freshness evidence artifact derived from docs lookup outputs.",
     }
 
     fpath = jack_dir / "repo-task-freshness-evidence.json"
-    fpath.write_text(json.dumps(freshness, indent=2, ensure_ascii=False), encoding="utf-8")
+    fpath.write_text(
+        json.dumps(freshness, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     return fpath
 
 
-def append_freshness_manifest_entry(repo_root: Path, manifest_path: Path, freshness_path: Path) -> None:
+def append_freshness_manifest_entry(
+    repo_root: Path, manifest_path: Path, freshness_path: Path
+) -> None:
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except Exception as exc:
-        print("Unable to read artifact family manifest for freshness update:", manifest_path, exc)
+        print(
+            "Unable to read artifact family manifest for freshness update:",
+            manifest_path,
+            exc,
+        )
         return
     entries = manifest.get("artifact_family_entries", [])
     new_entry = build_artifact_family_entry(
@@ -634,7 +736,10 @@ def append_freshness_manifest_entry(repo_root: Path, manifest_path: Path, freshn
     replaced = False
     for i, e in enumerate(entries):
         try:
-            if isinstance(e, dict) and (e.get("artifact_path") == artifact_rel or e.get("artifact_role") == "freshness_evidence"):
+            if isinstance(e, dict) and (
+                e.get("artifact_path") == artifact_rel
+                or e.get("artifact_role") == "freshness_evidence"
+            ):
                 entries[i] = new_entry
                 replaced = True
                 break
@@ -645,7 +750,9 @@ def append_freshness_manifest_entry(repo_root: Path, manifest_path: Path, freshn
         entries.append(new_entry)
 
     manifest["artifact_family_entries"] = entries
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
 
 def run_freshness_check(repo_root: Path) -> bool:
@@ -666,15 +773,23 @@ def run_freshness_check(repo_root: Path) -> bool:
     )
     print(result.stdout)
     if result.returncode != 0:
-        print(f"Freshness evidence check failed with exit code {result.returncode}", file=sys.stderr)
+        print(
+            f"Freshness evidence check failed with exit code {result.returncode}",
+            file=sys.stderr,
+        )
         print(result.stderr, file=sys.stderr)
         return False
     return True
 
+
 def main():
     parser = argparse.ArgumentParser(description="Run the full JACK repo task flow")
-    parser.add_argument("--repo-root", required=True, help="Path to the repository root")
-    parser.add_argument("--task", required=False, help="Task description passed to repo_task stages")
+    parser.add_argument(
+        "--repo-root", required=True, help="Path to the repository root"
+    )
+    parser.add_argument(
+        "--task", required=False, help="Task description passed to repo_task stages"
+    )
     args = parser.parse_args()
     repo_root = Path(args.repo_root).resolve()
     placeholder_task = args.task if args.task else "demo-task"
@@ -700,10 +815,14 @@ def main():
     optional_stages = [REPO_TASK_PATCH_SKETCH_STAGE]
 
     # Run MVP stages sequentially; any failure aborts the runner.
-    completed_stages = run_required_stages(scripts_dir, repo_root, placeholder_task, mvp_stages)
+    completed_stages = run_required_stages(
+        scripts_dir, repo_root, placeholder_task, mvp_stages
+    )
 
     # Run optional stages if they exist; failures are reported but do not abort.
-    optional_stage_records = run_optional_stages(scripts_dir, repo_root, placeholder_task, optional_stages, completed_stages)
+    optional_stage_records = run_optional_stages(
+        scripts_dir, repo_root, placeholder_task, optional_stages, completed_stages
+    )
 
     # Write a concise summary artifact describing what was run.
     summary_path = write_flow_summary(repo_root, mvp_stages, optional_stages)
@@ -721,22 +840,32 @@ def main():
         flow_started_at,
         flow_finished_at,
         build_required_stage_records(repo_root, mvp_stages) + optional_stage_records,
-        [record["stage_name"] for record in optional_stage_records if record.get("status") != "skipped"],
+        [
+            record["stage_name"]
+            for record in optional_stage_records
+            if record.get("status") != "skipped"
+        ],
     )
     print(f"Wrote transition ledger: {transition_ledger_path}")
 
-    manifest_path = write_artifact_family_manifest(repo_root, placeholder_task, transition_ledger_path, vr_path)
+    manifest_path = write_artifact_family_manifest(
+        repo_root, placeholder_task, transition_ledger_path, vr_path
+    )
     print(f"Wrote artifact family manifest: {manifest_path}")
 
     if not run_validation_report_check(repo_root):
         sys.exit(1)
 
     # Emit an advisory adversarial-review artifact (machine-readable) and register it in the manifest.
-    adv_path = write_adversarial_review_artifact(repo_root, placeholder_task, transition_ledger_path, vr_path)
+    adv_path = write_adversarial_review_artifact(
+        repo_root, placeholder_task, transition_ledger_path, vr_path
+    )
     print(f"Wrote adversarial review: {adv_path}")
 
     # Append the new adversarial artifact to the artifact family manifest so it's discoverable.
-    append_adversarial_manifest_entry(repo_root, placeholder_task, manifest_path, adv_path)
+    append_adversarial_manifest_entry(
+        repo_root, placeholder_task, manifest_path, adv_path
+    )
     print(f"Updated artifact family manifest with adversarial review: {manifest_path}")
 
     # Run the verifier again in adversarial-review mode to sanity check the advisory artifact.
@@ -753,6 +882,7 @@ def main():
     # Run the verifier again in freshness mode to sanity check the new artifact.
     if not run_freshness_check(repo_root):
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

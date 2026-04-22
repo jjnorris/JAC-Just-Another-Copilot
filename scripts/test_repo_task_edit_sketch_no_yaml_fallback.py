@@ -19,12 +19,15 @@ class EditSketchNoYamlFallbackTest(unittest.TestCase):
             jack.mkdir()
             inspect = {
                 "inspected_files": ["scripts\\foo.py"],
-                "key_symbols_or_sections": ["def load_json"]
+                "key_symbols_or_sections": ["def load_json"],
             }
-            (jack / "repo-task-inspect.json").write_text(json.dumps(inspect), encoding="utf-8")
+            (jack / "repo-task-inspect.json").write_text(
+                json.dumps(inspect), encoding="utf-8"
+            )
 
             # Run the edit-sketch module
             import importlib
+
             mod = importlib.import_module("scripts.repo_task_edit_sketch")
             # Call main with the temporary repo root
             res = mod.main(["--repo-root", str(td_path), "--task", "test task"])

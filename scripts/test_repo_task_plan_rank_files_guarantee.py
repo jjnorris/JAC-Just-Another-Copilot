@@ -25,13 +25,17 @@ class TestRepoTaskPlanRankFilesGuarantee(unittest.TestCase):
 
             # planner file
             plan_file = scripts_dir / "repo_task_plan.py"
-            plan_file.write_text("# planner\ndef rank_files(candidates, task, inspect_symbols=None):\n    pass\n", encoding="utf-8")
+            plan_file.write_text(
+                "# planner\ndef rank_files(candidates, task, inspect_symbols=None):\n    pass\n",
+                encoding="utf-8",
+            )
             # helper that matches an inspector symbol
             helper_file = scripts_dir / "helper_loader.py"
             helper_file.write_text("def load_spec(path):\n    pass\n", encoding="utf-8")
 
             (jack_dir / "repo-stack-profile.json").write_text(
-                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2), encoding="utf-8"
+                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2),
+                encoding="utf-8",
             )
 
             candidates = [str(plan_file), str(helper_file), str(plan_file)]
@@ -40,7 +44,9 @@ class TestRepoTaskPlanRankFilesGuarantee(unittest.TestCase):
             cwd = Path.cwd()
             try:
                 os.chdir(repo)
-                ranked = mod.rank_files(candidates, task, inspect_symbols=["def load_spec"])
+                ranked = mod.rank_files(
+                    candidates, task, inspect_symbols=["def load_spec"]
+                )
             finally:
                 os.chdir(cwd)
 

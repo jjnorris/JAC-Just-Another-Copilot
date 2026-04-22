@@ -25,6 +25,7 @@ REQ_PHRASES = [
     "completion gate",
 ]
 
+
 def main() -> int:
     p = Path(".github/skills/doublecheck/SKILL.md")
     if not p.exists():
@@ -40,5 +41,6 @@ def main() -> int:
     print("OK: doublecheck SKILL.md contains required governance headings")
     return 0
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     raise SystemExit(main())

@@ -1,0 +1,29 @@
+{
+  "schema_version": "jac-hook-v1",
+  "name": "assumption-recorder",
+  "trigger": "When the agent decides to proceed through non-blocking ambiguity.",
+  "inspects": [
+    "open ambiguity",
+    "risk class",
+    "chosen default"
+  ],
+  "warns_on": [
+    "assumption lacks rationale",
+    "assumption not surfaced to the user"
+  ],
+  "blocks_on": [],
+  "enforcement": "advisory",
+  "remediation": [
+    "Create an assumption record or convert it into a clarification request."
+  ],
+  "emitted_events": [
+    "assumption_added",
+    "clarification_requested"
+  ],
+  "limitations": [
+    "Requires either an adapter or disciplined manual use to ensure every assumption is logged.",
+    "The runner only warns on assumption language; it does not hard-block it."
+  ],
+  "fallback_behavior": "Use `docs/jack/templates/assumption-record.json` and `docs/jack/templates/clarification-request.json` directly."
+}
+

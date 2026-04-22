@@ -97,7 +97,9 @@ def extract_rank_files_snippet(lines: List[str], symbol_text: str) -> str:
             end = body_limit
             for j in range(i + 1, body_limit):
                 candidate_line = lines[j]
-                if candidate_line.startswith("def ") or candidate_line.startswith("class "):
+                if candidate_line.startswith("def ") or candidate_line.startswith(
+                    "class "
+                ):
                     end = j
                     break
         return "\n".join(lines[start:end])
@@ -127,7 +129,9 @@ def probe_symbol_in_file(candidate_path: Path, symbol_text: str) -> Optional[str
     return extract_rank_files_snippet(txt.splitlines(), symbol_text)
 
 
-def find_primary_target_from_inspect(repo_root: Path, inspect: Optional[Dict[str, Any]]) -> tuple[Optional[str], Optional[str], Dict[str, Any]]:
+def find_primary_target_from_inspect(
+    repo_root: Path, inspect: Optional[Dict[str, Any]]
+) -> tuple[Optional[str], Optional[str], Dict[str, Any]]:
     primary_file: Optional[str] = None
     primary_symbol: Optional[str] = None
     evidence: Dict[str, Any] = {}
@@ -156,7 +160,11 @@ def find_primary_target_from_inspect(repo_root: Path, inspect: Optional[Dict[str
     return primary_file, primary_symbol, evidence
 
 
-def describe_primary_target(primary_file: Optional[str], primary_symbol: Optional[str], plan: Optional[Dict[str, Any]]) -> str:
+def describe_primary_target(
+    primary_file: Optional[str],
+    primary_symbol: Optional[str],
+    plan: Optional[Dict[str, Any]],
+) -> str:
     if not primary_file and plan:
         return "Chosen from plan's recommended_first_edit_area as a fallback."
     elif primary_file and primary_symbol:
@@ -165,17 +173,26 @@ def describe_primary_target(primary_file: Optional[str], primary_symbol: Optiona
         return "No inspected files or plan hints available; target remains ambiguous."
 
 
-def resolve_primary_target(repo_root: Path, inspect: Optional[Dict[str, Any]], plan: Optional[Dict[str, Any]]) -> tuple[Optional[str], Optional[str], str, Dict[str, Any]]:
-    primary_file, primary_symbol, evidence = find_primary_target_from_inspect(repo_root, inspect)
+def resolve_primary_target(
+    repo_root: Path, inspect: Optional[Dict[str, Any]], plan: Optional[Dict[str, Any]]
+) -> tuple[Optional[str], Optional[str], str, Dict[str, Any]]:
+    primary_file, primary_symbol, evidence = find_primary_target_from_inspect(
+        repo_root, inspect
+    )
     if not primary_file and plan:
-        primary_file = plan.get("recommended_first_edit_area") or (plan.get("files_to_inspect_first") or [None])[0]
+        primary_file = (
+            plan.get("recommended_first_edit_area")
+            or (plan.get("files_to_inspect_first") or [None])[0]
+        )
 
     why = describe_primary_target(primary_file, primary_symbol, plan)
 
     return primary_file, primary_symbol, why, evidence
 
 
-def build_suggested_change_shape(primary_file: str, primary_symbol: str, current_snippet: str, repo_root: Path) -> str:
+def build_suggested_change_shape(
+    primary_file: str, primary_symbol: str, current_snippet: str, repo_root: Path
+) -> str:
     if "rank_files" in primary_symbol.lower():
         return (
             f"Edit the function `{primary_symbol}` in `{primary_file}` so the planning-focused self-hosting path keeps the right first-edit file at the front.\n\n"
@@ -190,13 +207,9 @@ def build_suggested_change_shape(primary_file: str, primary_symbol: str, current
 
     yaml_ok = repo_has_yaml_support(repo_root)
     if yaml_ok:
-        fallback_phrase = (
-            "2) wraps `json.loads(...)` in a try/except that on JSON decode attempts YAML parsing if available (safe fallback), otherwise raises a clear error explaining accepted formats;\n"
-        )
+        fallback_phrase = "2) wraps `json.loads(...)` in a try/except that on JSON decode attempts YAML parsing if available (safe fallback), otherwise raises a clear error explaining accepted formats;\n"
     else:
-        fallback_phrase = (
-            "2) wraps `json.loads(...)` in a try/except and raises a clear error on decode failure instructing the human to convert YAML to JSON or add YAML support in a follow-up change;\n"
-        )
+        fallback_phrase = "2) wraps `json.loads(...)` in a try/except and raises a clear error on decode failure instructing the human to convert YAML to JSON or add YAML support in a follow-up change;\n"
 
     return (
         f"Edit the function `{primary_symbol}` in `{primary_file}`.\n\n"
@@ -222,7 +235,9 @@ def main(argv: List[str] | None = None) -> int:
     # Load required artifacts (keep for evidence-backed decisions)
     plan = load_json(jack_dir / "repo-task-plan.json")
     inspect = load_json(jack_dir / "repo-task-inspect.json")
-    primary_file, primary_symbol, why, evidence = resolve_primary_target(repo_root, inspect, plan)
+    primary_file, primary_symbol, why, evidence = resolve_primary_target(
+        repo_root, inspect, plan
+    )
 
     # Suggested change shape — produce a concrete, code-facing change intent (no diffs)
     # Use the actual current implementation where possible to make the instruction direct.
@@ -231,7 +246,9 @@ def main(argv: List[str] | None = None) -> int:
     if primary_file_posix and primary_symbol and evidence.get("file_snippet"):
         # record the current simple implementation (if present) to refer to in the sketch
         current_snippet = evidence.get("file_snippet", "").strip()
-        suggested_shape = build_suggested_change_shape(primary_file_posix, primary_symbol, current_snippet, repo_root)
+        suggested_shape = build_suggested_change_shape(
+            primary_file_posix, primary_symbol, current_snippet, repo_root
+        )
     else:
         suggested_shape = "Identify a single concrete function or config block to harden; prefer loader functions like `load_spec` if present."
 
@@ -245,16 +262,26 @@ def main(argv: List[str] | None = None) -> int:
     # Manual checks before editing — concrete, actionable checks a human should run
     manual_checks: List[str] = []
     if primary_file_posix and primary_symbol:
-        manual_checks.append(f"Open `{primary_file_posix}` and confirm the function signature and body for `{primary_symbol}` matches the excerpt below.")
-        manual_checks.append(f"Search the repo for callers of `{primary_symbol.split()[-1]}` to assess impact (e.g., `git grep \"{primary_symbol.split()[-1]}\"`).")
+        manual_checks.append(
+            f"Open `{primary_file_posix}` and confirm the function signature and body for `{primary_symbol}` matches the excerpt below."
+        )
+        manual_checks.append(
+            f'Search the repo for callers of `{primary_symbol.split()[-1]}` to assess impact (e.g., `git grep "{primary_symbol.split()[-1]}"`).'
+        )
     if plan:
-        manual_checks.append("Confirm plan's recommended_first_edit_area is still valid: see `repo-task-plan.json`.")
-    manual_checks.append("Keep `do_not_auto_apply` true and avoid introducing new runners or orchestration changes in this edit.")
+        manual_checks.append(
+            "Confirm plan's recommended_first_edit_area is still valid: see `repo-task-plan.json`."
+        )
+    manual_checks.append(
+        "Keep `do_not_auto_apply` true and avoid introducing new runners or orchestration changes in this edit."
+    )
 
     # Ambiguities
     ambiguities: List[str] = []
     if not primary_file:
-        ambiguities.append("Unable to pinpoint a concrete file/symbol pairing from the inspector; human judgment required.")
+        ambiguities.append(
+            "Unable to pinpoint a concrete file/symbol pairing from the inspector; human judgment required."
+        )
 
     primary_file_posix = Path(primary_file).as_posix() if primary_file else None
 
@@ -277,7 +304,9 @@ def main(argv: List[str] | None = None) -> int:
     }
 
     json_path = jack_dir / "repo-task-edit-sketch.json"
-    json_path.write_text(json.dumps(sketch, indent=2, ensure_ascii=False), encoding="utf-8")
+    json_path.write_text(
+        json.dumps(sketch, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
     # Markdown version
     md_path = jack_dir / "repo-task-edit-sketch.md"
@@ -286,8 +315,16 @@ def main(argv: List[str] | None = None) -> int:
         f"**Task**: {args.task}",
         "",
         "## Primary Edit Target",
-        f"- **File**: `{primary_file_posix}`" if primary_file_posix else "- *No concrete file identified*",
-        f"- **Symbol/Section**: `{primary_symbol}`" if primary_symbol else "- *No obvious symbol*",
+        (
+            f"- **File**: `{primary_file_posix}`"
+            if primary_file_posix
+            else "- *No concrete file identified*"
+        ),
+        (
+            f"- **Symbol/Section**: `{primary_symbol}`"
+            if primary_symbol
+            else "- *No obvious symbol*"
+        ),
         f"- **Why first**: {why}",
         "",
         "## Suggested Change Shape",

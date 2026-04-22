@@ -10,8 +10,13 @@ from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 # Accept either docs/jacks or docs/jac inventory for compatibility with rename
-CANDIDATE_INVENTORY_PATHS = [ROOT / "docs/jacks/inventory.json", ROOT / "docs/jac/inventory.json"]
-INVENTORY_PATH = next((p for p in CANDIDATE_INVENTORY_PATHS if p.exists()), CANDIDATE_INVENTORY_PATHS[0])
+CANDIDATE_INVENTORY_PATHS = [
+    ROOT / "docs/jack/inventory.json",
+    ROOT / "docs/jack/inventory.json",
+]
+INVENTORY_PATH = next(
+    (p for p in CANDIDATE_INVENTORY_PATHS if p.exists()), CANDIDATE_INVENTORY_PATHS[0]
+)
 FRONTMATTER_REQUIRED = {"name", "description"}
 PATH_SUFFIXES = (".md", ".json")
 STALE_PATH_SENTINELS = ("jac-copilot/", "jack-copilot/")
@@ -87,13 +92,17 @@ def parse_simple_frontmatter(path: Path) -> tuple[dict[str, str], str]:
         if not stripped:
             continue
         if ":" not in stripped:
-            raise ValidationError(f"{rel(path)}: unsupported frontmatter line {stripped!r}")
+            raise ValidationError(
+                f"{rel(path)}: unsupported frontmatter line {stripped!r}"
+            )
         key, value = stripped.split(":", 1)
         parsed[key.strip()] = value.strip().strip('"').strip("'")
 
     missing = sorted(key for key in FRONTMATTER_REQUIRED if not parsed.get(key))
     if missing:
-        raise ValidationError(f"{rel(path)}: missing required frontmatter keys: {', '.join(missing)}")
+        raise ValidationError(
+            f"{rel(path)}: missing required frontmatter keys: {', '.join(missing)}"
+        )
 
     return parsed, body
 
@@ -109,7 +118,12 @@ def looks_like_local_path(value: str) -> bool:
         return False
     if " " in value or "\n" in value:
         return False
-    return "/" in value or value in {"README.md", "install.md", "compatibility.md", "AGENTS.md"}
+    return "/" in value or value in {
+        "README.md",
+        "install.md",
+        "compatibility.md",
+        "AGENTS.md",
+    }
 
 
 def extract_path_references(text: str) -> set[str]:
@@ -170,35 +184,45 @@ def check_frontmatter_files(failures: list[str]) -> None:
 
 def check_inventory(inventory: Any, failures: list[str]) -> None:
     if not isinstance(inventory, dict):
-        failures.append("docs/jacks/inventory.json: did not parse into a JSON object")
+        failures.append("docs/jack/inventory.json: did not parse into a JSON object")
         return
 
     anchor_files = inventory.get("anchor_files", {})
     if not isinstance(anchor_files, dict):
-        failures.append("docs/jacks/inventory.json: anchor_files must be an object")
+        failures.append("docs/jack/inventory.json: anchor_files must be an object")
     else:
         for name, value in sorted(anchor_files.items()):
             if not isinstance(value, str):
-                failures.append(f"docs/jacks/inventory.json: anchor_files.{name} must be a string")
+                failures.append(
+                    f"docs/jack/inventory.json: anchor_files.{name} must be a string"
+                )
                 continue
             if not (ROOT / value).exists():
-                failures.append(f"docs/jacks/inventory.json: anchor file missing: {value}")
+                failures.append(
+                    f"docs/jack/inventory.json: anchor file missing: {value}"
+                )
 
     patterns = inventory.get("patterns", {})
     if not isinstance(patterns, dict):
-        failures.append("docs/jacks/inventory.json: patterns must be an object")
+        failures.append("docs/jack/inventory.json: patterns must be an object")
     else:
         for name, values in sorted(patterns.items()):
             if not isinstance(values, list):
-                failures.append(f"docs/jacks/inventory.json: patterns.{name} must be an array")
+                failures.append(
+                    f"docs/jack/inventory.json: patterns.{name} must be an array"
+                )
                 continue
             for pattern in values:
                 if not isinstance(pattern, str):
-                    failures.append(f"docs/jacks/inventory.json: patterns.{name} contains a non-string entry")
+                    failures.append(
+                        f"docs/jack/inventory.json: patterns.{name} contains a non-string entry"
+                    )
                     continue
                 matches = [path for path in ROOT.glob(pattern) if path.exists()]
                 if not matches:
-                    failures.append(f"docs/jacks/inventory.json: pattern matched no files: {pattern}")
+                    failures.append(
+                        f"docs/jack/inventory.json: pattern matched no files: {pattern}"
+                    )
 
 
 def check_path_references(inventory: Any, failures: list[str]) -> None:
@@ -207,37 +231,51 @@ def check_path_references(inventory: Any, failures: list[str]) -> None:
 
     validation_targets = inventory.get("validation_targets", {})
     if not isinstance(validation_targets, dict):
-        failures.append("docs/jacks/inventory.json: validation_targets must be an object")
+        failures.append(
+            "docs/jack/inventory.json: validation_targets must be an object"
+        )
         return
 
     doc_targets = validation_targets.get("path_reference_docs", [])
     json_patterns = validation_targets.get("path_reference_json_patterns", [])
 
     if not isinstance(doc_targets, list):
-        failures.append("docs/jacks/inventory.json: validation_targets.path_reference_docs must be an array")
+        failures.append(
+            "docs/jack/inventory.json: validation_targets.path_reference_docs must be an array"
+        )
         doc_targets = []
     if not isinstance(json_patterns, list):
-        failures.append("docs/jacks/inventory.json: validation_targets.path_reference_json_patterns must be an array")
+        failures.append(
+            "docs/jack/inventory.json: validation_targets.path_reference_json_patterns must be an array"
+        )
         json_patterns = []
 
     targets: list[Path] = []
     for doc in doc_targets:
         if not isinstance(doc, str):
-            failures.append("docs/jacks/inventory.json: validation target doc entries must be strings")
+            failures.append(
+                "docs/jack/inventory.json: validation target doc entries must be strings"
+            )
             continue
         path = ROOT / doc
         if not path.exists():
-            failures.append(f"docs/jacks/inventory.json: validation target missing: {doc}")
+            failures.append(
+                f"docs/jack/inventory.json: validation target missing: {doc}"
+            )
             continue
         targets.append(path)
 
     for pattern in json_patterns:
         if not isinstance(pattern, str):
-            failures.append("docs/jacks/inventory.json: validation target JSON patterns must be strings")
+            failures.append(
+                "docs/jack/inventory.json: validation target JSON patterns must be strings"
+            )
             continue
         matched = list(ROOT.glob(pattern))
         if not matched:
-            failures.append(f"docs/jacks/inventory.json: validation target JSON pattern matched no files: {pattern}")
+            failures.append(
+                f"docs/jack/inventory.json: validation target JSON pattern matched no files: {pattern}"
+            )
             continue
         targets.extend(sorted(path for path in matched if path.is_file()))
 
@@ -285,7 +323,9 @@ def check_text_hygiene(failures: list[str]) -> None:
         bad_chars = sorted({char for char in text if char in INVISIBLE_CHARS})
         if bad_chars:
             encoded = ", ".join(f"U+{ord(char):04X}" for char in bad_chars)
-            failures.append(f"{rel(path)}: hidden or bidirectional Unicode character(s): {encoded}")
+            failures.append(
+                f"{rel(path)}: hidden or bidirectional Unicode character(s): {encoded}"
+            )
 
 
 def check_hook_contract_keys(warnings: list[str]) -> None:
@@ -293,7 +333,7 @@ def check_hook_contract_keys(warnings: list[str]) -> None:
 
     This is intentionally non-fatal: it surfaces drift without failing CI.
     """
-    contract_paths = sorted(ROOT.glob("docs/jacks/hook-contracts/*/hook.json"))
+    contract_paths = sorted(ROOT.glob("docs/jack/hook-contracts/*/hook.json"))
     if not contract_paths:
         return
 
@@ -304,11 +344,33 @@ def check_hook_contract_keys(warnings: list[str]) -> None:
     def detect_family(keys: set[str]) -> str:
         # Event-style contracts (emit observational events): use 'event', 'intent', 'fires_on',
         # 'advisory_conditions', 'deny_conditions', 'emits', 'notes'.
-        if any(k in keys for k in ("event", "intent", "fires_on", "advisory_conditions", "deny_conditions", "emits", "notes")):
+        if any(
+            k in keys
+            for k in (
+                "event",
+                "intent",
+                "fires_on",
+                "advisory_conditions",
+                "deny_conditions",
+                "emits",
+                "notes",
+            )
+        ):
             return "event-style"
         # Trigger-style contracts (preflight/inspection): use 'trigger', 'inspects', 'warns_on',
         # 'blocks_on', 'emitted_events', 'fallback_behavior', 'remediation'.
-        if any(k in keys for k in ("trigger", "inspects", "warns_on", "blocks_on", "emitted_events", "fallback_behavior", "remediation")):
+        if any(
+            k in keys
+            for k in (
+                "trigger",
+                "inspects",
+                "warns_on",
+                "blocks_on",
+                "emitted_events",
+                "fallback_behavior",
+                "remediation",
+            )
+        ):
             return "trigger-style"
         return "unknown"
 
@@ -332,7 +394,9 @@ def check_hook_contract_keys(warnings: list[str]) -> None:
         if family == "unknown":
             # Warn about unknown family to attract attention (non-fatal)
             for path in members:
-                warnings.append(f"{rel(path)}: could not assign a known hook-contract schema family; keys={sorted(members[path])}")
+                warnings.append(
+                    f"{rel(path)}: could not assign a known hook-contract schema family; keys={sorted(members[path])}"
+                )
             continue
         union_keys = set().union(*members.values())
         for path, keys in sorted(members.items()):
@@ -351,7 +415,9 @@ def check_hook_contract_keys(warnings: list[str]) -> None:
             if "hook_name" in keys:
                 seen.add("hook_name")
     if len(seen) == 2:
-        warnings.append("docs/jacks/hook-contracts: mixed use of 'name' and 'hook_name' found; prefer 'name' consistently")
+        warnings.append(
+            "docs/jack/hook-contracts: mixed use of 'name' and 'hook_name' found; prefer 'name' consistently"
+        )
 
 
 def main() -> int:
@@ -383,6 +449,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
-
 

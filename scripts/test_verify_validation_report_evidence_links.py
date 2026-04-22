@@ -32,7 +32,10 @@ class VerifyValidationReportEvidenceLinksTests(unittest.TestCase):
             )
 
             result = subprocess.run(
-                [sys.executable, str(Path(__file__).with_name("verify_validation_report.py"))],
+                [
+                    sys.executable,
+                    str(Path(__file__).with_name("verify_validation_report.py")),
+                ],
                 cwd=temp_dir,
                 capture_output=True,
                 text=True,

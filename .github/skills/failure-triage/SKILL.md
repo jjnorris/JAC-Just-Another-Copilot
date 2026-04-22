@@ -55,8 +55,7 @@ When a task hits an error, test failure, or unexpected behavior, apply a structu
 - Classification and one recommended next step. Does not fix the problem autonomously.
 
 ## Related docs
-- `docs/jacks/rules/01-repo-truth.md`
-- `docs/jacks/rules/13-stop-conditions.md`
-- `docs/jacks/workflows/bugfix-with-proof.md`
-
+- `docs/jack/rules/01-repo-truth.md`
+- `docs/jack/rules/13-stop-conditions.md`
+- `docs/jack/workflows/bugfix-with-proof.md`
 

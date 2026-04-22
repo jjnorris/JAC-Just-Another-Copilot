@@ -30,7 +30,8 @@ class TestRepoTaskPlanRankFilesPlanningSelfHosting(unittest.TestCase):
             # Provide a profile that signals a python tooling repo so the
             # planner-boost path may trigger when the task shape matches.
             (jack_dir / "repo-stack-profile.json").write_text(
-                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2), encoding="utf-8"
+                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2),
+                encoding="utf-8",
             )
 
             # Load the repo_task_plan implementation from the workspace so
@@ -53,7 +54,9 @@ class TestRepoTaskPlanRankFilesPlanningSelfHosting(unittest.TestCase):
                     str(scripts_dir / "repo_task_plan.py"),  # duplicate to test dedupe
                 ]
                 task = "Self-host JACK: planning-focused single-file edit"
-                ranked = mod.rank_files(candidates, task, inspect_symbols=["def load_spec"])
+                ranked = mod.rank_files(
+                    candidates, task, inspect_symbols=["def load_spec"]
+                )
             finally:
                 os.chdir(cwd)
 

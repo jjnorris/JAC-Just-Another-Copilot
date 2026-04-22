@@ -35,11 +35,20 @@ NEXT_JS_NAME = "Next.js"
 NONE_DETECTED_NOTE = "- (none detected)"
 SOURCE_SCAN_DIR_EXCLUDES = {"node_modules", ".git"}
 SOURCE_SIGNAL_PATTERNS = {
-    "FastAPI": [r"\b(?:from|import)\s+fastapi\b", r"\bFastAPI\s*\(", r"@app\.(?:get|post|put|delete)\b"],
+    "FastAPI": [
+        r"\b(?:from|import)\s+fastapi\b",
+        r"\bFastAPI\s*\(",
+        r"@app\.(?:get|post|put|delete)\b",
+    ],
     "Django": [r"\b(?:from|import)\s+django\b", r"\bdjango\."],
     "Flask": [r"\b(?:from|import)\s+flask\b", r"Flask\s*\("],
     "React": [r"\bfrom\s+[\'\"]react[\'\"]", r"\bimport\s+React\b"],
-    NEXT_JS_NAME: [r"\bfrom\s+[\'\"]next(?:/|\b)", r"\bgetServerSideProps\b", r"\bgetStaticProps\b", r"\bgetStaticPaths\b"],
+    NEXT_JS_NAME: [
+        r"\bfrom\s+[\'\"]next(?:/|\b)",
+        r"\bgetServerSideProps\b",
+        r"\bgetStaticProps\b",
+        r"\bgetStaticPaths\b",
+    ],
 }
 
 
@@ -93,7 +102,9 @@ def matching_extensions(name: str, exts: List[str]) -> List[str]:
     return [ext for ext in exts if name.endswith(ext)]
 
 
-def scan_source_text(text: str, compiled_patterns: Dict[str, List[re.Pattern]]) -> List[str]:
+def scan_source_text(
+    text: str, compiled_patterns: Dict[str, List[re.Pattern]]
+) -> List[str]:
     matched: List[str] = []
     for signal, regexes in compiled_patterns.items():
         if any(pattern.search(text) for pattern in regexes):
@@ -101,14 +112,19 @@ def scan_source_text(text: str, compiled_patterns: Dict[str, List[re.Pattern]]) 
     return matched
 
 
-def scan_source_signals(repo: Path, exts: List[str], max_files: int = MAX_SOURCE_FILES_SCANNED) -> Dict[str, List[str]]:
+def scan_source_signals(
+    repo: Path, exts: List[str], max_files: int = MAX_SOURCE_FILES_SCANNED
+) -> Dict[str, List[str]]:
     """
     Scan a bounded set of source files for explicit import/use patterns.
     Returns a mapping: signal_name -> list of relative file paths where it was seen.
 
     Conservative: stops after `max_files` files scanned and skips common vendor dirs.
     """
-    compiled = {signal: [re.compile(pattern) for pattern in patterns] for signal, patterns in SOURCE_SIGNAL_PATTERNS.items()}
+    compiled = {
+        signal: [re.compile(pattern) for pattern in patterns]
+        for signal, patterns in SOURCE_SIGNAL_PATTERNS.items()
+    }
     matches: Dict[str, List[str]] = {signal: [] for signal in compiled}
 
     scanned = 0
@@ -145,7 +161,9 @@ def find_files(repo: Path, patterns: List[str]) -> List[Path]:
     return sorted(found)
 
 
-def scan_repo_for_extensions(repo: Path, exts: List[str], max_scan: int = 20000) -> Dict[str, int]:
+def scan_repo_for_extensions(
+    repo: Path, exts: List[str], max_scan: int = 20000
+) -> Dict[str, int]:
     counts: Dict[str, int] = cast(Dict[str, int], dict.fromkeys(exts, 0))
     scanned = 0
     for root, dirs, files in os.walk(repo):
@@ -183,7 +201,15 @@ def detect_from_package_json(pjson: Dict) -> Tuple[List[str], List[str], List[st
     if "fastify" in keys:
         frameworks.append("Fastify")
     # build tools
-    for tool in ("webpack", "vite", "rollup", "parcel", "esbuild", "typescript", "babel"):
+    for tool in (
+        "webpack",
+        "vite",
+        "rollup",
+        "parcel",
+        "esbuild",
+        "typescript",
+        "babel",
+    ):
         if tool in keys:
             build_tools.append(tool)
     # package managers inferred by lockfiles elsewhere
@@ -318,7 +344,13 @@ def main(argv=None) -> int:
         evidence_files.append(wf.relative_to(repo).as_posix())
 
     # lockfiles
-    for lf in ("yarn.lock", "pnpm-lock.yaml", "package-lock.json", "poetry.lock", "Pipfile"):
+    for lf in (
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "package-lock.json",
+        "poetry.lock",
+        "Pipfile",
+    ):
         p = repo / lf
         if p.exists():
             evidence_files.append(p.relative_to(repo).as_posix())
@@ -354,7 +386,10 @@ def main(argv=None) -> int:
             detected_package_managers.append("pnpm")
         if (repo / "package-lock.json").exists():
             detected_package_managers.append("npm")
-        if "typescript" in (pj.get("devDependencies", {}) or {}) or (repo / TSCONFIG_JSON).exists():
+        if (
+            "typescript" in (pj.get("devDependencies", {}) or {})
+            or (repo / TSCONFIG_JSON).exists()
+        ):
             if "TypeScript" not in detected_frameworks:
                 detected_frameworks.append("TypeScript")
         detected_runtime_targets.append("Node")
@@ -397,6 +432,7 @@ def main(argv=None) -> int:
             detected_package_managers.append("pip")
         # Extract a version constraint if present
         import re as _re
+
         m = _re.search(r"^\s*python\s*=\s*['\"]([^'\"]+)['\"]", txt, _re.MULTILINE)
         if m and not python_version:
             python_version = m.group(1)
@@ -467,9 +503,13 @@ def main(argv=None) -> int:
         evidence_files.append(".github/workflows/*")
 
     # --- bounded source-signal scanning (secondary, lower-trust signals) ---
-    source_matches = scan_source_signals(repo, SOURCE_EXTS, max_files=MAX_SOURCE_FILES_SCANNED)
+    source_matches = scan_source_signals(
+        repo, SOURCE_EXTS, max_files=MAX_SOURCE_FILES_SCANNED
+    )
     # consistent source hints are those seen in multiple files
-    source_consistent = [sig for sig, files in source_matches.items() if len(files) >= 2]
+    source_consistent = [
+        sig for sig, files in source_matches.items() if len(files) >= 2
+    ]
     # If manifests absent, allow repeated source hints to seed detected frameworks (lower trust)
     if not manifest_frameworks and source_consistent:
         for s in source_consistent:
@@ -496,15 +536,21 @@ def main(argv=None) -> int:
     # Build improved confidence notes including manifest vs source contributions
     confidence_notes = []
     if evidence_files:
-        confidence_notes.append(f"Manifests/configs present: {', '.join(evidence_files)}")
+        confidence_notes.append(
+            f"Manifests/configs present: {', '.join(evidence_files)}"
+        )
     if manifest_frameworks:
-        confidence_notes.append(f"Manifest-detected frameworks: {', '.join(manifest_frameworks)}")
+        confidence_notes.append(
+            f"Manifest-detected frameworks: {', '.join(manifest_frameworks)}"
+        )
     if any(source_matches.values()):
         # summarize up to 3 files per signal
         for sig, files in source_matches.items():
             if files:
                 sample = files[:3]
-                confidence_notes.append(f"Source hint: {sig} seen in {len(files)} file(s) (examples: {', '.join(sample)})")
+                confidence_notes.append(
+                    f"Source hint: {sig} seen in {len(files)} file(s) (examples: {', '.join(sample)})"
+                )
 
     # detect conflicts between manifests and source hints
     if manifest_frameworks and any(source_matches.values()):
@@ -512,7 +558,9 @@ def main(argv=None) -> int:
         man_set = set(manifest_frameworks)
         conflict = src_set - man_set
         if conflict:
-            confidence_notes.append(f"Conflicting signals: manifests indicate {', '.join(man_set)} but source hints include {', '.join(conflict)}; confidence reduced")
+            confidence_notes.append(
+                f"Conflicting signals: manifests indicate {', '.join(man_set)} but source hints include {', '.join(conflict)}; confidence reduced"
+            )
     # recommended doc sources and queries
     doc_sources = recommend_docs(detected_frameworks + detected_runtime_targets)
     doc_queries = generate_doc_queries(detected_frameworks, detected_runtime_targets)
@@ -543,12 +591,14 @@ def main(argv=None) -> int:
     #   * mixed_utility – both packaging and many scripts
     #   * ambiguous – none of the above
     script_count = sum(1 for _ in repo.rglob("*.py"))
-    has_packaging = any((repo / f).exists() for f in ("pyproject.toml", "setup.cfg", "setup.py"))
+    has_packaging = any(
+        (repo / f).exists() for f in ("pyproject.toml", "setup.cfg", "setup.py")
+    )
     has_entrypoint = False
     for fp in repo.rglob("*.py"):
         try:
             txt = fp.read_text(encoding="utf-8", errors="ignore")
-            if "if __name__ == '__main__'" in txt or "if __name__ == \"__main__\"" in txt:
+            if "if __name__ == '__main__'" in txt or 'if __name__ == "__main__"' in txt:
                 has_entrypoint = True
                 break
         except Exception:
@@ -561,7 +611,9 @@ def main(argv=None) -> int:
     if detected_frameworks:
         repo_shape = "python_app_repo"
         shape_conf = "high"
-        shape_notes = ["Framework imports detected, indicating an application/service repository."]
+        shape_notes = [
+            "Framework imports detected, indicating an application/service repository."
+        ]
     # If the repo is script-heavy (many .py files) and there is no packaging manifest,
     # prefer tooling/scripts classification even if an entrypoint exists. This avoids
     # misclassifying script-heavy tooling repositories that happen to include
@@ -581,7 +633,9 @@ def main(argv=None) -> int:
     elif has_packaging:
         repo_shape = "python_library_repo"
         shape_conf = "high"
-        shape_notes = ["Packaging manifest present without clear application framework."]
+        shape_notes = [
+            "Packaging manifest present without clear application framework."
+        ]
 
     # Minimal adjustment: if we conclusively classified the repo as a
     # high-confidence `python_tooling_repo` (many standalone scripts with
@@ -700,7 +754,9 @@ def main(argv=None) -> int:
     brief_lines.append("# Repo Research Brief")
     brief_lines.append("")
     brief_lines.append("## Inferred stack")
-    brief_lines.append(", ".join(detected_frameworks + detected_runtime_targets) or "(none clear)")
+    brief_lines.append(
+        ", ".join(detected_frameworks + detected_runtime_targets) or "(none clear)"
+    )
     brief_lines.append("")
     brief_lines.append("## Preferred official docs")
     for s in doc_sources:
@@ -712,7 +768,9 @@ def main(argv=None) -> int:
     brief_lines.append("")
     brief_lines.append("## Main ambiguities")
     if not evidence_files:
-        brief_lines.append("- No clear manifest files; language/framework inference is low confidence.")
+        brief_lines.append(
+            "- No clear manifest files; language/framework inference is low confidence."
+        )
     else:
         brief_lines.append("- See confidence notes in the full profile for specifics.")
 

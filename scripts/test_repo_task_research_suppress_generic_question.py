@@ -20,11 +20,21 @@ class TestSuppressGenericQuestion(unittest.TestCase):
             "confidence_level": "low",
         }
 
-        brief = mod.make_brief(Path("."), "Self-host JACK: research-quality focused run for single-file edit", profile, [], [], [])
+        brief = mod.make_brief(
+            Path("."),
+            "Self-host JACK: research-quality focused run for single-file edit",
+            profile,
+            [],
+            [],
+            [],
+        )
         questions = brief.get("recommended_next_questions", [])
         generic = "Is this repository using Django, FastAPI, Flask, or another Python framework? Please confirm."
         self.assertNotIn(generic, questions)
-        self.assertTrue(any("Python application" in q for q in questions), f"expected targeted question, got {questions}")
+        self.assertTrue(
+            any("Python application" in q for q in questions),
+            f"expected targeted question, got {questions}",
+        )
         # The brief-generation should upgrade confidence for actionability
         # when local signals are strong (low->medium for python_app_repo).
         self.assertEqual(

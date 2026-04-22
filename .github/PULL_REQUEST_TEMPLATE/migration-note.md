@@ -6,4 +6,5 @@ What to include in this PR:
 - Configuration updates made and how to test them.
 - Verification steps for reviewers (e.g., run a pipeline with JACK_REVIEW_OK unset and confirm hooks block until a review artifact is present).
 
-Reference: docs/jacks/deprecate_jack_review_ok.md
+Reference: docs/jack/deprecate_jack_review_ok.md
+

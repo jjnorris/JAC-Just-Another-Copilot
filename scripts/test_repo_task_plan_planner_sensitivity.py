@@ -12,7 +12,9 @@ class TestRankFilesPlannerSensitivity(unittest.TestCase):
         # the planning-focused branch in rank_files.
         self.jack_dir = Path("jack")
         self.jack_dir.mkdir(exist_ok=True)
-        (self.jack_dir / "repo-stack-profile.json").write_text(json.dumps({"repo_shape": "python_tooling_repo"}))
+        (self.jack_dir / "repo-stack-profile.json").write_text(
+            json.dumps({"repo_shape": "python_tooling_repo"})
+        )
 
     def tearDown(self):
         # Clean up test artifacts
@@ -35,7 +37,10 @@ class TestRankFilesPlannerSensitivity(unittest.TestCase):
         task = "Self-host planning: keep planner first for close evidence"
         ranked = rank_files(candidates, task, inspect_symbols=None)
         self.assertGreaterEqual(len(ranked), 1)
-        self.assertTrue(ranked[0].endswith("repo_task_plan.py"), "Planner should be first when competitor evidence is weak")
+        self.assertTrue(
+            ranked[0].endswith("repo_task_plan.py"),
+            "Planner should be first when competitor evidence is weak",
+        )
 
         # Scenario B: strong competitor with explicit stage symbols and defs
         strong = Path("scripts/strong_competitor.py")
@@ -58,7 +63,10 @@ class TestRankFilesPlannerSensitivity(unittest.TestCase):
         task2 = "Self-host planning inspect edit change plan research intake lookup profile docs"
         ranked2 = rank_files(candidates2, task2, inspect_symbols=None)
         self.assertGreaterEqual(len(ranked2), 1)
-        self.assertTrue(ranked2[0].endswith("strong_competitor.py"), "Strong competitor should outrank planner when evidence is materially stronger")
+        self.assertTrue(
+            ranked2[0].endswith("strong_competitor.py"),
+            "Strong competitor should outrank planner when evidence is materially stronger",
+        )
 
 
 if __name__ == "__main__":

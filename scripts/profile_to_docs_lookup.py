@@ -77,7 +77,9 @@ FRAMEWORK_QUERY_TEMPLATES = {
 }
 
 
-IMPLEMENTATION_TOOLING_QUERY = "Python argparse, subprocess, pathlib, and JSON for tooling scripts"
+IMPLEMENTATION_TOOLING_QUERY = (
+    "Python argparse, subprocess, pathlib, and JSON for tooling scripts"
+)
 IMPLEMENTATION_TOOLING_SOURCES = [
     "https://docs.python.org/3/library/argparse.html",
     "https://docs.python.org/3/library/pathlib.html",
@@ -106,15 +108,27 @@ def has_jack_self_hosting_signals(repo_root: Path | None) -> bool:
     return sum(path.is_file() for path in signal_paths) >= 2
 
 
-def source_urls_for_query(query: str, stack: str, repo_root: Path | None = None) -> List[str]:
-    if stack == "python" and query == IMPLEMENTATION_TOOLING_QUERY and has_jack_self_hosting_signals(repo_root):
+def source_urls_for_query(
+    query: str, stack: str, repo_root: Path | None = None
+) -> List[str]:
+    if (
+        stack == "python"
+        and query == IMPLEMENTATION_TOOLING_QUERY
+        and has_jack_self_hosting_signals(repo_root)
+    ):
         return list(IMPLEMENTATION_TOOLING_SOURCES)
-    if stack == "python" and query == PACKAGING_TOOLING_QUERY and has_jack_self_hosting_signals(repo_root):
+    if (
+        stack == "python"
+        and query == PACKAGING_TOOLING_QUERY
+        and has_jack_self_hosting_signals(repo_root)
+    ):
         return list(PACKAGING_TOOLING_SOURCES)
     return list(DEFAULT_REGISTRY.get(stack, []))
 
 
-def _max_query_count(shape: str, shape_conf: str, base_conf: str, languages: List[str]) -> int:
+def _max_query_count(
+    shape: str, shape_conf: str, base_conf: str, languages: List[str]
+) -> int:
     if base_conf == "high" and shape_conf == "high":
         max_queries = 3
     elif base_conf == "medium" or shape_conf == "medium":
@@ -122,13 +136,24 @@ def _max_query_count(shape: str, shape_conf: str, base_conf: str, languages: Lis
     else:
         max_queries = 1
 
-    if shape == "python_tooling_repo" and shape_conf == "high" and any("py" in str(l).lower() for l in languages):
+    if (
+        shape == "python_tooling_repo"
+        and shape_conf == "high"
+        and any("py" in str(l).lower() for l in languages)
+    ):
         max_queries = max(max_queries, 2)
 
     return max_queries
 
 
-def _append_query_candidate(candidates: List[Dict[str, Any]], rationale: Dict[str, Dict[str, Any]], query: str, stack: str, why: str, signals: Dict[str, Any]) -> None:
+def _append_query_candidate(
+    candidates: List[Dict[str, Any]],
+    rationale: Dict[str, Dict[str, Any]],
+    query: str,
+    stack: str,
+    why: str,
+    signals: Dict[str, Any],
+) -> None:
     candidates.append({"query": query, "stack": stack})
     rationale[query] = {"signals": signals, "target": stack, "why": why}
 
@@ -138,28 +163,50 @@ def _string_list(value: Any) -> List[str]:
     return [str(item) for item in items]
 
 
-def _append_recommended_queries(profile: Dict[str, Any], frameworks: List[str], max_queries: int, candidates: List[Dict[str, Any]], rationale: Dict[str, Dict[str, Any]]) -> bool:
+def _append_recommended_queries(
+    profile: Dict[str, Any],
+    frameworks: List[str],
+    max_queries: int,
+    candidates: List[Dict[str, Any]],
+    rationale: Dict[str, Dict[str, Any]],
+) -> bool:
     recommended = _string_list(profile.get("recommended_doc_queries"))
     if not recommended:
         return False
 
     stack = FRAMEWORK_TO_STACK.get(frameworks[0], "") if frameworks else ""
     for query in recommended[:max_queries]:
-        _append_query_candidate(candidates, rationale, query, stack, "profile recommendation", {})
+        _append_query_candidate(
+            candidates, rationale, query, stack, "profile recommendation", {}
+        )
     return True
 
 
-def _append_framework_queries(frameworks: List[str], max_queries: int, candidates: List[Dict[str, Any]], rationale: Dict[str, Dict[str, Any]]) -> None:
+def _append_framework_queries(
+    frameworks: List[str],
+    max_queries: int,
+    candidates: List[Dict[str, Any]],
+    rationale: Dict[str, Dict[str, Any]],
+) -> None:
     for fw in frameworks:
         templates = FRAMEWORK_QUERY_TEMPLATES.get(fw, [])
         for query in templates:
             if len(candidates) >= max_queries:
                 return
             stack = FRAMEWORK_TO_STACK.get(fw, "")
-            _append_query_candidate(candidates, rationale, query, stack, "framework template", {"framework": fw})
+            _append_query_candidate(
+                candidates,
+                rationale,
+                query,
+                stack,
+                "framework template",
+                {"framework": fw},
+            )
 
 
-def _shape_query_candidates(shape: str, frameworks: List[str], repo_root: Path | None) -> List[Tuple[str, str]]:
+def _shape_query_candidates(
+    shape: str, frameworks: List[str], repo_root: Path | None
+) -> List[Tuple[str, str]]:
     if shape == "python_tooling_repo":
         if has_jack_self_hosting_signals(repo_root):
             return [
@@ -188,28 +235,57 @@ def _shape_query_candidates(shape: str, frameworks: List[str], repo_root: Path |
     return []
 
 
-def _append_shape_queries(shape_queries: List[Tuple[str, str]], shape: str, max_queries: int, candidates: List[Dict[str, Any]], rationale: Dict[str, Dict[str, Any]]) -> None:
+def _append_shape_queries(
+    shape_queries: List[Tuple[str, str]],
+    shape: str,
+    max_queries: int,
+    candidates: List[Dict[str, Any]],
+    rationale: Dict[str, Dict[str, Any]],
+) -> None:
     for query, stack in shape_queries:
         if len(candidates) >= max_queries:
             return
-        _append_query_candidate(candidates, rationale, query, stack, f"shape {shape} query", {"repo_shape": shape})
+        _append_query_candidate(
+            candidates,
+            rationale,
+            query,
+            stack,
+            f"shape {shape} query",
+            {"repo_shape": shape},
+        )
 
 
-def _append_language_fallback(languages: List[str], runtimes: List[str], candidates: List[Dict[str, Any]], rationale: Dict[str, Dict[str, Any]], ambiguity: List[str]) -> None:
+def _append_language_fallback(
+    languages: List[str],
+    runtimes: List[str],
+    candidates: List[Dict[str, Any]],
+    rationale: Dict[str, Dict[str, Any]],
+    ambiguity: List[str],
+) -> None:
     if any(l.lower().startswith("py") for l in languages):
         query = GENERIC_PYTHON_PACKAGING_QUERY
-        _append_query_candidate(candidates, rationale, query, "python", "language fallback", {})
+        _append_query_candidate(
+            candidates, rationale, query, "python", "language fallback", {}
+        )
         return
 
-    if any(l.lower().startswith("ts") for l in languages) or any(r.lower() == "node" for r in runtimes):
+    if any(l.lower().startswith("ts") for l in languages) or any(
+        r.lower() == "node" for r in runtimes
+    ):
         query = "Node/TypeScript module resolution"
-        _append_query_candidate(candidates, rationale, query, "typescript", "runtime fallback", {})
+        _append_query_candidate(
+            candidates, rationale, query, "typescript", "runtime fallback", {}
+        )
         return
 
-    ambiguity.append("No clear framework, language, or shape signals for query selection")
+    ambiguity.append(
+        "No clear framework, language, or shape signals for query selection"
+    )
 
 
-def pick_queries(profile: Dict[str, Any], repo_root: Path | None = None) -> Tuple[List[Dict[str, Any]], List[str], Dict[str, Dict[str, Any]]]:  # noqa: C901
+def pick_queries(
+    profile: Dict[str, Any], repo_root: Path | None = None
+) -> Tuple[List[Dict[str, Any]], List[str], Dict[str, Dict[str, Any]]]:  # noqa: C901
     """Return selected queries (dicts), ambiguity notes, and per-query rationale.
 
     Shape‑aware selection: use repo_shape to guide query templates and source
@@ -227,7 +303,9 @@ def pick_queries(profile: Dict[str, Any], repo_root: Path | None = None) -> Tupl
     ambiguity: List[str] = []
     rationale: Dict[str, Dict[str, Any]] = {}
 
-    if _append_recommended_queries(profile, frameworks, max_queries, candidates, rationale):
+    if _append_recommended_queries(
+        profile, frameworks, max_queries, candidates, rationale
+    ):
         return candidates, ambiguity, rationale
 
     _append_framework_queries(frameworks, max_queries, candidates, rationale)
@@ -242,7 +320,15 @@ def pick_queries(profile: Dict[str, Any], repo_root: Path | None = None) -> Tupl
     return candidates, ambiguity, rationale
 
 
-def write_plan(out_json: Path, out_md: Path, selected: List[Dict[str, Any]], profile: Dict[str, Any], ambiguity: List[str], rationale: Dict[str, Dict[str, Any]], repo_root: Path | None = None) -> None:  # noqa: C901
+def write_plan(
+    out_json: Path,
+    out_md: Path,
+    selected: List[Dict[str, Any]],
+    profile: Dict[str, Any],
+    ambiguity: List[str],
+    rationale: Dict[str, Dict[str, Any]],
+    repo_root: Path | None = None,
+) -> None:  # noqa: C901
     """Write a concise plan JSON and markdown.
 
     The implementation is deliberately simple to keep cognitive complexity low.
@@ -252,12 +338,21 @@ def write_plan(out_json: Path, out_md: Path, selected: List[Dict[str, Any]], pro
     repo_shape_confidence = str(profile.get("repo_shape_confidence", "low"))
     repo_shape_notes = _string_list(profile.get("repo_shape_notes"))
     selected_queries = [item["query"] for item in selected]
-    selected_sources = {item["query"]: source_urls_for_query(item["query"], str(item.get("stack", "")), repo_root) for item in selected}
+    selected_sources = {
+        item["query"]: source_urls_for_query(
+            item["query"], str(item.get("stack", "")), repo_root
+        )
+        for item in selected
+    }
     stack_signals_used: Dict[str, Any] = {
         "detected_frameworks": _string_list(profile.get("detected_frameworks")),
-        "detected_package_managers": _string_list(profile.get("detected_package_managers")),
+        "detected_package_managers": _string_list(
+            profile.get("detected_package_managers")
+        ),
         "detected_build_tools": _string_list(profile.get("detected_build_tools")),
-        "detected_runtime_targets": _string_list(profile.get("detected_runtime_targets")),
+        "detected_runtime_targets": _string_list(
+            profile.get("detected_runtime_targets")
+        ),
     }
     ambiguity_notes = list(ambiguity)
     plan: Dict[str, Any] = {
@@ -273,7 +368,9 @@ def write_plan(out_json: Path, out_md: Path, selected: List[Dict[str, Any]], pro
     }
 
     out_json.parent.mkdir(parents=True, exist_ok=True)
-    out_json.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
+    out_json.write_text(
+        json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     md_lines: List[str] = []
     md_lines.append("# Repo Docs Lookup Plan")
@@ -292,7 +389,9 @@ def write_plan(out_json: Path, out_md: Path, selected: List[Dict[str, Any]], pro
     md_lines.append("")
     md_lines.append("## Query rationales")
     for q, r in rationale.items():
-        md_lines.append(f"- {q}: target={r.get('target')}; why={r.get('why')}; signals={r.get('signals')}")
+        md_lines.append(
+            f"- {q}: target={r.get('target')}; why={r.get('why')}; signals={r.get('signals')}"
+        )
     md_lines.append("")
     md_lines.append("## Stack signals used")
     for k, v in stack_signals_used.items():
@@ -335,13 +434,21 @@ def load_existing_evidence_lines(out_evidence: Path) -> set[str]:
     return existing_lines
 
 
-def append_tmp_evidence(tmp_out: Path, out_evidence: Path, existing_lines: set[str], query: str, max_lines_per_query: int = 6) -> bool:
+def append_tmp_evidence(
+    tmp_out: Path,
+    out_evidence: Path,
+    existing_lines: set[str],
+    query: str,
+    max_lines_per_query: int = 6,
+) -> bool:
     if not tmp_out.exists():
         return False
 
     written_count = 0
     try:
-        with tmp_out.open("r", encoding="utf-8") as src, out_evidence.open("a", encoding="utf-8") as dst:
+        with tmp_out.open("r", encoding="utf-8") as src, out_evidence.open(
+            "a", encoding="utf-8"
+        ) as dst:
             for line in src:
                 stripped = line.strip()
                 if not stripped or stripped in existing_lines:
@@ -352,7 +459,10 @@ def append_tmp_evidence(tmp_out: Path, out_evidence: Path, existing_lines: set[s
                 if written_count >= max_lines_per_query:
                     break
     except Exception as exc:
-        print(f"Warning: failed to append tmp evidence for '{query}': {exc}", file=sys.stderr)
+        print(
+            f"Warning: failed to append tmp evidence for '{query}': {exc}",
+            file=sys.stderr,
+        )
     finally:
         try:
             tmp_out.unlink()
@@ -362,7 +472,9 @@ def append_tmp_evidence(tmp_out: Path, out_evidence: Path, existing_lines: set[s
     return written_count > 0
 
 
-def append_selected_evidence(repo: Path, selected: List[Dict[str, Any]], out_evidence: Path) -> bool:
+def append_selected_evidence(
+    repo: Path, selected: List[Dict[str, Any]], out_evidence: Path
+) -> bool:
     docs_lookup_path = (Path(__file__).parent / "docs_lookup.py").resolve()
     out_evidence.parent.mkdir(parents=True, exist_ok=True)
     existing_lines = load_existing_evidence_lines(out_evidence)
@@ -373,25 +485,48 @@ def append_selected_evidence(repo: Path, selected: List[Dict[str, Any]], out_evi
         stack = item.get("stack") or ""
         source_urls = source_urls_for_query(query, stack, repo_root=repo)
         tmp_out = out_evidence.with_name(out_evidence.stem + f"-{idx}.jsonl")
-        code = run_docs_lookup_for_query(docs_lookup_path, query, stack, source_urls, tmp_out)
+        code = run_docs_lookup_for_query(
+            docs_lookup_path, query, stack, source_urls, tmp_out
+        )
         if code == 0:
-            any_written = append_tmp_evidence(tmp_out, out_evidence, existing_lines, query) or any_written
+            any_written = (
+                append_tmp_evidence(tmp_out, out_evidence, existing_lines, query)
+                or any_written
+            )
             continue
-        print(f"Warning: docs_lookup failed for query '{query}' (stack={stack})", file=sys.stderr)
+        print(
+            f"Warning: docs_lookup failed for query '{query}' (stack={stack})",
+            file=sys.stderr,
+        )
 
     return any_written
 
 
-def run_docs_lookup_for_query(docs_lookup_path: Path, query: str, stack: str, source_urls: List[str], out_path: Path) -> int:
+def run_docs_lookup_for_query(
+    docs_lookup_path: Path,
+    query: str,
+    stack: str,
+    source_urls: List[str],
+    out_path: Path,
+) -> int:
     registry_path: Path | None = None
     try:
-        args = [sys.executable, str(docs_lookup_path), "--query", query, "--out", str(out_path)]
+        args = [
+            sys.executable,
+            str(docs_lookup_path),
+            "--query",
+            query,
+            "--out",
+            str(out_path),
+        ]
         if stack:
             args += ["--stack", stack]
 
         default_urls = DEFAULT_REGISTRY.get(stack, [])
         if source_urls and source_urls != default_urls:
-            with tempfile.NamedTemporaryFile("w", delete=False, suffix=".json", encoding="utf-8") as fh:
+            with tempfile.NamedTemporaryFile(
+                "w", delete=False, suffix=".json", encoding="utf-8"
+            ) as fh:
                 json.dump({stack: source_urls}, fh, ensure_ascii=False, indent=2)
                 fh.write("\n")
                 registry_path = Path(fh.name)
@@ -439,7 +574,9 @@ def main(argv: List[str] | None = None) -> int:
     out_plan_md = (repo / args.out_plan_md).resolve()
     out_evidence = (repo / args.out_evidence).resolve()
 
-    write_plan(out_plan, out_plan_md, selected, profile, ambiguity, rationale, repo_root=repo)
+    write_plan(
+        out_plan, out_plan_md, selected, profile, ambiguity, rationale, repo_root=repo
+    )
 
     any_written = append_selected_evidence(repo, selected, out_evidence)
 
@@ -447,7 +584,10 @@ def main(argv: List[str] | None = None) -> int:
         print(f"Wrote plan: {out_plan} and evidence: {out_evidence}")
         return 0
     else:
-        print("No evidence was written; check network or registry mappings", file=sys.stderr)
+        print(
+            "No evidence was written; check network or registry mappings",
+            file=sys.stderr,
+        )
         return 3
 
 

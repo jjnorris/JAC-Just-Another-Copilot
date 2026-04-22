@@ -3,13 +3,13 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-TEXT_EXTS = {'.json', '.jsonl', '.md', '.py', '.yaml', '.yml', '.txt', '.ini', '.cfg'}
+TEXT_EXTS = {".json", ".jsonl", ".md", ".py", ".yaml", ".yml", ".txt", ".ini", ".cfg"}
 processed = []
 
-for p in ROOT.rglob('*'):
+for p in ROOT.rglob("*"):
     if not p.is_file():
         continue
-    if '.git' in p.parts:
+    if ".git" in p.parts:
         continue
     if p.suffix.lower() not in TEXT_EXTS:
         continue
@@ -19,31 +19,31 @@ for p in ROOT.rglob('*'):
         continue
     changed = False
     # BOM byte order mark
-    if raw.startswith(b'\xef\xbb\xbf'):
+    if raw.startswith(b"\xef\xbb\xbf"):
         try:
-            text = raw.decode('utf-8-sig')
+            text = raw.decode("utf-8-sig")
             changed = True
         except Exception:
             try:
-                text = raw.decode('utf-8', errors='replace')
+                text = raw.decode("utf-8", errors="replace")
                 changed = True
             except Exception:
                 continue
     else:
         try:
-            text = raw.decode('utf-8')
+            text = raw.decode("utf-8")
         except Exception:
             try:
-                text = raw.decode('utf-8-sig')
+                text = raw.decode("utf-8-sig")
                 changed = True
             except Exception:
                 continue
-    if '\ufeff' in text:
-        text = text.replace('\ufeff', '')
+    if "\ufeff" in text:
+        text = text.replace("\ufeff", "")
         changed = True
     if changed:
         try:
-            p.write_text(text, encoding='utf-8', newline='\n')
+            p.write_text(text, encoding="utf-8", newline="\n")
             processed.append(str(p.relative_to(ROOT)))
         except Exception:
             continue

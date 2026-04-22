@@ -18,7 +18,9 @@ class RepoTaskPlanRankTests(unittest.TestCase):
         self.workflow_file = self.workflow_dir / "tmp-validate.yml"
         self.script_file = self.scripts_dir / "tmp_intake.py"
         self.workflow_file.write_text("name: tmp\n", encoding="utf-8")
-        self.script_file.write_text("def load_spec(spec_file):\n    return {}\n", encoding="utf-8")
+        self.script_file.write_text(
+            "def load_spec(spec_file):\n    return {}\n", encoding="utf-8"
+        )
 
     def tearDown(self) -> None:
         try:
@@ -31,7 +33,10 @@ class RepoTaskPlanRankTests(unittest.TestCase):
             pass
 
     def test_script_with_load_spec_ranked_before_workflow(self) -> None:
-        candidates = [str(self.workflow_file.relative_to(self.root)), str(self.script_file.relative_to(self.root))]
+        candidates = [
+            str(self.workflow_file.relative_to(self.root)),
+            str(self.script_file.relative_to(self.root)),
+        ]
         ranked = rank_files(candidates, "improve loader behavior")
         # Expect the script file (with def load_spec) to be ranked first
         self.assertEqual(ranked[0], str(self.script_file.relative_to(self.root)))

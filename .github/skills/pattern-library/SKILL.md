@@ -45,7 +45,6 @@ Prefer canonical patterns and warn about duplicate abstractions or premature gen
 - May recommend reuse and consolidation. It may not invent a second competing home.
 
 ## Related docs
-- `docs/jacks/rules/00-core-role.md`
-- `docs/jacks/rules/02-boundaries.md`
-
+- `docs/jack/rules/00-core-role.md`
+- `docs/jack/rules/02-boundaries.md`
 

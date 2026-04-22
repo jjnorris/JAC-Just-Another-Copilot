@@ -14,11 +14,18 @@ class TestValidationReportPathsPosix(unittest.TestCase):
             jack.mkdir(parents=True)
 
             # Create stub artifacts that should appear in evidence_links
-            for name in ("repo-task-plan.json", "repo-task-inspect.json", "repo-task-edit-sketch.json", "repo-task-change-outline.json"):
+            for name in (
+                "repo-task-plan.json",
+                "repo-task-inspect.json",
+                "repo-task-edit-sketch.json",
+                "repo-task-change-outline.json",
+            ):
                 (jack / name).write_text("{}", encoding="utf-8")
 
             completed = ["profile_repo_stack.py", "profile_to_docs_lookup.py"]
-            vr_path = rtf.write_validation_report(repo_root, "posix-check-task", completed)
+            vr_path = rtf.write_validation_report(
+                repo_root, "posix-check-task", completed
+            )
 
             data = json.loads(vr_path.read_text(encoding="utf-8"))
             # evidence_links should be POSIX relative paths (no backslashes)

@@ -49,7 +49,8 @@ class TestRepoTaskPlanPlanningSpecificity(unittest.TestCase):
 
             # Provide profile that signals python tooling repo
             (jack_dir / "repo-stack-profile.json").write_text(
-                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2), encoding="utf-8"
+                json.dumps({"repo_shape": "python_tooling_repo"}, indent=2),
+                encoding="utf-8",
             )
 
             task = "Self-host JACK: implement rank_files planning fix"
@@ -57,11 +58,15 @@ class TestRepoTaskPlanPlanningSpecificity(unittest.TestCase):
             ret = mod.main(["--repo-root", str(repo), "--task", task])
             self.assertEqual(ret, 0)
 
-            plan = json.loads((jack_dir / "repo-task-plan.json").read_text(encoding="utf-8"))
+            plan = json.loads(
+                (jack_dir / "repo-task-plan.json").read_text(encoding="utf-8")
+            )
 
             # Assertions: planner remains first-edit area and emits concrete
             # planning-focused steps (contains 'rewrite').
-            self.assertIn("repo_task_plan.py", plan.get("recommended_first_edit_area", ""))
+            self.assertIn(
+                "repo_task_plan.py", plan.get("recommended_first_edit_area", "")
+            )
             steps = plan.get("implementation_steps", [])
             self.assertGreater(len(steps), 0)
             first = steps[0].lower()

@@ -70,10 +70,14 @@ POST_VALIDATION_STAGE = "post_validation"
 
 REQUIRED_VALIDATED_STAGES: set[str] = set(TRANSITION_REQUIRED_STAGE_SEQUENCE)
 
-KNOWN_VALIDATED_STAGES: set[str] = REQUIRED_VALIDATED_STAGES | {TRANSITION_OPTIONAL_STAGE}
+KNOWN_VALIDATED_STAGES: set[str] = REQUIRED_VALIDATED_STAGES | {
+    TRANSITION_OPTIONAL_STAGE
+}
 
 TRANSITION_LEDGER_PATH = Path("jack/repo-task-transition-ledger.json")
-TRANSITION_LEDGER_ARTIFACTS: dict[str, str] = dict(zip(TRANSITION_REQUIRED_STAGE_SEQUENCE, TRANSITION_REQUIRED_ARTIFACTS))
+TRANSITION_LEDGER_ARTIFACTS: dict[str, str] = dict(
+    zip(TRANSITION_REQUIRED_STAGE_SEQUENCE, TRANSITION_REQUIRED_ARTIFACTS)
+)
 
 REQUIRED_ARTIFACT_FAMILY_PATHS = {
     REPO_STACK_PROFILE_JSON,
@@ -135,7 +139,9 @@ def require_json_object(path: Path, label: str) -> dict[str, Any]:
     return data
 
 
-def validate_required_stage_record(stage_record: dict[str, Any], expected_name: str) -> None:
+def validate_required_stage_record(
+    stage_record: dict[str, Any], expected_name: str
+) -> None:
     if stage_record.get("stage_name") != expected_name:
         print("INVALID TRANSITION LEDGER: stage order mismatch")
         raise SystemExit(1)
@@ -149,7 +155,9 @@ def validate_required_stage_record(stage_record: dict[str, Any], expected_name: 
         raise SystemExit(1)
     artifact_paths = cast(list[object], artifact_paths)
     if len(artifact_paths) != 1:
-        print("INVALID TRANSITION LEDGER: required stages must name exactly one primary artifact path")
+        print(
+            "INVALID TRANSITION LEDGER: required stages must name exactly one primary artifact path"
+        )
         raise SystemExit(1)
 
     expected_artifact = TRANSITION_LEDGER_ARTIFACTS.get(expected_name)
@@ -168,14 +176,18 @@ def validate_required_stage_record(stage_record: dict[str, Any], expected_name: 
         raise SystemExit(1)
 
 
-def expected_transition_stage_names(validated_stages: list[object], optional_stage_present: bool) -> list[str]:
+def expected_transition_stage_names(
+    validated_stages: list[object], optional_stage_present: bool
+) -> list[str]:
     expected_stage_names = [str(stage) for stage in validated_stages]
     if not optional_stage_present:
         expected_stage_names.append(TRANSITION_OPTIONAL_STAGE)
     return expected_stage_names
 
 
-def validate_optional_stage_record(stage_record: dict[str, Any], optional_stage_present: bool) -> None:
+def validate_optional_stage_record(
+    stage_record: dict[str, Any], optional_stage_present: bool
+) -> None:
     if stage_record.get("stage_name") != TRANSITION_OPTIONAL_STAGE:
         print("INVALID TRANSITION LEDGER: optional stage record missing")
         raise SystemExit(1)
@@ -196,15 +208,26 @@ def validate_optional_stage_record(stage_record: dict[str, Any], optional_stage_
             raise SystemExit(1)
     else:
         if status != "skipped":
-            print("INVALID TRANSITION LEDGER: optional stage should be skipped when the script is absent")
+            print(
+                "INVALID TRANSITION LEDGER: optional stage should be skipped when the script is absent"
+            )
             raise SystemExit(1)
     if artifact_paths:
-        print("INVALID TRANSITION LEDGER: optional stage should not name artifact paths")
+        print(
+            "INVALID TRANSITION LEDGER: optional stage should not name artifact paths"
+        )
         raise SystemExit(1)
 
 
 def validate_transition_ledger_header(ledger: dict[str, Any], report_task: Any) -> None:
-    required_fields = ["task", "started_at", "finished_at", "stages", "optional_stages_encountered", "final_status"]
+    required_fields = [
+        "task",
+        "started_at",
+        "finished_at",
+        "stages",
+        "optional_stages_encountered",
+        "final_status",
+    ]
     missing_fields = [field for field in required_fields if field not in ledger]
     if missing_fields:
         print("INVALID TRANSITION LEDGER: missing keys:", missing_fields)
@@ -227,7 +250,9 @@ def validate_transition_ledger_stage_records(
     validated_stages: list[object],
     optional_stage_present: bool,
 ) -> None:
-    expected_stage_names = expected_transition_stage_names(validated_stages, optional_stage_present)
+    expected_stage_names = expected_transition_stage_names(
+        validated_stages, optional_stage_present
+    )
     if len(stages) != len(expected_stage_names):
         print("INVALID TRANSITION LEDGER: stage count mismatch")
         raise SystemExit(1)
@@ -247,7 +272,9 @@ def validate_transition_ledger_stage_records(
         validate_required_stage_record(stage_record_dict, expected_name)
 
 
-def validate_transition_ledger_optional_stage_list(encountered: object, optional_stage_present: bool) -> None:
+def validate_transition_ledger_optional_stage_list(
+    encountered: object, optional_stage_present: bool
+) -> None:
     if not isinstance(encountered, list):
         print("INVALID TRANSITION LEDGER: optional_stages_encountered must be a list")
         raise SystemExit(1)
@@ -258,11 +285,15 @@ def validate_transition_ledger_optional_stage_list(encountered: object, optional
             print("INVALID TRANSITION LEDGER: optional stage encounter list mismatch")
             raise SystemExit(1)
     elif encountered_values:
-        print("INVALID TRANSITION LEDGER: skipped optional stage must not be listed as encountered")
+        print(
+            "INVALID TRANSITION LEDGER: skipped optional stage must not be listed as encountered"
+        )
         raise SystemExit(1)
 
 
-def validate_ledger_status(ledger: dict[str, Any], stages: list[dict[str, Any]]) -> None:
+def validate_ledger_status(
+    ledger: dict[str, Any], stages: list[dict[str, Any]]
+) -> None:
     final_status = ledger.get("final_status")
     if final_status not in {"completed", "failed"}:
         print("INVALID TRANSITION LEDGER: invalid final_status")
@@ -270,14 +301,20 @@ def validate_ledger_status(ledger: dict[str, Any], stages: list[dict[str, Any]])
 
     has_failed_stage = any(stage.get("status") == "failed" for stage in stages)
     if final_status == "failed" and not has_failed_stage:
-        print("INVALID TRANSITION LEDGER: final_status failed without a failed stage record")
+        print(
+            "INVALID TRANSITION LEDGER: final_status failed without a failed stage record"
+        )
         raise SystemExit(1)
     if final_status == "completed" and has_failed_stage:
-        print("INVALID TRANSITION LEDGER: final_status completed despite a failed stage record")
+        print(
+            "INVALID TRANSITION LEDGER: final_status completed despite a failed stage record"
+        )
         raise SystemExit(1)
 
 
-def validate_transition_ledger(report_task: Any, validated_stages: list[object]) -> None:
+def validate_transition_ledger(
+    report_task: Any, validated_stages: list[object]
+) -> None:
     if not should_validate_transition_ledger():
         return
 
@@ -295,7 +332,9 @@ def validate_transition_ledger(report_task: Any, validated_stages: list[object])
 
     optional_stage_present = Path("scripts/repo_task_patch_sketch.py").is_file()
     stage_records = cast(list[object], stages)
-    validate_transition_ledger_stage_records(stage_records, validated_stages, optional_stage_present)
+    validate_transition_ledger_stage_records(
+        stage_records, validated_stages, optional_stage_present
+    )
     validate_transition_ledger_optional_stage_list(
         ledger.get("optional_stages_encountered"),
         optional_stage_present,
@@ -312,7 +351,9 @@ def expected_output_type(artifact_path: str) -> str:
     return "md"
 
 
-def validate_artifact_family_entry(entry: dict[str, Any], validated_stage_names: set[str]) -> None:
+def validate_artifact_family_entry(
+    entry: dict[str, Any], validated_stage_names: set[str]
+) -> None:
     required_fields = [
         "stage_name",
         "artifact_role",
@@ -348,7 +389,9 @@ def validate_artifact_family_entry(entry: dict[str, Any], validated_stage_names:
         raise SystemExit(1)
     artifact_path_text = str(artifact_path)
     if not Path(artifact_path_text).is_file():
-        print(f"INVALID ARTIFACT FAMILY MANIFEST: missing artifact path {artifact_path_text}")
+        print(
+            f"INVALID ARTIFACT FAMILY MANIFEST: missing artifact path {artifact_path_text}"
+        )
         raise SystemExit(1)
 
     required_or_optional = entry.get("required_or_optional")
@@ -363,15 +406,22 @@ def validate_artifact_family_entry(entry: dict[str, Any], validated_stage_names:
             raise SystemExit(1)
     else:
         # For post-validation artifacts accept runner-produced or human-reviewed producers.
-        if not (isinstance(producer, str) and (producer.startswith("scripts/") or producer == "human review")):
-            print("INVALID ARTIFACT FAMILY MANIFEST: producer mismatch for post-validation artifact")
+        if not (
+            isinstance(producer, str)
+            and (producer.startswith("scripts/") or producer == "human review")
+        ):
+            print(
+                "INVALID ARTIFACT FAMILY MANIFEST: producer mismatch for post-validation artifact"
+            )
             raise SystemExit(1)
 
     consumers = entry.get("consumers")
     if not isinstance(consumers, list) or not consumers:
         print("INVALID ARTIFACT FAMILY MANIFEST: consumers must be a non-empty list")
         raise SystemExit(1)
-    if not all(isinstance(consumer, str) and consumer.strip() for consumer in consumers):
+    if not all(
+        isinstance(consumer, str) and consumer.strip() for consumer in consumers
+    ):
         print("INVALID ARTIFACT FAMILY MANIFEST: consumers must be strings")
         raise SystemExit(1)
 
@@ -381,11 +431,15 @@ def validate_artifact_family_entry(entry: dict[str, Any], validated_stage_names:
         raise SystemExit(1)
 
     if entry.get("expected_in_current_live_flow") is not True:
-        print("INVALID ARTIFACT FAMILY MANIFEST: expected_in_current_live_flow must be true")
+        print(
+            "INVALID ARTIFACT FAMILY MANIFEST: expected_in_current_live_flow must be true"
+        )
         raise SystemExit(1)
 
 
-def validate_artifact_family_top_level(manifest: dict[str, Any], report_task: Any) -> None:
+def validate_artifact_family_top_level(
+    manifest: dict[str, Any], report_task: Any
+) -> None:
     required_top_level_fields = [
         "task",
         "generated_at",
@@ -393,9 +447,13 @@ def validate_artifact_family_top_level(manifest: dict[str, Any], report_task: An
         "validation_report_ref",
         "artifact_family_entries",
     ]
-    missing_top_level_fields = [field for field in required_top_level_fields if field not in manifest]
+    missing_top_level_fields = [
+        field for field in required_top_level_fields if field not in manifest
+    ]
     if missing_top_level_fields:
-        print("INVALID ARTIFACT FAMILY MANIFEST: missing keys:", missing_top_level_fields)
+        print(
+            "INVALID ARTIFACT FAMILY MANIFEST: missing keys:", missing_top_level_fields
+        )
         raise SystemExit(1)
 
     if manifest.get("task") != report_task:
@@ -438,7 +496,9 @@ def collect_artifact_family_entries(
     return required_paths_in_manifest, manifest_entries_by_path
 
 
-def validate_artifact_family_required_paths(required_paths_in_manifest: set[str]) -> None:
+def validate_artifact_family_required_paths(
+    required_paths_in_manifest: set[str],
+) -> None:
     if required_paths_in_manifest != REQUIRED_ARTIFACT_FAMILY_PATHS:
         print("INVALID ARTIFACT FAMILY MANIFEST: required artifact path set mismatch")
         print(" - expected:")
@@ -452,20 +512,28 @@ def validate_artifact_family_required_paths(required_paths_in_manifest: set[str]
 
 def validate_artifact_family_evidence_coverage(evidence_names: set[str]) -> None:
     if not evidence_names <= REQUIRED_ARTIFACT_FAMILY_PATHS:
-        print("INVALID ARTIFACT FAMILY MANIFEST: validation report evidence not covered by required artifacts")
+        print(
+            "INVALID ARTIFACT FAMILY MANIFEST: validation report evidence not covered by required artifacts"
+        )
         raise SystemExit(1)
 
 
-def validate_artifact_family_ledger_alignment(manifest_entries_by_path: dict[str, dict[str, Any]]) -> None:
+def validate_artifact_family_ledger_alignment(
+    manifest_entries_by_path: dict[str, dict[str, Any]]
+) -> None:
     ledger = require_json_object(TRANSITION_LEDGER_PATH, "TRANSITION LEDGER")
     ledger_stage_records = ledger.get("stages")
     if not isinstance(ledger_stage_records, list):
-        print("INVALID ARTIFACT FAMILY MANIFEST: transition ledger stages must be a list")
+        print(
+            "INVALID ARTIFACT FAMILY MANIFEST: transition ledger stages must be a list"
+        )
         raise SystemExit(1)
 
     for stage_record in cast(list[object], ledger_stage_records):
         if not isinstance(stage_record, dict):
-            print("INVALID ARTIFACT FAMILY MANIFEST: transition ledger stage record is not an object")
+            print(
+                "INVALID ARTIFACT FAMILY MANIFEST: transition ledger stage record is not an object"
+            )
             raise SystemExit(1)
 
         stage_record_dict = cast(dict[str, Any], stage_record)
@@ -475,12 +543,16 @@ def validate_artifact_family_ledger_alignment(manifest_entries_by_path: dict[str
 
         expected_path = REQUIRED_ARTIFACT_FAMILY_STAGE_PATHS.get(str(stage_name))
         if expected_path is None:
-            print(f"INVALID ARTIFACT FAMILY MANIFEST: no manifest path for stage {stage_name}")
+            print(
+                f"INVALID ARTIFACT FAMILY MANIFEST: no manifest path for stage {stage_name}"
+            )
             raise SystemExit(1)
 
         entry = manifest_entries_by_path.get(expected_path)
         if entry is None:
-            print(f"INVALID ARTIFACT FAMILY MANIFEST: missing manifest entry for {expected_path}")
+            print(
+                f"INVALID ARTIFACT FAMILY MANIFEST: missing manifest entry for {expected_path}"
+            )
             raise SystemExit(1)
         if entry.get("stage_name") != stage_name:
             print("INVALID ARTIFACT FAMILY MANIFEST: stage_name mismatch")
@@ -503,7 +575,10 @@ def validate_adversarial_review(
     for path, entry in manifest_entries_by_path.items():
         if not isinstance(entry, dict):
             continue
-        if entry.get("artifact_role") == "adversarial_review" or Path(path).name == "repo-task-adversarial-review.json":
+        if (
+            entry.get("artifact_role") == "adversarial_review"
+            or Path(path).name == "repo-task-adversarial-review.json"
+        ):
             adv_entry = entry
             break
 
@@ -547,14 +622,28 @@ def validate_adversarial_review(
     validation_ref = manifest.get("validation_report_ref")
     ledger_ref = manifest.get("transition_ledger_ref")
     if validation_ref not in evidence_inputs or ledger_ref not in evidence_inputs:
-        print("INVALID ADVERSARIAL REVIEW: evidence_inputs must include validation report and transition ledger refs")
+        print(
+            "INVALID ADVERSARIAL REVIEW: evidence_inputs must include validation report and transition ledger refs"
+        )
         raise SystemExit(1)
 
-    if adv.get("acceptance_recommendation") not in {"accept", "needs_followup", "escalate"}:
+    if adv.get("acceptance_recommendation") not in {
+        "accept",
+        "needs_followup",
+        "escalate",
+    }:
         print("INVALID ADVERSARIAL REVIEW: bad acceptance_recommendation")
         raise SystemExit(1)
 
-    if adv.get("recommended_return_stage") not in {"none", "planning", "hardening", "execution", "testing", "validation", "escalate"}:
+    if adv.get("recommended_return_stage") not in {
+        "none",
+        "planning",
+        "hardening",
+        "execution",
+        "testing",
+        "validation",
+        "escalate",
+    }:
         print("INVALID ADVERSARIAL REVIEW: bad recommended_return_stage")
         raise SystemExit(1)
 
@@ -564,6 +653,7 @@ def validate_adversarial_review(
         raise SystemExit(1)
 
     print("OK: adversarial review artifact present and consistent")
+
 
 def validate_freshness_evidence(
     manifest: dict[str, Any],
@@ -577,7 +667,10 @@ def validate_freshness_evidence(
     for path, entry in manifest_entries_by_path.items():
         if not isinstance(entry, dict):
             continue
-        if entry.get("artifact_role") == "freshness_evidence" or Path(path).name == "repo-task-freshness-evidence.json":
+        if (
+            entry.get("artifact_role") == "freshness_evidence"
+            or Path(path).name == "repo-task-freshness-evidence.json"
+        ):
             fres_entry = entry
             break
 
@@ -609,8 +702,12 @@ def validate_freshness_evidence(
 
     # Require that the freshness evidence references docs lookup plan or docs evidence
     allowed = {REPO_DOCS_LOOKUP_PLAN_JSON, REPO_DOCS_EVIDENCE_JSONL}
-    if not any(str(inp) in allowed or Path(str(inp)).name in allowed for inp in source_inputs):
-        print("INVALID FRESHNESS EVIDENCE: source_inputs must include docs lookup plan or docs evidence")
+    if not any(
+        str(inp) in allowed or Path(str(inp)).name in allowed for inp in source_inputs
+    ):
+        print(
+            "INVALID FRESHNESS EVIDENCE: source_inputs must include docs lookup plan or docs evidence"
+        )
         raise SystemExit(1)
 
     consumed = fres.get("consumed_by_stages")
@@ -630,21 +727,29 @@ def validate_artifact_family_manifest(
         return
 
     if not ARTIFACT_FAMILY_MANIFEST_PATH.exists():
-        print("MISSING ARTIFACT FAMILY MANIFEST: jack/repo-task-artifact-family-manifest.json")
+        print(
+            "MISSING ARTIFACT FAMILY MANIFEST: jack/repo-task-artifact-family-manifest.json"
+        )
         raise SystemExit(1)
 
-    manifest = require_json_object(ARTIFACT_FAMILY_MANIFEST_PATH, "ARTIFACT FAMILY MANIFEST")
+    manifest = require_json_object(
+        ARTIFACT_FAMILY_MANIFEST_PATH, "ARTIFACT FAMILY MANIFEST"
+    )
     validate_artifact_family_top_level(manifest, report_task)
 
     entries = manifest.get("artifact_family_entries")
     if not isinstance(entries, list) or not entries:
-        print("INVALID ARTIFACT FAMILY MANIFEST: artifact_family_entries must be a non-empty list")
+        print(
+            "INVALID ARTIFACT FAMILY MANIFEST: artifact_family_entries must be a non-empty list"
+        )
         raise SystemExit(1)
 
     validated_stage_names = {str(stage) for stage in validated_stages}
-    required_paths_in_manifest, manifest_entries_by_path = collect_artifact_family_entries(
-        cast(list[object], entries),
-        validated_stage_names,
+    required_paths_in_manifest, manifest_entries_by_path = (
+        collect_artifact_family_entries(
+            cast(list[object], entries),
+            validated_stage_names,
+        )
     )
     validate_artifact_family_required_paths(required_paths_in_manifest)
     validate_artifact_family_evidence_coverage(evidence_names)
@@ -653,6 +758,7 @@ def validate_artifact_family_manifest(
         validate_adversarial_review(manifest, report_task, manifest_entries_by_path)
     if should_validate_freshness_evidence():
         validate_freshness_evidence(manifest, report_task, manifest_entries_by_path)
+
 
 p = Path("jack/repo-task-validation-report.json")
 if not p.exists():
@@ -689,7 +795,9 @@ if missing_links:
         print(f" - {link}")
     raise SystemExit(1)
 
-evidence_names = {Path(link).name for link in evidence_links if isinstance(link, str) and link.strip()}
+evidence_names = {
+    Path(link).name for link in evidence_links if isinstance(link, str) and link.strip()
+}
 missing_evidence_names = sorted(REQUIRED_EVIDENCE_LINKS - evidence_names)
 unexpected_evidence_names = sorted(evidence_names - REQUIRED_EVIDENCE_LINKS)
 if missing_evidence_names or unexpected_evidence_names:
@@ -724,7 +832,9 @@ for link in evidence_links:
         invalid_artifacts.append(f"{link} (not a JSON object)")
         continue
     artifact_data = cast(dict[str, Any], artifact_json)
-    missing_fields = [field for field in required_fields if not artifact_data.get(field)]
+    missing_fields = [
+        field for field in required_fields if not artifact_data.get(field)
+    ]
     if missing_fields:
         invalid_artifacts.append(
             f"{link} (missing required fields: {', '.join(missing_fields)})"
@@ -746,8 +856,12 @@ if not validated_stages:
     print("MISSING OR EMPTY VALIDATED STAGES")
     raise SystemExit(1)
 
-unknown_validated_stages = [stage for stage in validated_stages if stage not in KNOWN_VALIDATED_STAGES]
-missing_required_stages = [stage for stage in REQUIRED_VALIDATED_STAGES if stage not in validated_stages]
+unknown_validated_stages = [
+    stage for stage in validated_stages if stage not in KNOWN_VALIDATED_STAGES
+]
+missing_required_stages = [
+    stage for stage in REQUIRED_VALIDATED_STAGES if stage not in validated_stages
+]
 if unknown_validated_stages or missing_required_stages:
     print("INVALID VALIDATED STAGES:")
     if unknown_validated_stages:
@@ -783,7 +897,9 @@ if not methods:
 
 report_task_text = str(report_task)
 if not any(
-    isinstance(method, str) and "run_repo_task_flow.py" in method and report_task_text in method
+    isinstance(method, str)
+    and "run_repo_task_flow.py" in method
+    and report_task_text in method
     for method in methods
 ):
     print("INVALID METHODS: missing current flow runner/task reference")
@@ -798,7 +914,9 @@ if not assumptions:
     print("MISSING OR EMPTY ASSUMPTIONS")
     raise SystemExit(1)
 
-assumption_values = {assumption for assumption in assumptions if isinstance(assumption, str)}
+assumption_values = {
+    assumption for assumption in assumptions if isinstance(assumption, str)
+}
 if assumption_values != expected_assumptions:
     print("INVALID ASSUMPTIONS: expected exact JACK provenance markers")
     raise SystemExit(1)

@@ -7,7 +7,9 @@ import scripts.repo_task_research as rtr
 
 
 class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
-    def test_tooling_self_hosting_suppresses_generic_questions_and_updates_next_step(self):
+    def test_tooling_self_hosting_suppresses_generic_questions_and_updates_next_step(
+        self,
+    ):
         with tempfile.TemporaryDirectory() as td:
             repo = Path(td)
             # prepare a jack profile indicating python_tooling_repo
@@ -21,7 +23,9 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
                 "detected_runtime_targets": ["Python"],
                 "confidence_level": "low",
             }
-            (jack_dir / "repo-stack-profile.json").write_text(json.dumps(profile), encoding="utf-8")
+            (jack_dir / "repo-stack-profile.json").write_text(
+                json.dumps(profile), encoding="utf-8"
+            )
 
             task = "Self-host JACK: research-quality focused run for single-file edit"
             brief = rtr.make_brief(repo, task, profile, [], [], [])
@@ -47,7 +51,9 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
             self.assertNotIn("validate the repo runtime locally", txt)
             self.assertIn("Inspect JACK artifacts", txt)
 
-    def test_planning_focused_self_hosting_without_plan_file_anchors_to_planner_step(self):
+    def test_planning_focused_self_hosting_without_plan_file_anchors_to_planner_step(
+        self,
+    ):
         with tempfile.TemporaryDirectory() as td:
             repo = Path(td)
             jack_dir = repo / "jack"
@@ -60,7 +66,9 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
                 "detected_runtime_targets": ["Python"],
                 "confidence_level": "medium",
             }
-            (jack_dir / "repo-stack-profile.json").write_text(json.dumps(profile), encoding="utf-8")
+            (jack_dir / "repo-stack-profile.json").write_text(
+                json.dumps(profile), encoding="utf-8"
+            )
 
             task = "Self-host JACK: verify rank_files canonical implementation"
             snippets = [
@@ -96,7 +104,9 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
                 self.assertNotIn(q, brief.get("recommended_next_questions", []))
 
             suggestions = brief.get("actionable_suggestions", [])
-            self.assertTrue(any("scripts/repo_task_plan.py" in s for s in suggestions), suggestions)
+            self.assertTrue(
+                any("scripts/repo_task_plan.py" in s for s in suggestions), suggestions
+            )
 
             out_json = repo / "jack" / "repo-task-brief.json"
             out_md = repo / "jack" / "repo-task-brief.md"
@@ -125,8 +135,12 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
             plan = {
                 "recommended_first_edit_area": "scripts/repo_task_plan.py",
             }
-            (jack_dir / "repo-stack-profile.json").write_text(json.dumps(profile), encoding="utf-8")
-            (jack_dir / "repo-task-plan.json").write_text(json.dumps(plan), encoding="utf-8")
+            (jack_dir / "repo-stack-profile.json").write_text(
+                json.dumps(profile), encoding="utf-8"
+            )
+            (jack_dir / "repo-task-plan.json").write_text(
+                json.dumps(plan), encoding="utf-8"
+            )
 
             task = "Self-host JACK: verify rank_files canonical implementation"
             snippets = [
@@ -152,7 +166,9 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
                 },
             ]
 
-            brief = rtr.make_brief(repo, task, profile, snippets, snippets, [], plan=plan)
+            brief = rtr.make_brief(
+                repo, task, profile, snippets, snippets, [], plan=plan
+            )
 
             forbidden = [
                 "Repository appears to be a script-heavy tooling repo. Is this intended as CLI/tools code (not a web framework)? Any preferred packaging or runtime/version to assume?",
@@ -163,7 +179,9 @@ class TestRepoTaskResearchToolingSelfHosting(unittest.TestCase):
                 self.assertNotIn(q, brief.get("recommended_next_questions", []))
 
             suggestions = brief.get("actionable_suggestions", [])
-            self.assertTrue(any("scripts/repo_task_plan.py" in s for s in suggestions), suggestions)
+            self.assertTrue(
+                any("scripts/repo_task_plan.py" in s for s in suggestions), suggestions
+            )
 
             out_json = repo / "jack" / "repo-task-brief.json"
             out_md = repo / "jack" / "repo-task-brief.md"

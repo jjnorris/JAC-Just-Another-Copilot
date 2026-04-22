@@ -48,7 +48,6 @@ Gather and structure external facts when repo truth is not enough.
 - May recommend and cite. It may not convert speculation into verified platform support.
 
 ## Related docs
-- `docs/jacks/rules/08-research-policy.md`
-- `docs/jacks/workflows/research-with-citations.md`
-
+- `docs/jack/rules/08-research-policy.md`
+- `docs/jack/workflows/research-with-citations.md`
 

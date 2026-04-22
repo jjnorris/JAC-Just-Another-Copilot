@@ -25,7 +25,9 @@ def load_payload(stream: TextIO) -> tuple[Dict[str, Any], Optional[str]]:
     if isinstance(payload, dict):
         return cast(Dict[str, Any], payload), None
 
-    return {"rawPayload": payload}, "payload was not a JSON object; wrapped raw payload for compatibility"
+    return {
+        "rawPayload": payload
+    }, "payload was not a JSON object; wrapped raw payload for compatibility"
 
 
 def resolve_cwd(payload: Dict[str, Any]) -> Path:
@@ -41,7 +43,11 @@ def resolve_git_dir(start: Path) -> Optional[Path]:
         if not dot_git.is_file():
             continue
         try:
-            first = dot_git.read_text(encoding="utf-8", errors="ignore").splitlines()[0].strip()
+            first = (
+                dot_git.read_text(encoding="utf-8", errors="ignore")
+                .splitlines()[0]
+                .strip()
+            )
         except Exception:
             continue
         if not first.startswith("gitdir:"):
@@ -86,10 +92,14 @@ class HookLogger:
 
         try:
             log_dir.mkdir(parents=True, exist_ok=True)
-            with (log_dir / file_name).open("a", encoding="utf-8", errors="surrogatepass") as handle:
+            with (log_dir / file_name).open(
+                "a", encoding="utf-8", errors="surrogatepass"
+            ) as handle:
                 handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
         except Exception:
             return
 
     def append_hook_payload(self, payload: Dict[str, Any]) -> None:
-        self.append_jsonl(f"{self.hook or 'unknown'}.jsonl", {"hook": self.hook, "payload": payload})
+        self.append_jsonl(
+            f"{self.hook or 'unknown'}.jsonl", {"hook": self.hook, "payload": payload}
+        )

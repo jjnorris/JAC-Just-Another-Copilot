@@ -39,4 +39,3 @@ jobs:
 
       - name: Run hook regression tests
         run: python -m unittest -v scripts.hook_regression_tests
-

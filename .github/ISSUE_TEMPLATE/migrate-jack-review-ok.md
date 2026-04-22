@@ -9,8 +9,9 @@ Describe where JACK_REVIEW_OK was used (workflows, CI settings, environment vari
 ## Migration checklist
 - [ ] Locate all uses of JACK_REVIEW_OK (workflows, CI, deployment configs).
 - [ ] Remove the JACK_REVIEW_OK environment variable or stop setting it.
-- [ ] Update workflows to rely on server-verified review artifacts (see docs/jacks/deprecate_jack_review_ok.md).
+- [ ] Update workflows to rely on server-verified review artifacts (see docs/jack/deprecate_jack_review_ok.md).
 - [ ] Run repository checks and verify JACK hooks enforce review requirements.
 
 ## Notes
 Link any PRs or CI changes that are required and add testing notes.
+
